@@ -1,0 +1,18 @@
+{
+  "name": "practica",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:tailwind": "pnpm tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/styles.css --watch",
+    "dev:php": "cd src && php -S localhost:6969"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.4"
+  }
+}
