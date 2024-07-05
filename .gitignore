@@ -4,11 +4,17 @@
 # production
 **/styles/styles.css
 
+# docker
+/sql_data
+docker-compose.yaml
+
+
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.bak
 
 # local env files
 .env
