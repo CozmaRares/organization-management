@@ -65,7 +65,7 @@ const values = {};
 fs.readFileSync(envFile, "utf8")
   .split("\n")
   .filter((str) => str.length != 0 && str[0] != "#")
-  .map((str) => str.split(" = "))
+  .map((str) => str.split("="))
   .forEach(([name, value]) => {
     values[VARIABLES[name]] = value;
   });

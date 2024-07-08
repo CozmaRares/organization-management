@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev:tailwind": "pnpm tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/styles.css --watch",
-    "dev:php": "cd src && php -S localhost:6969",
-    "build:docker": "node build-compose.js && docker compose up -d"
+    "dev:php": "./php-server.sh",
+    "build:compose": "node build-compose.js",
+    "build": "docker compose up -d"
   },
   "keywords": [],
   "author": "",

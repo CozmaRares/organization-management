@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+/vendor
 
 # production
 **/styles/styles.css
@@ -16,6 +17,6 @@ yarn-error.log*
 .pnpm-debug.log*
 *.bak
 
-# local env files
-.env
-.env*.local
+# env files
+.env*
+!.env.example
