@@ -1,9 +1,9 @@
 # dependencies
-/node_modules
-/vendor
+**/node_modules
+**/vendor
 
 # production
-**/styles/styles.css
+**/dist
 
 # docker
 /sql_data

@@ -1,20 +1,10 @@
 {
-  "name": "practica",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev:tailwind": "pnpm tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/styles.css --watch",
-    "dev:php": "./php-server.sh",
+    "dev:client": "cd client && pnpm dev",
+    "dev:server": "./php-server.sh",
     "build:compose": "node build-compose.js",
     "build": "docker compose up -d"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.4"
   }
 }
