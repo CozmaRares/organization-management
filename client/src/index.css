@@ -2,9 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-.font-inter {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-  font-variation-settings: "slnt" 0;
+@layer base {
+  :root {
+    --text: 22 4 5;
+    --background: 254 251 251;
+    --primary: 210 29 20;
+    --secondary: 13 92 197;
+    --accent: 63 6 167;
+  }
+  .dark {
+    --text: 251 233 234;
+    --background: 4 1 1;
+    --primary: 235 55 45;
+    --secondary: 58 138 242;
+    --accent: 144 88 249;
+  }
+
+  * {
+    @apply border-text/50;
+  }
+
+  body {
+    @apply bg-background text-text;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-secondary/30 hover:bg-secondary/40 transition-colors;
+  }
 }

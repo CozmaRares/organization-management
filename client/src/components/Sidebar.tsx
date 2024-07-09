@@ -42,7 +42,7 @@ const routes: Routes = Object.freeze({
 });
 
 const listStyles = "p-2 space-y-2";
-const itemStyles = "hover:bg-slate-600/50 transition-colors rounded-md";
+const itemStyles = "bg-background card rounded-md";
 const linkStyles = "block w-full p-3";
 
 export default function Sidebar({ className }: Props) {
@@ -66,7 +66,7 @@ export default function Sidebar({ className }: Props) {
               <ul
                 className={cn(
                   listStyles,
-                  "pointer-events-none absolute left-3/4 top-0 z-10 rounded-md border-2 border-white/50 bg-slate-950 opacity-0",
+                  "pointer-events-none absolute left-3/4 top-0 z-10 rounded-md border-2 bg-background opacity-0",
                   "group-hover:pointer-events-auto group-hover:left-[90%] group-hover:opacity-100",
                   "transition-[left,opacity]",
                 )}

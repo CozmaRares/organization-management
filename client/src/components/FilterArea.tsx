@@ -18,15 +18,18 @@ export default function FilterArea({ className }: Props) {
       <h2 className="mb-3 text-lg">Filtre</h2>
       <ul className="flex flex-row gap-2">
         {filters.map(filter => (
-          <li className="flex flex-row items-center gap-1 rounded-full bg-slate-500/30 py-1 pl-2">
+          <li
+            key={filter}
+            className="card flex flex-row items-center gap-1 rounded-full p-1 pl-3"
+          >
             {filter}
-            <button className="scale-75 rounded-full p-1 transition-colors hover:bg-black/50">
+            <button className="scale-75 rounded-full p-1 transition-colors hover:bg-background/40">
               <X />
             </button>
           </li>
         ))}
       </ul>
-      <button className="col-start-2 hover:bg-slate-500/40 transition-colors row-span-full flex flex-col self-center rounded-lg bg-slate-500/30 p-2">
+      <button className="card col-start-2 row-span-full flex flex-col self-center rounded-lg p-2">
         <span>Schimba</span>
         <span>filtrele</span>
       </button>
