@@ -2,24 +2,16 @@
 
 require "bootstrap.php";
 
-use Server\Env;
+use Server\ConnectionFactory;
+use Server\DAO\Employee;
 
-$env = new Env(".env.local");
+$conn = ConnectionFactory::newConnection();
 
-$host = $env->get("MYSQL_HOST");
-$username = "root";
-$password = $env->get("MYSQL_ROOT_PASSWORD");
-$dbname = $env->get("MYSQL_DATABASE");
-$port = $env->get("MYSQL_PORT");
+$e = Employee::findByID($conn, "2");
 
-$conn = new mysqli($host, $username, $password, $dbname, $port);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connection successful";
-}
+echo "Name: " . $e->getName();
+echo "\nPosition: " . $e->getPosition();
+echo "\nSalary: " . $e->getSalary();
+echo "\n";
 
 $conn->close();
-
-echo "\n";
