@@ -3,15 +3,20 @@
 require "bootstrap.php";
 
 use Server\ConnectionFactory;
-use Server\DAO\Employee;
+use Server\DAO\EmployeeDAO;
+use Server\Database\Query\SelectQueryBuilder;
 
 $conn = ConnectionFactory::newConnection();
 
-$e = Employee::findByID($conn, "2");
+$builder = (new SelectQueryBuilder())->where(EmployeeDAO::COLUMNS["id"] . " = 1");
 
-echo "Name: " . $e->getName();
-echo "\nPosition: " . $e->getPosition();
-echo "\nSalary: " . $e->getSalary();
-echo "\n";
+$e = EmployeeDAO::find($conn, $builder);
+
+foreach ($e as  $emp) {
+    echo "Name: " . $emp->getName();
+    echo "\nPosition: " . $emp->getPosition();
+    echo "\nSalary: " . $emp->getSalary();
+    echo "\n";
+}
 
 $conn->close();
