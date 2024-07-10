@@ -1,19 +1,7 @@
 {
-    "name": "raru/org-management",
-    "type": "project",
     "autoload": {
         "psr-4": {
-            "Raru\\OrgManagement\\": "src/"
+            "Server\\": "server/"
         }
-    },
-    "authors": [
-        {
-            "name": "Cozma Rares",
-            "email": "cozmarares11@gmail.com"
-        }
-    ],
-    "require": {
-        "propel/propel": "~2.0@beta",
-        "monolog/monolog": "^3.7"
     }
 }
