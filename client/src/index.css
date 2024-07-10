@@ -29,6 +29,6 @@
 
 @layer components {
   .card {
-    @apply bg-secondary/30 hover:bg-secondary/40 transition-colors;
+    @apply bg-secondary/30 transition-colors hover:bg-secondary/40;
   }
 }

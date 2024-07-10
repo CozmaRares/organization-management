@@ -18,8 +18,8 @@ export default function Shortcuts({ className }: Props) {
   ) as string[];
 
   return (
-    <div className={cn("flex flex-row items-center", className)}>
-      <ul className="flex flex-grow flex-row gap-2">
+    <div className={cn("flex flex-row items-center gap-2", className)}>
+      <ul className="contents">
         {shortcuts.map(([path, name]) => (
           <li key={path}>
             <Link
@@ -31,7 +31,9 @@ export default function Shortcuts({ className }: Props) {
           </li>
         ))}
       </ul>
-      <button className="card rounded-lg p-2">Modifica scurtaturile</button>
+      <button className="card ml-auto rounded-lg p-2">
+        Modifica scurtaturile
+      </button>
     </div>
   );
 }
