@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Server;
+namespace Server\Database;
 
 use mysqli;
+use Server\Env;
 
 const ENV_FILE = ".env.local";
 

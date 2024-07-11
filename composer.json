@@ -1,5 +1,8 @@
 {
     "autoload": {
+          "files": [
+            "server/Database/Query/Operators.php"
+        ],
         "psr-4": {
             "Server\\": "server/"
         }
