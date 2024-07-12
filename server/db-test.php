@@ -6,13 +6,20 @@ use Server\DAO\EmployeeDAO;
 use Server\Database\ConnectionFactory;
 use Server\Database\Query\SelectQueryBuilder;
 
+use function Server\Database\Query\_and;
 use function Server\Database\Query\_eq;
 
 $conn = ConnectionFactory::newConnection();
 
-$builder = (new SelectQueryBuilder())->where(_eq(EmployeeDAO::COLUMNS["id"], "1"))
+$builder = (new SelectQueryBuilder())
     ->addCol(EmployeeDAO::COLUMNS["name"])
-    ->addCol(EmployeeDAO::COLUMNS["salary"]);
+    ->addCol(EmployeeDAO::COLUMNS["salary"])
+    ->where(
+        _and(
+            _eq(EmployeeDAO::COLUMNS["id"], "1"),
+            _eq(EmployeeDAO::COLUMNS["salary"], "75000"),
+        )
+    );
 
 $e = EmployeeDAO::find($conn, $builder);
 

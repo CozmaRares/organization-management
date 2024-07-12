@@ -1,7 +1,8 @@
 {
     "autoload": {
           "files": [
-            "server/Database/Query/Operators.php"
+            "server/Database/Query/Operators.php",
+            "server/Database/ConnectionFactory.php"
         ],
         "psr-4": {
             "Server\\": "server/"

@@ -46,7 +46,7 @@ class Employee {
 
     public function setSalary(float $salary): void {
         if ($salary < 0) {
-            throw new \InvalidArgumentException('Salary cannot be negative.');
+            throw new \InvalidArgumentException("Salary cannot be negative.");
         }
         $this->salary = $salary;
     }

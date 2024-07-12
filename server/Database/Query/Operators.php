@@ -6,16 +6,16 @@ namespace Server\Database\Query;
 
 // LOGICAL ==============
 
-function _and(string ...$cols): string {
-    return join(" and ", $cols);
+function _and(string ...$vals): string {
+    return "(" . join(") and (", $vals) . ")";
 }
 
-function _or(string ...$cols): string {
-    return join(" or ", $cols);
+function _or(string ...$vals): string {
+    return "(" . join(") or (", $vals) . ")";
 }
 
-function _not(string $col): string {
-    return "not ($col)";
+function _not(string $val): string {
+    return "not ($val)";
 }
 
 // COMPARISON ==============
