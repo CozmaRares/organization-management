@@ -125,9 +125,9 @@ export default function Sidebar({ className }: Props) {
       <div className="flex flex-row justify-center gap-3">
         <Link
           to="/settings"
-          className="card rounded-lg p-2"
+          className="card group rounded-lg p-2"
         >
-          <Settings />
+          <Settings className="transition-transform group-hover:rotate-180" />
         </Link>
         <ThemeSwitch />
       </div>
