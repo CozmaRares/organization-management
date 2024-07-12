@@ -9,10 +9,10 @@ class Employee {
     private $salary;
 
     public function __construct(
-        string $id,
-        string $name,
-        string $position,
-        float $salary
+        ?string $id,
+        ?string $name,
+        ?string $position,
+        ?float $salary
     ) {
         $this->id = $id;
         $this->name = $name;

@@ -50,7 +50,7 @@ const routes: Routes = Object.freeze({
     icon: <Truck />,
   },
   "/clienti": {
-    text: "Clients",
+    text: "Clienti",
     icon: <Users />,
   },
   "/facturi": {

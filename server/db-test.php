@@ -10,13 +10,15 @@ use function Server\Database\Query\_eq;
 
 $conn = ConnectionFactory::newConnection();
 
-$builder = (new SelectQueryBuilder())->where(_eq(EmployeeDAO::COLUMNS["id"], "1"));
+$builder = (new SelectQueryBuilder())->where(_eq(EmployeeDAO::COLUMNS["id"], "1"))
+    ->addCol(EmployeeDAO::COLUMNS["name"])
+    ->addCol(EmployeeDAO::COLUMNS["salary"]);
 
 $e = EmployeeDAO::find($conn, $builder);
 
 foreach ($e as  $emp) {
     echo "Name: " . $emp->getName();
-    echo "\nPosition: " . $emp->getPosition();
+    /*echo "\nPosition: " . $emp->getPosition();*/
     echo "\nSalary: " . $emp->getSalary();
     echo "\n";
 }
