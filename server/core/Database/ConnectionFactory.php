@@ -35,7 +35,7 @@ class ConnectionFactory {
 
 class Connection extends mysqli {
     public function runQuery(string $query) {
-        Logger::log("Running query: $query");
+        Logger::info("Running query: $query");
 
         return $this->query($query);
     }

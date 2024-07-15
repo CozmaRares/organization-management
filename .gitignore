@@ -5,6 +5,7 @@
 # production
 **/dist
 **/*.gen.ts
+**/error.log
 
 # docker
 /sql_data
