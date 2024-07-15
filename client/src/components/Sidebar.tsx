@@ -41,18 +41,9 @@ type Routes = Partial<
 >;
 
 const routes: Routes = Object.freeze({
-  "/": {
-    text: "Home",
-    icon: <House />,
-  },
-  "/furnizori": {
-    text: "Furnizori",
-    icon: <Truck />,
-  },
-  "/clienti": {
-    text: "Clienti",
-    icon: <Users />,
-  },
+  "/": { text: "Home", icon: <House /> },
+  "/furnizori": { text: "Furnizori", icon: <Truck /> },
+  "/clienti": { text: "Clienti", icon: <Users /> },
   "/facturi": {
     text: "Facturi",
     icon: <ReceiptText />,

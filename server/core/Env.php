@@ -8,7 +8,7 @@ class Env {
     private $env;
 
     function __construct(string $file) {
-        $this->env = __DIR__ . "/../$file";
+        $this->env = __DIR__ . "/../../$file";
         $this->env = parse_ini_file($this->env);
     }
 

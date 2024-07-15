@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -o errexit -o noclobber -o nounset
+set -o errexit -o nounset
 
 env_file="./.env.local"
 compose_file="./docker-compose.yaml";
@@ -27,7 +27,6 @@ services:
             org-management:
                 aliases:
                 - mysql
-
         volumes:
             - ./sql_data:/var/lib/mysql
 
@@ -44,4 +43,21 @@ services:
             org-management:
                 aliases:
                 - phpmyadmin
+
+    # FIXME: mysqli not found
+    # apache:
+    #     build:
+    #         context: .
+    #         dockerfile: Dockerfile
+    #     ports:
+    #         - 6969:80
+    #     networks:
+    #         org-management:
+    #             aliases:
+    #             - apache
+    #     volumes:
+    #       - ./server:/var/www/html
+    #       - ./vendor:/var/www/vendor
+    #     depends_on:
+    #         - mysql
 EOF

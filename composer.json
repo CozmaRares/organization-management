@@ -1,11 +1,11 @@
 {
     "autoload": {
           "files": [
-            "server/Database/Query/Operators.php",
-            "server/Database/ConnectionFactory.php"
+            "server/core/Database/Query/Operators.php",
+            "server/core/Database/ConnectionFactory.php"
         ],
         "psr-4": {
-            "Server\\": "server/"
+            "Server\\": "server/core"
         }
     }
 }
