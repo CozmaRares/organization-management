@@ -44,20 +44,18 @@ services:
                 aliases:
                 - phpmyadmin
 
-    # FIXME: mysqli not found
-    # apache:
-    #     build:
-    #         context: .
-    #         dockerfile: Dockerfile
-    #     ports:
-    #         - 6969:80
-    #     networks:
-    #         org-management:
-    #             aliases:
-    #             - apache
-    #     volumes:
-    #       - ./server:/var/www/html
-    #       - ./vendor:/var/www/vendor
-    #     depends_on:
-    #         - mysql
+    apache:
+        build: .
+        ports:
+            - 6969:80
+        networks:
+            org-management:
+                aliases:
+                - apache
+        volumes:
+          - ./html:/var/www/html
+          - ./vendor:/var/www/vendor
+          - ./server:/var/www/server
+        depends_on:
+            - mysql
 EOF

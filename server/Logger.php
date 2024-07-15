@@ -3,7 +3,7 @@
 namespace Server;
 
 class Logger {
-    private static $file = "../../error.log";
+    private static $file = "../error.log";
 
     public static function setFile($file) {
         Logger::$file = $file;
