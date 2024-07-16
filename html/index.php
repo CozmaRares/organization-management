@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require "../server/bootstrap.php";
 
 use Server\DAO\EmployeeDAO;
@@ -9,7 +11,7 @@ use Bramus\Router\Router;
 
 $router = new Router();
 
-$router->get("/test", function () {
+$router->get("/api/test", function () {
     $conn = ConnectionFactory::newConnection();
 
     $builder = new SelectQueryBuilder();

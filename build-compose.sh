@@ -2,10 +2,27 @@
 
 set -o errexit -o nounset
 
-env_file="./.env.local"
+env_file="./.env"
 compose_file="./docker-compose.yaml";
 
 source "$env_file"
+
+if [[ $ENVIRONMENT == "development" ]]; then
+    VOLUMES=$(cat <<EOF
+
+        volumes:
+            - ./html:/var/www/html
+            - ./vendor:/var/www/vendor
+            - ./server:/var/www/server
+            - ./.env:/var/www/.env
+            - ./apache2.conf:/etc/apache2/apache2.conf
+EOF
+)
+    TARGET="base"
+else
+    VOLUMES=""
+    TARGET="build"
+fi
 
 cat <<EOF > "$compose_file"
 networks:
@@ -45,19 +62,18 @@ services:
             - mysql
 
     apache:
-        build: .
+        build:
+            context: .
+            target: ${TARGET}
         ports:
             - 6969:80
-        volumes:
-          - ./html:/var/www/html
-          - ./vendor:/var/www/vendor
-          - ./server:/var/www/server
-          - ./.env.local:/var/www/.env.local
-          - ./apache2.conf:/etc/apache2/apache2.conf
+        ${VOLUMES}
         networks:
             org-management:
                 aliases:
                 - apache
         depends_on:
             - mysql
+        environment:
+            - ENVIRONMENT=${ENVIRONMENT}
 EOF

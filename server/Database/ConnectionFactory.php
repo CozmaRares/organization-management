@@ -8,7 +8,7 @@ use mysqli;
 use Server\Env;
 use Server\Logger;
 
-const ENV_FILE = ".env.local";
+const ENV_FILE = ".env";
 
 class ConnectionFactory {
     private function __construct() {
