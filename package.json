@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "scripts": {
     "dev:client": "cd client && pnpm dev",
-    "dev:server": "docker compose up --build -d",
-    "build:compose": "node build-compose.js",
     "format": "cd client && pnpm format"
   }
 }

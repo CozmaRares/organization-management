@@ -53,6 +53,7 @@ services:
           - ./vendor:/var/www/vendor
           - ./server:/var/www/server
           - ./.env.local:/var/www/.env.local
+          - ./apache2.conf:/etc/apache2/apache2.conf
         networks:
             org-management:
                 aliases:
