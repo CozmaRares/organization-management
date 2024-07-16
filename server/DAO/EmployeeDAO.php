@@ -6,8 +6,9 @@ namespace Server\DAO;
 
 use Server\Models\Employee;
 use Server\Database\Query\SelectQueryBuilder;
-
 use Server\Database\Connection;
+
+use function Server\Utils\getNullish;
 
 class EmployeeDAO implements DAO {
     public const TABLE_NAME = "Employees";
@@ -19,6 +20,15 @@ class EmployeeDAO implements DAO {
     ];
 
     private function __construct() {
+    }
+
+    private static function createEmployee(array $data) {
+        return new Employee(
+            getNullish($data, EmployeeDAO::COLUMNS["id"]),
+            getNullish($data, EmployeeDAO::COLUMNS["name"]),
+            getNullish($data, EmployeeDAO::COLUMNS["position"]),
+            (float) getNullish($data, EmployeeDAO::COLUMNS["salary"]),
+        );
     }
 
     public static function findByID(Connection $connection, string $id) {
@@ -36,12 +46,7 @@ class EmployeeDAO implements DAO {
 
         $row = $result->fetch_assoc();
 
-        return new Employee(
-            $row[EmployeeDAO::COLUMNS["id"]],
-            $row[EmployeeDAO::COLUMNS["name"]],
-            $row[EmployeeDAO::COLUMNS["position"]],
-            (float) $row[EmployeeDAO::COLUMNS["salary"]],
-        );
+        return EmployeeDAO::createEmployee($row);
     }
 
     public static function find(Connection $connection, SelectQueryBuilder $builder) {
@@ -53,12 +58,7 @@ class EmployeeDAO implements DAO {
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $results[] = new Employee(
-                    $row[EmployeeDAO::COLUMNS["id"]],
-                    $row[EmployeeDAO::COLUMNS["name"]],
-                    $row[EmployeeDAO::COLUMNS["position"]],
-                    (float) $row[EmployeeDAO::COLUMNS["salary"]],
-                );
+                $results[] = EmployeeDAO::createEmployee($row);
             }
         }
 

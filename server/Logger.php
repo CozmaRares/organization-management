@@ -3,7 +3,7 @@
 namespace Server;
 
 class Logger {
-    private static $file = "../error.log";
+    private static $file = "default.log";
 
     public static function setFile($file) {
         Logger::$file = $file;
@@ -27,6 +27,7 @@ class Logger {
 
     private static function log($message, $level) {
         $message = date("d/m/Y H:i:s") . " [$level] - $message" . PHP_EOL;
-        file_put_contents(Logger::$file, $message, FILE_APPEND);
+        $file = "../logs/" . Logger::$file;
+        file_put_contents($file, $message, FILE_APPEND);
     }
 }

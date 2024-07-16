@@ -23,17 +23,15 @@ services:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
         ports:
             - ${MYSQL_PORT}:3306
+        volumes:
+            - ./sql_data:/var/lib/mysql
         networks:
             org-management:
                 aliases:
                 - mysql
-        volumes:
-            - ./sql_data:/var/lib/mysql
 
     phpmyadmin:
         image: phpmyadmin:5.2.0
-        links:
-            - mysql
         environment:
             PMA_HOST: mysql
             PMA_PORT: 3306
@@ -43,19 +41,22 @@ services:
             org-management:
                 aliases:
                 - phpmyadmin
+        depends_on:
+            - mysql
 
     apache:
         build: .
         ports:
             - 6969:80
-        networks:
-            org-management:
-                aliases:
-                - apache
         volumes:
           - ./html:/var/www/html
           - ./vendor:/var/www/vendor
           - ./server:/var/www/server
+          - ./.env.local:/var/www/.env.local
+        networks:
+            org-management:
+                aliases:
+                - apache
         depends_on:
             - mysql
 EOF
