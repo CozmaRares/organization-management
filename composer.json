@@ -8,5 +8,8 @@
         "psr-4": {
             "Server\\": "server/"
         }
+    },
+    "require": {
+        "bramus/router": "^1.6"
     }
 }
