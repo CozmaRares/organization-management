@@ -13,6 +13,3 @@ COPY ./vendor /var/www/vendor
 COPY ./server /var/www/server
 COPY ./.env /var/www/.env
 COPY ./apache2.conf /etc/apache2/apache2.conf
-
-# FIX:
-# COPY ./client/dist /var/www/html

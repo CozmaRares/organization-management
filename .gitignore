@@ -3,9 +3,11 @@
 **/vendor
 
 # production
-**/dist
 **/*.gen.ts
 **/logs
+html
+!html/.htaccess
+!html/index.php
 
 # docker
 /sql_data
