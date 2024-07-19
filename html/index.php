@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require "../server/bootstrap.php";
+require __DIR__ . "/../server/bootstrap.php";
 
 use Server\DAO\EmployeeDAO;
 use Server\Database\ConnectionFactory;
@@ -11,21 +11,33 @@ use Bramus\Router\Router;
 
 $router = new Router();
 
-$router->get("/api/test", function () {
-    $conn = ConnectionFactory::newConnection();
+$router->mount('/api', function () use ($router) {
 
-    $builder = new SelectQueryBuilder();
+    $router->get('/', function () {
+        echo "hello from api";
+    });
 
-    $e = EmployeeDAO::find($conn, $builder);
+    $router->get("/test", function () {
+        $conn = ConnectionFactory::newConnection();
 
-    foreach ($e as  $emp) {
-        echo "Name: " . $emp->getName();
-        echo "\nSalary: " . $emp->getSalary();
-        echo "\n";
-    }
+        $builder = new SelectQueryBuilder();
 
-    $conn->close();
+        $e = EmployeeDAO::find($conn, $builder);
+
+        foreach ($e as  $emp) {
+            echo "Name: " . $emp->getName();
+            echo "\nSalary: " . $emp->getSalary();
+            echo "\n";
+        }
+
+        $conn->close();
+    });
+
+    /*$router->get('/(\d+)', function($id) {*/
+    /*    echo 'id id ' . htmlentities($id);*/
+    /*});*/
 });
+
 
 
 $router->run();
