@@ -9,6 +9,7 @@ import {
   Handshake,
   House,
   ListCheck,
+  NotebookTabs,
   PiggyBank,
   ReceiptText,
   Settings,
@@ -43,7 +44,13 @@ type Routes = Partial<
 const routes: Routes = Object.freeze({
   "/": { text: "Home", icon: <House /> },
   "/furnizori": { text: "Furnizori", icon: <Truck /> },
-  "/clienti": { text: "Clienti", icon: <Users /> },
+  "/clienti": {
+    text: "Clienti",
+    icon: <Users />,
+    nested: {
+      "/clienti/contracte": { text: "Contracte", icon: <NotebookTabs /> },
+    },
+  },
   "/facturi": {
     text: "Facturi",
     icon: <ReceiptText />,

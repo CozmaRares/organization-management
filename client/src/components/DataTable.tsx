@@ -69,14 +69,16 @@ export default function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex flex-row items-center justify-between gap-2 py-4">
-        <div className="flex flex-row flex-wrap gap-2">{filters(table)}</div>
+        {filters && (
+          <div className="flex flex-row flex-wrap gap-2">{filters(table)}</div>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
               className="ml-auto mt-auto"
             >
-              Columns
+              Coloane
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -111,7 +113,7 @@ export default function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          Inapoi
         </Button>
         <Button
           variant="outline"
@@ -119,7 +121,7 @@ export default function DataTable<TData, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          Inainte
         </Button>
       </div>
     </div>
@@ -140,7 +142,7 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
             colSpan={columns.length}
             className="text-center"
           >
-            No columns.
+            Nici o coloana.
           </TableHead>
         </TableRow>
       </Table>
@@ -196,7 +198,7 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
               colSpan={columns.length}
               className="text-center"
             >
-              No results.
+              Nici un rezultat.
             </TableCell>
           </TableRow>
         )}
