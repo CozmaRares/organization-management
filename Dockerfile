@@ -13,3 +13,8 @@ COPY ./vendor /var/www/vendor
 COPY ./server /var/www/server
 COPY ./.env /var/www/.env
 COPY ./apache2.conf /etc/apache2/apache2.conf
+
+# TODO: load schema
+# COPY ./db /var/db
+# RUN php /var/db/load_schama.php
+# RM /var/db
