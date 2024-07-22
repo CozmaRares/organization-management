@@ -84,5 +84,6 @@ export const columns: ColumnDef<Payment>[] = [
         </DropdownMenu>
       );
     },
+    size: 70,
   },
 ];

@@ -41,6 +41,8 @@ export default function DataTable<TData, TValue>({
 }: Props<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  // TODO: store filters in search params
+  // https://tanstack.com/table/latest/docs/framework/react/examples/query-router-search-params
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -57,17 +59,22 @@ export default function DataTable<TData, TValue>({
       columnVisibility,
       columnFilters,
     },
+    defaultColumn: {
+      minSize: 0,
+      size: Number.MAX_SAFE_INTEGER,
+      maxSize: Number.MAX_SAFE_INTEGER,
+    },
   });
 
   return (
     <div>
       <div className="flex flex-row items-center justify-between gap-2 py-4">
-        <div className="flex flex-row gap-2">{filters(table)}</div>
+        <div className="flex flex-row flex-wrap gap-2">{filters(table)}</div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="ml-auto"
+              className="ml-auto mt-auto"
             >
               Columns
             </Button>
@@ -146,7 +153,12 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map(header => {
               return (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  style={{
+                    width: computeCellSize(header.getSize()),
+                  }}
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -167,7 +179,12 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
               data-state={row.getIsSelected() && "selected"}
             >
               {row.getVisibleCells().map(cell => (
-                <TableCell key={cell.id}>
+                <TableCell
+                  key={cell.id}
+                  style={{
+                    width: computeCellSize(cell.column.getSize()),
+                  }}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}
@@ -186,4 +203,10 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
       </TableBody>
     </Table>
   );
+}
+
+function computeCellSize(size: number) {
+  if (size == Number.MAX_SAFE_INTEGER) return "auto";
+
+  return size;
 }
