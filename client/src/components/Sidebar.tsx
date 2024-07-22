@@ -1,5 +1,5 @@
 import { routeTree } from "@/routeTree.gen";
-import { Link, ParseRoute } from "@tanstack/react-router";
+import { Link, ParseRoute, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import ThemeSwitch from "@/components/ThemeSwitch";
 import {
@@ -66,6 +66,8 @@ const iconStyles =
   "flex w-[2em] items-center justify-center transition-transform duration-300 group-hover/link:rotate-[360deg] group-hover/link:scale-[1.2]";
 
 export default function Sidebar({ className }: Props) {
+  const location = useRouterState({ select: s => s.location });
+
   return (
     <aside className={cn("flex flex-col justify-between p-3", className)}>
       <nav>
@@ -75,6 +77,10 @@ export default function Sidebar({ className }: Props) {
               key={path}
               className={cn(itemStyles, {
                 "group/item relative": nested !== undefined,
+                "bg-primary/30":
+                  path == "/"
+                    ? location.pathname == "/"
+                    : location.pathname.startsWith(path),
               })}
             >
               <Link
