@@ -72,7 +72,7 @@ export default function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex flex-row items-center justify-between gap-2 py-4">
-        <div className="flex flex-row flex-wrap gap-2">
+        <div className="grid grid-cols-5 gap-2">
           {columns.map(column => {
             const meta = column.meta as FilterColumnMeta<TData, TValue>;
 

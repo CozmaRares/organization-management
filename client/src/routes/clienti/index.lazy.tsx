@@ -21,10 +21,32 @@ const columns: ColumnDef<Client>[] = [
   {
     accessorKey: "nume",
     header: "Nume",
+    meta: {
+      filterComponent: (table: Table<unknown>) => (
+        <Input
+          placeholder="Filtreaza numele..."
+          value={(table.getColumn("nume")?.getFilterValue() as string) ?? ""}
+          onChange={event =>
+            table.getColumn("nume")?.setFilterValue(event.target.value)
+          }
+        />
+      ),
+    },
   },
   {
     accessorKey: "adresa",
     header: "Adresa",
+    meta: {
+      filterComponent: (table: Table<unknown>) => (
+        <Input
+          placeholder="Filtreaza adresa..."
+          value={(table.getColumn("adresa")?.getFilterValue() as string) ?? ""}
+          onChange={event =>
+            table.getColumn("adresa")?.setFilterValue(event.target.value)
+          }
+        />
+      ),
+    },
   },
   {
     accessorKey: "cif",
@@ -35,12 +57,11 @@ const columns: ColumnDef<Client>[] = [
     meta: {
       filterComponent: (table: Table<unknown>) => (
         <Input
-          placeholder="Filter CIF..."
+          placeholder="Filtreaza CIF..."
           value={(table.getColumn("cif")?.getFilterValue() as string) ?? ""}
           onChange={event =>
             table.getColumn("cif")?.setFilterValue(event.target.value)
           }
-          className="max-w-[200px]"
         />
       ),
     },
@@ -48,18 +69,31 @@ const columns: ColumnDef<Client>[] = [
   {
     accessorKey: "punct_lucru",
     header: "Punct de Lucru",
+    meta: {
+      filterComponent: (table: Table<unknown>) => (
+        <Input
+          placeholder="Filtreaza punct de lucru..."
+          value={
+            (table.getColumn("punct_lucru")?.getFilterValue() as string) ?? ""
+          }
+          onChange={event =>
+            table.getColumn("punct_lucru")?.setFilterValue(event.target.value)
+          }
+        />
+      ),
+    },
   },
 ];
 
 const data = [
   {
-    nume: "a",
+    nume: "aa",
     adresa: "a",
     cif: "12345",
     punct_lucru: "a",
   },
   {
-    nume: "a",
+    nume: "bb",
     adresa: "a",
     cif: "23456",
     punct_lucru: "a",
