@@ -10,6 +10,7 @@ import {
   SortingState,
   getSortedRowModel,
   Table as TanStackTable,
+  ColumnMeta,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -31,13 +32,15 @@ import {
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filters: (table: TanStackTable<TData>) => React.ReactNode;
 };
+
+interface FilterColumnMeta<TData, TValue> extends ColumnMeta<TData, TValue> {
+  filterComponent?: (table: TanStackTable<TData>) => JSX.Element;
+}
 
 export default function DataTable<TData, TValue>({
   columns,
   data,
-  filters,
 }: Props<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -69,9 +72,14 @@ export default function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex flex-row items-center justify-between gap-2 py-4">
-        {filters && (
-          <div className="flex flex-row flex-wrap gap-2">{filters(table)}</div>
-        )}
+        <div className="flex flex-row flex-wrap gap-2">
+          {columns.map(column => {
+            const meta = column.meta as FilterColumnMeta<TData, TValue>;
+
+            if (!meta?.filterComponent) return null;
+            return meta.filterComponent(table);
+          })}
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

@@ -4,7 +4,7 @@
 import DataTable from "@/components/DataTable";
 import { Input } from "@/components/ui/input";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Table } from "@tanstack/react-table";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -31,6 +31,18 @@ const columns: ColumnDef<Client>[] = [
     header: "CIF",
     filterFn: (row, _, filterValue) => {
       return row.original.cif.startsWith(filterValue);
+    },
+    meta: {
+      filterComponent: (table: Table<unknown>) => (
+        <Input
+          placeholder="Filter CIF..."
+          value={(table.getColumn("cif")?.getFilterValue() as string) ?? ""}
+          onChange={event =>
+            table.getColumn("cif")?.setFilterValue(event.target.value)
+          }
+          className="max-w-[200px]"
+        />
+      ),
     },
   },
   {
@@ -59,16 +71,6 @@ function Page() {
     <DataTable
       columns={columns}
       data={data}
-      filters={table => (
-        <Input
-          placeholder="Filter CIF..."
-          value={(table.getColumn("cif")?.getFilterValue() as string) ?? ""}
-          onChange={event =>
-            table.getColumn("cif")?.setFilterValue(event.target.value)
-          }
-          className="max-w-[200px]"
-        />
-      )}
     />
   );
 }
