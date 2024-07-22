@@ -11,6 +11,7 @@ import {
   getSortedRowModel,
   Table as TanStackTable,
   ColumnMeta,
+  RowData,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -28,14 +29,21 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { RankingInfo } from "@tanstack/match-sorter-utils";
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 };
 
-interface FilterColumnMeta<TData, TValue> extends ColumnMeta<TData, TValue> {
-  filterComponent?: (table: TanStackTable<TData>) => JSX.Element;
+declare module "@tanstack/react-table" {
+  interface FilterMeta {
+    itemRank?: RankingInfo;
+  }
+
+  interface ColumnMeta<TData extends RowData, TValue> {
+    filterComponent?: (table: TanStackTable<TData>) => React.ReactNode;
+  }
 }
 
 export default function DataTable<TData, TValue>({
@@ -74,7 +82,7 @@ export default function DataTable<TData, TValue>({
       <div className="flex flex-row items-center justify-between gap-2 py-4">
         <div className="grid grid-cols-5 gap-2">
           {columns.map(column => {
-            const meta = column.meta as FilterColumnMeta<TData, TValue>;
+            const meta = column.meta;
 
             if (!meta?.filterComponent) return null;
             return meta.filterComponent(table);
