@@ -46,7 +46,7 @@ export default function ThemeSwitch() {
   return (
     <button
       onClick={toggleTheme}
-      className="card rounded-lg p-2"
+      className="btn rounded-lg p-2"
     >
       {theme == "light" ? <Sun /> : <Moon />}
     </button>

@@ -9,13 +9,18 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-router": "^1.43.12",
+    "@tanstack/react-table": "^8.19.3",
     "@tanstack/router-devtools": "^1.43.12",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.403.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.4.0"
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@tanstack/router-plugin": "^1.43.12",

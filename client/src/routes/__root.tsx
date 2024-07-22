@@ -21,7 +21,7 @@ export const Route = createRootRoute({
         <Shortcuts className="col-span-full border-b p-3" />
         <Sidebar className="col-[span_var(--sidebar-cols)/span_var(--sidebar-cols)] col-start-1 row-start-2 row-end-4 border-r" />
         <FilterContextProvider>
-          <FilterArea className="col-[calc(var(--sidebar-cols)+1)/-1] row-start-2 border-b shadow-lg shadow-text/50" />
+          <FilterArea className="col-[calc(var(--sidebar-cols)+1)/-1] row-start-2 border-b shadow-lg shadow-foreground/10" />
           <div className="col-[calc(var(--sidebar-cols)+1)/-1] row-start-3 overflow-scroll p-4">
             <Outlet />
           </div>

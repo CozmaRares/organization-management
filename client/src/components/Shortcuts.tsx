@@ -24,14 +24,14 @@ export default function Shortcuts({ className }: Props) {
           <li key={path}>
             <Link
               to={`/${path}`}
-              className="card block min-w-[4ch] rounded-full px-2 py-1 text-center"
+              className="btn block min-w-[4ch] rounded-full px-2 py-1 text-center"
             >
               {name}
             </Link>
           </li>
         ))}
       </ul>
-      <button className="card ml-auto rounded-lg p-2">
+      <button className="btn ml-auto rounded-lg p-2">
         Modifica scurtaturile
       </button>
     </div>

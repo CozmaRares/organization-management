@@ -20,7 +20,7 @@ export default function FilterArea({ className }: Props) {
         {filters.map(filter => (
           <li
             key={filter}
-            className="card flex flex-row items-center gap-1 rounded-full p-1 pl-3"
+            className="btn flex flex-row items-center gap-1 rounded-full p-1 pl-3"
           >
             {filter}
             <button className="scale-75 rounded-full p-1 transition-colors hover:bg-background/40">
@@ -29,7 +29,7 @@ export default function FilterArea({ className }: Props) {
           </li>
         ))}
       </ul>
-      <button className="card col-start-2 row-span-full flex flex-col self-center rounded-lg p-2">
+      <button className="btn col-start-2 row-span-full flex flex-col self-center rounded-lg p-2">
         <span>Schimba</span>
         <span>filtrele</span>
       </button>

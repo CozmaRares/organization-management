@@ -60,7 +60,7 @@ const routes: Routes = Object.freeze({
 });
 
 const listStyles = "p-2 space-y-2";
-const itemStyles = "card bg-background rounded-md";
+const itemStyles = "btn bg-background rounded-md";
 const linkStyles = "block w-full p-3 flex flex-row gap-2 group/link";
 const iconStyles =
   "flex w-[2em] items-center justify-center transition-transform duration-300 group-hover/link:rotate-[360deg] group-hover/link:scale-[1.2]";
@@ -116,7 +116,7 @@ export default function Sidebar({ className }: Props) {
       <div className="flex flex-row justify-center gap-3">
         <Link
           to="/settings"
-          className="card group rounded-lg p-2"
+          className="btn group rounded-lg p-2"
         >
           <Settings className="transition-transform group-hover:rotate-180" />
         </Link>
