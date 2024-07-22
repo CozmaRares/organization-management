@@ -7,7 +7,17 @@ export const Route = createFileRoute("/payments")({
 });
 
 import { Payment, columns } from "@/components/payments/columns";
-import { DataTable } from "@/components/payments/data-table";
+import DataTable from "@/components/DataTable";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const data: Payment[] = [
   {
@@ -48,6 +58,43 @@ export default function DemoPage() {
       <DataTable
         columns={columns}
         data={data}
+        filters={table => (
+          <>
+            <Select
+              value={
+                (table.getColumn("status")?.getFilterValue() as string) ?? ""
+              }
+              onValueChange={value =>
+                value == "clear"
+                  ? table.getColumn("status")?.setFilterValue("")
+                  : table.getColumn("status")?.setFilterValue(value)
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select a status..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Status</SelectLabel>
+                  <SelectItem value="success">Success</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="failed">Failed</SelectItem>
+                  <SelectItem value="clear">All</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Input
+              placeholder="Filter emails..."
+              value={
+                (table.getColumn("email")?.getFilterValue() as string) ?? ""
+              }
+              onChange={event =>
+                table.getColumn("email")?.setFilterValue(event.target.value)
+              }
+              className="max-w-[200px]"
+            />
+          </>
+        )}
       />
     </div>
   );

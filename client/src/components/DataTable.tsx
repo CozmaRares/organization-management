@@ -11,6 +11,7 @@ import {
   useReactTable,
   SortingState,
   getSortedRowModel,
+  Table as TanStackTable,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -20,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -28,17 +29,18 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 
-interface DataTableProps<TData, TValue> {
+type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-}
+  filters: (table: TanStackTable<TData>) => React.ReactNode;
+};
 
-export function DataTable<TData, TValue>({
+export default function DataTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+  filters,
+}: Props<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -59,17 +61,12 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  console.log(columnFilters);
+
   return (
     <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={event =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+      <div className="flex flex-row items-center justify-between gap-2 py-4">
+        <div className="flex flex-row gap-2">{filters(table)}</div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -140,7 +137,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="text-center"
                 >
                   No results.
                 </TableCell>
