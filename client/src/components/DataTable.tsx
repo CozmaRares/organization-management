@@ -28,10 +28,12 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ReactNode } from "@tanstack/react-router";
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  footer?: ReactNode;
 };
 
 declare module "@tanstack/react-table" {
@@ -44,6 +46,7 @@ declare module "@tanstack/react-table" {
 export default function DataTable<TData, TValue>({
   columns,
   data,
+  footer,
 }: Props<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -78,7 +81,6 @@ export default function DataTable<TData, TValue>({
         <div className="grid grid-cols-5 gap-2">
           {columns.map(column => {
             const meta = column.meta;
-
             if (!meta?.filterComponent) return null;
             return meta.filterComponent(table);
           })}
@@ -117,12 +119,14 @@ export default function DataTable<TData, TValue>({
           columns={columns}
         />
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center gap-2 py-4">
+        <div>{footer}</div>
         <Button
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="ml-auto"
         >
           Inapoi
         </Button>
