@@ -10,7 +10,6 @@ import {
   SortingState,
   getSortedRowModel,
   Table as TanStackTable,
-  ColumnMeta,
   RowData,
 } from "@tanstack/react-table";
 import {
@@ -29,7 +28,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RankingInfo } from "@tanstack/match-sorter-utils";
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -37,10 +35,7 @@ type Props<TData, TValue> = {
 };
 
 declare module "@tanstack/react-table" {
-  interface FilterMeta {
-    itemRank?: RankingInfo;
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     filterComponent?: (table: TanStackTable<TData>) => React.ReactNode;
   }
