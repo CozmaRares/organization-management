@@ -3,15 +3,9 @@
 
 import DataTable from "@/components/DataTable";
 import { Input } from "@/components/ui/input";
+import { fuzzyFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import {
-  ColumnDef,
-  FilterFn,
-  SortingFn,
-  sortingFns,
-  Table,
-} from "@tanstack/react-table";
-import { rankItem, compareItems } from "@tanstack/match-sorter-utils";
+import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -22,29 +16,6 @@ type Client = {
   adresa: string;
   cif: string;
   punct_lucru: string;
-};
-
-const fuzzyFilter: FilterFn<Client> = (row, columnId, value, addMeta) => {
-  const itemRank = rankItem(row.getValue(columnId), value);
-
-  addMeta({
-    itemRank,
-  });
-
-  return itemRank.passed;
-};
-
-const fuzzySort: SortingFn<Client> = (rowA, rowB, columnId) => {
-  let dir = 0;
-
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!,
-    );
-  }
-
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 };
 
 const columns: ColumnDef<Client>[] = [
@@ -84,8 +55,7 @@ const columns: ColumnDef<Client>[] = [
   {
     accessorKey: "adresa",
     header: "Adresa",
-    filterFn: fuzzyFilter,
-    sortingFn: fuzzySort,
+    filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
       filterComponent: (table: Table<Client>) => (
         <Input
@@ -101,8 +71,7 @@ const columns: ColumnDef<Client>[] = [
   {
     accessorKey: "punct_lucru",
     header: "Punct de Lucru",
-    filterFn: fuzzyFilter,
-    sortingFn: fuzzySort,
+    filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
       filterComponent: (table: Table<Client>) => (
         <Input
