@@ -1,0 +1,56 @@
+import {
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ReactNode } from "react";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+
+type Props = {
+  title: string;
+  description?: ReactNode;
+  footer: ReactNode;
+  inputs: Array<{
+    id: string;
+    label: string;
+    inputType: "input" | "textarea";
+    defaultValue?: string;
+  }>;
+};
+
+export default function DialogContentDataForm({
+  title,
+  description,
+  footer,
+  inputs,
+}: Props) {
+  return (
+    <DialogContent className="max-w-[600px]">
+      <DialogHeader>
+        <DialogTitle>{title}</DialogTitle>
+        {description && <DialogDescription>{description}</DialogDescription>}
+      </DialogHeader>
+      <div className="grid grid-cols-2 gap-4 py-2">
+        {inputs.map(({ id, label, inputType, defaultValue }) => {
+          const Inp = inputType == "input" ? Input : Textarea;
+          return (
+            <div className="flex flex-col gap-2">
+              <Label htmlFor={id}>{label}</Label>
+              inputType
+              <Inp
+                id={id}
+                defaultValue={defaultValue}
+                placeholder={label}
+              />
+            </div>
+          );
+        })}
+      </div>
+      <DialogFooter>{footer}</DialogFooter>
+    </DialogContent>
+  );
+}

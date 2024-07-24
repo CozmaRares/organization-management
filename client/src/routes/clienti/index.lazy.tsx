@@ -15,15 +15,8 @@ import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import DialogContentDataForm from "@/components/DialogContentDataForm";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -150,49 +144,42 @@ const columns: ColumnDef<Client>[] = [
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* TODO: add a component to create the dialog content based on its props, make it general enough to be used in other tables */}
-            <DialogContent className="max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Date Client</DialogTitle>
-                <DialogDescription>
+            <DialogContentDataForm
+              title="Modifica Datele Clientului"
+              description={
+                <>
                   <p>Modifica datele clientului aici.</p>
                   <p>Da click pe salveaza cand ai terminat.</p>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid grid-cols-2 gap-4 py-2">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="cif">CIF</Label>
-                  <Input
-                    id="cif"
-                    defaultValue={client.cif}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="nume">Nume</Label>
-                  <Input
-                    id="nume"
-                    defaultValue={client.nume}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="adresa">Adresa</Label>
-                  <Textarea
-                    id="adresa"
-                    defaultValue={client.adresa}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="punct_lucru">Punct de Lucru</Label>
-                  <Textarea
-                    id="punct_lucru"
-                    defaultValue={client.punct_lucru}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit">Salveaza</Button>
-              </DialogFooter>
-            </DialogContent>
+                </>
+              }
+              footer={<Button type="submit">Salveaza</Button>}
+              inputs={[
+                {
+                  id: "cif",
+                  label: "CIF",
+                  inputType: "input",
+                  defaultValue: client.cif
+                },
+                {
+                  id: "nume",
+                  label: "Nume",
+                  inputType: "input",
+                  defaultValue: client.nume
+                },
+                {
+                  id: "adresa",
+                  label: "Adresa",
+                  inputType: "textarea",
+                  defaultValue: client.adresa
+                },
+                {
+                  id: "punct_lucru",
+                  label: "Punct de Lucru",
+                  inputType: "textarea",
+                  defaultValue: client.punct_lucru
+                },
+              ]}
+            />
 
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -255,44 +242,32 @@ function AddClient() {
           Adauga Client
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Adauga Client</DialogTitle>
-        </DialogHeader>
-        <div className="grid grid-cols-2 gap-4 py-2">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="cif">CIF</Label>
-            <Input
-              id="cif"
-              placeholder="CIF"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="nume">Nume</Label>
-            <Input
-              id="nume"
-              placeholder="Nume"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="adresa">Adresa</Label>
-            <Textarea
-              id="adresa"
-              placeholder="Adresa"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="punct_lucru">Punct de Lucru</Label>
-            <Textarea
-              id="punct_lucru"
-              placeholder="Punct de Lucru"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Adauga</Button>
-        </DialogFooter>
-      </DialogContent>
+      <DialogContentDataForm
+        title="Adauga Client"
+        footer={<Button type="submit">Adauga</Button>}
+        inputs={[
+          {
+            id: "cif",
+            label: "CIF",
+            inputType: "input",
+          },
+          {
+            id: "nume",
+            label: "Nume",
+            inputType: "input",
+          },
+          {
+            id: "adresa",
+            label: "Adresa",
+            inputType: "textarea",
+          },
+          {
+            id: "punct_lucru",
+            label: "Punct de Lucru",
+            inputType: "textarea",
+          },
+        ]}
+      />
     </Dialog>
   );
 }

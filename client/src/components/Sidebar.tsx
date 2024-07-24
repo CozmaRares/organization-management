@@ -6,11 +6,9 @@ import {
   Banknote,
   ClipboardMinus,
   Coins,
-  Handshake,
   House,
   ListCheck,
   NotebookTabs,
-  PiggyBank,
   ReceiptText,
   Settings,
   Truck,
@@ -54,11 +52,7 @@ const routes: Routes = Object.freeze({
   "/facturi": {
     text: "Facturi",
     icon: <ReceiptText />,
-    nested: {
-      // TODO:
-      "/clienti": { text: "Clienti", icon: <PiggyBank /> },
-      "/furnizori": { text: "Furnizori", icon: <Handshake /> },
-    },
+    nested: {},
   },
   "/cheltuieli": { text: "Cheltuieli", icon: <Coins /> },
   "/taskuri": { text: "Task-uri", icon: <ListCheck /> },
@@ -72,6 +66,7 @@ const linkStyles = "block w-full p-3 flex flex-row gap-2 group/link";
 const iconStyles =
   "flex w-[2em] items-center justify-center transition-transform duration-300 group-hover/link:rotate-[360deg] group-hover/link:scale-[1.2]";
 
+// TODO: refactor to accordion
 export default function Sidebar({ className }: Props) {
   const location = useRouterState({ select: s => s.location });
 
@@ -97,7 +92,7 @@ export default function Sidebar({ className }: Props) {
                 <span className={iconStyles}>{icon}</span>
                 {text}
               </Link>
-              {nested && (
+              {nested && Object.entries(nested).length > 0 && (
                 <ul
                   className={cn(
                     listStyles,
