@@ -13,10 +13,7 @@ import { fuzzyFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
-import {
-  Dialog,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +25,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import DialogContentDataForm from "@/components/DialogContentDataForm";
+import DialogContentDataForm, {
+  DialogContentDataFormProps,
+} from "@/components/DialogContentDataForm";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -40,6 +39,29 @@ type Client = {
   cif: string;
   punct_lucru: string;
 };
+
+const dialogContentInputs = [
+  {
+    id: "cif",
+    label: "CIF",
+    inputType: "input",
+  },
+  {
+    id: "nume",
+    label: "Nume",
+    inputType: "input",
+  },
+  {
+    id: "adresa",
+    label: "Adresa",
+    inputType: "textarea",
+  },
+  {
+    id: "punct_lucru",
+    label: "Punct de Lucru",
+    inputType: "textarea",
+  },
+] as const satisfies DialogContentDataFormProps["inputs"];
 
 const columns: ColumnDef<Client>[] = [
   {
@@ -153,32 +175,10 @@ const columns: ColumnDef<Client>[] = [
                 </>
               }
               footer={<Button type="submit">Salveaza</Button>}
-              inputs={[
-                {
-                  id: "cif",
-                  label: "CIF",
-                  inputType: "input",
-                  defaultValue: client.cif
-                },
-                {
-                  id: "nume",
-                  label: "Nume",
-                  inputType: "input",
-                  defaultValue: client.nume
-                },
-                {
-                  id: "adresa",
-                  label: "Adresa",
-                  inputType: "textarea",
-                  defaultValue: client.adresa
-                },
-                {
-                  id: "punct_lucru",
-                  label: "Punct de Lucru",
-                  inputType: "textarea",
-                  defaultValue: client.punct_lucru
-                },
-              ]}
+              inputs={dialogContentInputs.map(inp => ({
+                ...inp,
+                defaultValue: client[inp.id],
+              }))}
             />
 
             <AlertDialogContent>
@@ -204,20 +204,22 @@ const columns: ColumnDef<Client>[] = [
   },
 ];
 
-const data = [
-  {
-    nume: "aa",
-    adresa: "a",
-    cif: "12345",
-    punct_lucru: "Aiud, Alba",
-  },
-  {
-    nume: "bb",
-    adresa: "a",
-    cif: "23456",
-    punct_lucru: "Gladiolelor, Alba Iulia",
-  },
-];
+const data = new Array(1)
+  .fill([
+    {
+      nume: "aa",
+      adresa: "a",
+      cif: "12345",
+      punct_lucru: "Aiud, Alba",
+    },
+    {
+      nume: "bb",
+      adresa: "a",
+      cif: "23456",
+      punct_lucru: "Gladiolelor, Alba Iulia",
+    },
+  ])
+  .flat();
 
 function Page() {
   return (
@@ -245,28 +247,7 @@ function AddClient() {
       <DialogContentDataForm
         title="Adauga Client"
         footer={<Button type="submit">Adauga</Button>}
-        inputs={[
-          {
-            id: "cif",
-            label: "CIF",
-            inputType: "input",
-          },
-          {
-            id: "nume",
-            label: "Nume",
-            inputType: "input",
-          },
-          {
-            id: "adresa",
-            label: "Adresa",
-            inputType: "textarea",
-          },
-          {
-            id: "punct_lucru",
-            label: "Punct de Lucru",
-            inputType: "textarea",
-          },
-        ]}
+        inputs={dialogContentInputs}
       />
     </Dialog>
   );

@@ -174,9 +174,8 @@ export default function DataTable<TData, TValue>({
   );
 }
 
-type TblProps<TData, TValue> = {
+type TblProps<TData, TValue> = Pick<Props<TData, TValue>, "columns"> & {
   table: TanStackTable<TData>;
-  columns: Props<TData, TValue>["columns"];
 };
 
 function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {

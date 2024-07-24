@@ -10,7 +10,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
-type Props = {
+export type DialogContentDataFormProps = {
   title: string;
   description?: ReactNode;
   footer: ReactNode;
@@ -27,7 +27,7 @@ export default function DialogContentDataForm({
   description,
   footer,
   inputs,
-}: Props) {
+}: DialogContentDataFormProps) {
   return (
     <DialogContent className="max-w-[600px]">
       <DialogHeader>
