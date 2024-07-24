@@ -1,7 +1,6 @@
 import { routeTree } from "@/routeTree.gen";
 import { Link, ParseRoute, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
-import ThemeSwitch from "@/components/ThemeSwitch";
 import {
   Banknote,
   ChevronDown,
@@ -13,7 +12,6 @@ import {
   ListCheck,
   NotebookTabs,
   ReceiptText,
-  Settings,
   Truck,
   Users,
 } from "lucide-react";
@@ -59,19 +57,15 @@ const routes: Routes = Object.freeze({
 
 export default function Sidebar({ className }: Props) {
   return (
-    <aside className={cn("flex flex-col justify-between p-3", className)}>
+    <aside
+      className={cn(
+        "flex max-h-full flex-col justify-between overflow-scroll p-3",
+        className,
+      )}
+    >
       <nav>
         <Nav routes={routes} />
       </nav>
-      <div className="flex flex-row justify-center gap-3">
-        <Link
-          to="/settings"
-          className="btn group rounded-lg p-2"
-        >
-          <Settings className="transition-transform group-hover:rotate-180" />
-        </Link>
-        <ThemeSwitch />
-      </div>
     </aside>
   );
 }
@@ -151,9 +145,8 @@ type CollapsibleMenuProps = {
   className?: string;
 };
 
-const linkStyles = "group/link flex w-full flex-row gap-2";
-const iconStyles =
-  "flex w-[2em] items-center justify-center transition-transform duration-300 group-hover/link:rotate-[360deg] group-hover/link:scale-[1.2]";
+const linkStyles = "flex w-full flex-row gap-2";
+const iconStyles = "flex w-[2em] items-center justify-center";
 
 function CollapsibleMenu({
   path,

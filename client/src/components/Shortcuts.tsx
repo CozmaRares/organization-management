@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
+import ThemeSwitch from "./ThemeSwitch";
 
 type Props = {
   className?: string;
@@ -34,6 +35,7 @@ export default function Shortcuts({ className }: Props) {
       <button className="btn ml-auto rounded-lg p-2">
         Modifica scurtaturile
       </button>
+      <ThemeSwitch />
     </div>
   );
 }
