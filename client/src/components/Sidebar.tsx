@@ -4,9 +4,12 @@ import { cn } from "@/lib/utils";
 import ThemeSwitch from "@/components/ThemeSwitch";
 import {
   Banknote,
+  ChevronDown,
+  ChevronUp,
   ClipboardMinus,
   Coins,
   House,
+  LayoutDashboard,
   ListCheck,
   NotebookTabs,
   ReceiptText,
@@ -14,30 +17,24 @@ import {
   Truck,
   Users,
 } from "lucide-react";
+import { useState } from "react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./ui/collapsible";
 
 type Props = {
   className?: string;
 };
 
-type ValidRoutes = ParseRoute<typeof routeTree>["fullPath"];
-type Routes = Partial<
-  Record<
-    ValidRoutes,
-    {
-      text: string;
-      icon: JSX.Element;
-      nested?: Partial<
-        Record<
-          ValidRoutes,
-          {
-            text: string;
-            icon: JSX.Element;
-          }
-        >
-      >;
-    }
-  >
->;
+type ValidRoute = ParseRoute<typeof routeTree>["fullPath"];
+type RouteInfo = {
+  text: string;
+  icon: JSX.Element;
+};
+type RoutesGeneric<T> = Partial<Record<ValidRoute, RouteInfo & T>>;
+type Routes = RoutesGeneric<{ nested?: RoutesGeneric<{}> }>;
 
 const routes: Routes = Object.freeze({
   "/": { text: "Home", icon: <House /> },
@@ -58,68 +55,13 @@ const routes: Routes = Object.freeze({
   "/taskuri": { text: "Task-uri", icon: <ListCheck /> },
   "/rapoarte": { text: "Raporte", icon: <ClipboardMinus /> },
   "/salarii": { text: "Salarii", icon: <Banknote /> },
-});
+} satisfies Routes);
 
-const listStyles = "p-2 space-y-2";
-const itemStyles = "btn bg-background rounded-md";
-const linkStyles = "block w-full p-3 flex flex-row gap-2 group/link";
-const iconStyles =
-  "flex w-[2em] items-center justify-center transition-transform duration-300 group-hover/link:rotate-[360deg] group-hover/link:scale-[1.2]";
-
-// TODO: refactor to accordion
 export default function Sidebar({ className }: Props) {
-  const location = useRouterState({ select: s => s.location });
-
   return (
     <aside className={cn("flex flex-col justify-between p-3", className)}>
       <nav>
-        <ul className={cn(listStyles, "w-full")}>
-          {Object.entries(routes).map(([path, { text, icon, nested }]) => (
-            <li
-              key={path}
-              className={cn(itemStyles, {
-                "group/item relative": nested !== undefined,
-                "bg-primary/30":
-                  path == "/"
-                    ? location.pathname == "/"
-                    : location.pathname.startsWith(path),
-              })}
-            >
-              <Link
-                to={path}
-                className={linkStyles}
-              >
-                <span className={iconStyles}>{icon}</span>
-                {text}
-              </Link>
-              {nested && Object.entries(nested).length > 0 && (
-                <ul
-                  className={cn(
-                    listStyles,
-                    "pointer-events-none absolute left-3/4 top-0 z-10 rounded-md border-2 bg-background opacity-0",
-                    "group-hover/item:pointer-events-auto group-hover/item:left-[90%] group-hover/item:opacity-100",
-                    "transition-[left,opacity]",
-                  )}
-                >
-                  {Object.entries(nested).map(([path, { text, icon }]) => (
-                    <li
-                      className={itemStyles}
-                      key={"nested-" + path}
-                    >
-                      <Link
-                        to={path}
-                        className={linkStyles}
-                      >
-                        <span className={iconStyles}>{icon}</span>
-                        {text}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+        <Nav routes={routes} />
       </nav>
       <div className="flex flex-row justify-center gap-3">
         <Link
@@ -131,5 +73,145 @@ export default function Sidebar({ className }: Props) {
         <ThemeSwitch />
       </div>
     </aside>
+  );
+}
+
+type NavProps = { routes: Routes };
+
+function Nav({ routes }: NavProps) {
+  const location = useRouterState().location.pathname;
+
+  return (
+    <ul className="space-y-2 p-2">
+      {Object.entries(routes).map(([path, { text, icon, nested }]) => (
+        <NavItem
+          path={path}
+          text={text}
+          icon={icon}
+          nested={nested}
+          active={isLinkActive(location, path, text)}
+        />
+      ))}
+    </ul>
+  );
+}
+
+function isLinkActive(location: string, path: string, text: string) {
+  if (path == "/") return location == "/";
+
+  if (text == "Dashboard") return location == path;
+
+  return location.startsWith(path);
+}
+
+type NavItemProps = {
+  path: string;
+  text: string;
+  icon: JSX.Element;
+  nested?: Routes;
+  active: boolean;
+};
+
+const activeBg = "bg-primary/30";
+
+function NavItem({ path, text, icon, nested, active }: NavItemProps) {
+  const hasNested = nested && Object.entries(nested).length > 0;
+
+  const itemStyles = cn("btn bg-background rounded-md", active && activeBg);
+
+  if (!hasNested)
+    return (
+      <li className={itemStyles}>
+        <NavLink
+          path={path}
+          text={text}
+          icon={icon}
+        />
+      </li>
+    );
+
+  return (
+    <li>
+      <CollapsibleMenu
+        path={path}
+        text={text}
+        icon={icon}
+        nested={nested}
+        className={itemStyles}
+      />
+    </li>
+  );
+}
+
+type CollapsibleMenuProps = {
+  path: string;
+  text: string;
+  icon: JSX.Element;
+  nested: Routes;
+  className?: string;
+};
+
+const linkStyles = "group/link flex w-full flex-row gap-2";
+const iconStyles =
+  "flex w-[2em] items-center justify-center transition-transform duration-300 group-hover/link:rotate-[360deg] group-hover/link:scale-[1.2]";
+
+function CollapsibleMenu({
+  path,
+  text,
+  icon,
+  nested,
+  className,
+}: CollapsibleMenuProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    >
+      <CollapsibleTrigger asChild>
+        <div className={cn("flex items-center justify-between p-3", className)}>
+          <div className={linkStyles}>
+            <span className={iconStyles}>{icon}</span>
+            {text}
+          </div>
+          {isOpen ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+          <span className="sr-only">Toggle</span>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <Nav
+          routes={{
+            [path]: {
+              text: "Dashboard",
+              icon: <LayoutDashboard />,
+            },
+            ...nested,
+          }}
+        />
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+type NavLinkProps = {
+  path: string;
+  text: string;
+  icon: JSX.Element;
+};
+
+function NavLink({ path, text, icon }: NavLinkProps) {
+  return (
+    <Link
+      to={path}
+      className={cn(linkStyles, "p-3")}
+    >
+      <span className={iconStyles}>{icon}</span>
+      {text}
+    </Link>
   );
 }

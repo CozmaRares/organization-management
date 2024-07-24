@@ -40,7 +40,6 @@ export default function DialogContentDataForm({
           return (
             <div className="flex flex-col gap-2">
               <Label htmlFor={id}>{label}</Label>
-              inputType
               <Inp
                 id={id}
                 defaultValue={defaultValue}
