@@ -19,7 +19,7 @@ export const Route = createRootRoute({
         <Shortcuts className="col-span-full border-b p-3" />
         <Sidebar className="col-[span_var(--sidebar-cols)/span_var(--sidebar-cols)] col-start-1 row-start-2 row-end-4 border-r" />
         <div className="col-[calc(var(--sidebar-cols)+1)/-1] row-start-2 overflow-scroll">
-          <div className="container px-4 py-10">
+          <div className="container px-4 py-4">
             <Outlet />
           </div>
         </div>

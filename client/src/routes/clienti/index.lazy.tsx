@@ -204,7 +204,7 @@ const columns: ColumnDef<Client>[] = [
   },
 ];
 
-const data = new Array(1)
+const data = new Array(25)
   .fill([
     {
       nume: "aa",
@@ -214,9 +214,15 @@ const data = new Array(1)
     },
     {
       nume: "bb",
-      adresa: "a",
+      adresa: "b",
       cif: "23456",
       punct_lucru: "Gladiolelor, Alba Iulia",
+    },
+    {
+      nume: "cc",
+      adresa: "c",
+      cif: "34567",
+      punct_lucru: "Nu avem",
     },
   ])
   .flat();

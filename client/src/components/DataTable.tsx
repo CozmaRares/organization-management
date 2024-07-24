@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "./ui/input";
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -134,12 +135,29 @@ export default function DataTable<TData, TValue>({
         />
       </div>
       <div className="flex items-center gap-2 py-4">
-        <div>{footer}</div>
+        <div className="mr-auto">{footer}</div>
+        <span className="flex items-center gap-1">
+          <div>Pagina</div>
+          <Input
+            key={`table-pagination-index-${table.getState().pagination.pageIndex}`}
+            type="number"
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              if (page >= 0 && page < table.getPageCount())
+                table.setPageIndex(page);
+              else
+                e.target.value = `${table.getState().pagination.pageIndex + 1}`;
+            }}
+            className="w-16 pr-1"
+          />
+          din {table.getPageCount().toLocaleString()}
+        </span>
         <Select
           value={table.getState().pagination.pageSize.toString()}
           onValueChange={value => table.setPageSize(Number(value))}
         >
-          <SelectTrigger className="ml-auto w-[110px]">
+          <SelectTrigger className="w-[110px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
