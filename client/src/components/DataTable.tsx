@@ -11,6 +11,7 @@ import {
   getSortedRowModel,
   Table as TanStackTable,
   RowData,
+  PaginationState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -29,6 +30,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ReactNode } from "@tanstack/react-router";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -50,6 +58,10 @@ export default function DataTable<TData, TValue>({
 }: Props<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   // TODO: store filters in search params
   // https://tanstack.com/table/latest/docs/framework/react/examples/query-router-search-params
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -61,9 +73,11 @@ export default function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
+      pagination,
       sorting,
       columnVisibility,
       columnFilters,
@@ -121,12 +135,29 @@ export default function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center gap-2 py-4">
         <div>{footer}</div>
+        <Select
+          value={table.getState().pagination.pageSize.toString()}
+          onValueChange={value => table.setPageSize(Number(value))}
+        >
+          <SelectTrigger className="ml-auto w-[110px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {[10, 20, 30, 40, 50].map(pageSize => (
+              <SelectItem
+                key={`table pagination show ${pageSize}`}
+                value={pageSize.toString()}
+              >
+                Arata {pageSize}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="ml-auto"
         >
           Inapoi
         </Button>

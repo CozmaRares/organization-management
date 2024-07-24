@@ -1,6 +1,3 @@
-// TODO: advanced filters
-// https://github.com/TanStack/table/discussions/4133
-
 import DataTable from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import {
