@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -91,7 +91,7 @@ export default function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex flex-row items-center justify-between py-4">
-        <div className="flex-items flew-row w-4/5 flex flex-wrap-reverse [--flex-items:5] [--gap:0.5rem]">
+        <div className="flex-items flew-row flex w-4/5 flex-wrap-reverse [--flex-items:5] [--gap:0.5rem]">
           {columns.map(column => {
             const meta = column.meta;
             if (!meta?.filterComponent) return null;
@@ -137,22 +137,21 @@ export default function DataTable<TData, TValue>({
         <span className="flex items-center gap-1">
           <div>Pagina</div>
           <Input
-            key={`table-pagination-index-${table.getState().pagination.pageIndex}`}
+            key={`table-pagination-index-${pagination.pageIndex}`}
             type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
+            defaultValue={pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
               if (page >= 0 && page < table.getPageCount())
                 table.setPageIndex(page);
-              else
-                e.target.value = `${table.getState().pagination.pageIndex + 1}`;
+              else e.target.value = `${pagination.pageIndex + 1}`;
             }}
             className="w-16 pr-1"
           />
           din {table.getPageCount().toLocaleString()}
         </span>
         <Select
-          value={table.getState().pagination.pageSize.toString()}
+          value={pagination.pageSize.toString()}
           onValueChange={value => table.setPageSize(Number(value))}
         >
           <SelectTrigger className="w-[110px]">
@@ -195,6 +194,12 @@ type TblProps<TData, TValue> = Pick<Props<TData, TValue>, "columns"> & {
 };
 
 function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
+  const headersRef = useRef<HTMLTableSectionElement>(null);
+
+  useEffect(() => {
+    headersRef.current!.scrollIntoView({ behavior: "smooth" });
+  }, [table.getState().pagination.pageIndex]);
+
   if (table.getHeaderGroups()[0].headers.length == 0)
     return (
       <Table>
@@ -211,7 +216,10 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
 
   return (
     <Table>
-      <TableHeader>
+      <TableHeader
+        ref={headersRef}
+        className="scroll-m-4"
+      >
         {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map(header => {
@@ -271,6 +279,5 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
 
 function computeCellSize(size: number) {
   if (size == Number.MAX_SAFE_INTEGER) return "auto";
-
   return size;
 }
