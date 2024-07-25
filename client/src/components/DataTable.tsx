@@ -63,8 +63,6 @@ export default function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 10,
   });
-  // TODO: store filters in search params
-  // https://tanstack.com/table/latest/docs/framework/react/examples/query-router-search-params
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -92,8 +90,8 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between gap-2 py-4">
-        <div className="grid grid-cols-5 gap-2">
+      <div className="flex flex-row items-center justify-between py-4">
+        <div className="flex-items flew-row w-4/5 flex flex-wrap-reverse [--flex-items:5] [--gap:0.5rem]">
           {columns.map(column => {
             const meta = column.meta;
             if (!meta?.filterComponent) return null;
@@ -246,6 +244,7 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
               {row.getVisibleCells().map(cell => (
                 <TableCell
                   key={cell.id}
+                  className="py-2"
                   style={{
                     width: computeCellSize(cell.column.getSize()),
                   }}

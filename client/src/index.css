@@ -72,4 +72,9 @@
   .btn {
     @apply bg-primary/30 transition-colors hover:bg-primary/40;
   }
+
+  .flex-items > * {
+    flex: 0 1 calc(100% / var(--flex-items) - var(--gap));
+    margin: calc(var(--gap) / 2);
+  }
 }
