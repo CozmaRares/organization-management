@@ -163,8 +163,17 @@ function CollapsibleMenu({
       open={isOpen}
       onOpenChange={setIsOpen}
     >
-      <CollapsibleTrigger asChild>
-        <div className={cn("flex items-center justify-between p-3", className)}>
+      <CollapsibleTrigger
+        className="cursor-pointer"
+        asChild
+      >
+        <div
+          className={cn(
+            "flex items-center justify-between p-3",
+            className,
+            isOpen && "rounded-bl-none",
+          )}
+        >
           <div className={linkStyles}>
             <span className={iconStyles}>{icon}</span>
             {text}
@@ -177,7 +186,8 @@ function CollapsibleMenu({
           <span className="sr-only">Toggle</span>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent>
+      <CollapsibleContent className="relative">
+        <div className="absolute left-0 top-0 z-0 h-full w-[3px] bg-primary/30" />
         <Nav
           routes={{
             [path]: {
