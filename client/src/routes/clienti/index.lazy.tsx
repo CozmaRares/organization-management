@@ -28,6 +28,7 @@ import DialogContentDataForm, {
   DialogContentDataFormProps,
 } from "@/components/DialogContentDataForm";
 import InputFilter from "@/components/filters/InputFilter";
+import { InputType } from "@/lib/types";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -40,30 +41,7 @@ type Client = {
   punct_lucru: string;
 };
 
-const dialogContentInputs = [
-  {
-    id: "cif",
-    label: "CIF",
-    inputType: "input",
-  },
-  {
-    id: "nume",
-    label: "Nume",
-    inputType: "input",
-  },
-  {
-    id: "adresa",
-    label: "Adresă",
-    inputType: "textarea",
-  },
-  {
-    id: "punct_lucru",
-    label: "Punct de Lucru",
-    inputType: "textarea",
-  },
-] as const satisfies DialogContentDataFormProps["inputs"];
-
-const columns: ColumnDef<Client>[] = [
+const columns = [
   {
     accessorKey: "cif",
     header: "CIF",
@@ -111,6 +89,7 @@ const columns: ColumnDef<Client>[] = [
           }
         />
       ),
+      inputType: "textarea",
     },
   },
   {
@@ -129,6 +108,7 @@ const columns: ColumnDef<Client>[] = [
           }
         />
       ),
+      inputType: "textarea",
     },
   },
   {
@@ -202,7 +182,17 @@ const columns: ColumnDef<Client>[] = [
     },
     size: 70,
   },
-];
+] as const satisfies ColumnDef<Client>[];
+
+const dialogContentInputs = columns
+  .filter(col => {
+    return "accessorKey" in col;
+  })
+  .map(({ accessorKey, header, meta }) => ({
+    id: accessorKey,
+    label: header,
+    inputType: ("inputType" in meta ? meta.inputType : "input") as InputType,
+  }));
 
 const data = new Array(25)
   .fill([

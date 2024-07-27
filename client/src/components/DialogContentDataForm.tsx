@@ -9,6 +9,7 @@ import { ReactNode } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { InputType } from "@/lib/types";
 
 export type DialogContentDataFormProps = {
   title: string;
@@ -17,7 +18,7 @@ export type DialogContentDataFormProps = {
   inputs: Array<{
     id: string;
     label: string;
-    inputType: "input" | "textarea";
+    inputType: InputType
     defaultValue?: string;
   }>;
 };

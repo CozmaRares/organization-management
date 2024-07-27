@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "./ui/input";
+import { InputType } from "@/lib/types";
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -48,6 +49,7 @@ type Props<TData, TValue> = {
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
+    inputType?: InputType;
     filterComponent?: (table: TanStackTable<TData>) => React.ReactNode;
   }
 }
