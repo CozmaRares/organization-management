@@ -24,9 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import DialogContentDataForm, {
-  DialogContentDataFormProps,
-} from "@/components/DialogContentDataForm";
+import DialogContentDataForm from "@/components/DialogContentDataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { InputType } from "@/lib/types";
 

@@ -11,14 +11,14 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { InputType } from "@/lib/types";
 
-export type DialogContentDataFormProps = {
+type Props = {
   title: string;
   description?: ReactNode;
   footer: ReactNode;
   inputs: Array<{
     id: string;
     label: string;
-    inputType: InputType
+    inputType: InputType;
     defaultValue?: string;
   }>;
 };
@@ -28,7 +28,7 @@ export default function DialogContentDataForm({
   description,
   footer,
   inputs,
-}: DialogContentDataFormProps) {
+}: Props) {
   return (
     <DialogContent className="max-w-[600px]">
       <DialogHeader>
@@ -36,15 +36,15 @@ export default function DialogContentDataForm({
         {description && <DialogDescription>{description}</DialogDescription>}
       </DialogHeader>
       <div className="grid grid-cols-2 gap-4 py-2">
-        {inputs.map(({ id, label, inputType, defaultValue }) => {
-          const Inp = inputType == "input" ? Input : Textarea;
+        {inputs.map(({ id, label, defaultValue, inputType }) => {
           return (
             <div className="flex flex-col gap-2">
               <Label htmlFor={id}>{label}</Label>
               <Inp
                 id={id}
-                defaultValue={defaultValue}
                 placeholder={label}
+                inputType={inputType}
+                defaultValue={defaultValue}
               />
             </div>
           );
@@ -53,4 +53,21 @@ export default function DialogContentDataForm({
       <DialogFooter>{footer}</DialogFooter>
     </DialogContent>
   );
+}
+
+type InpProps = {
+  id: string;
+  placeholder: string;
+  inputType: InputType;
+  defaultValue?: string;
+};
+
+function Inp({ inputType, ...props }: InpProps) {
+  if (inputType == "input") return <Input {...props} />;
+
+  if (inputType == "textarea") return <Textarea {...props} />;
+
+  if (inputType == "date") return <Input {...props} />;
+
+  return null;
 }
