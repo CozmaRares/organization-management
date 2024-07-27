@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -84,10 +84,14 @@ export default function DataTable<TData, TValue>({
     <div>
       <div className="flex flex-row items-center justify-between py-4">
         <div className="flex-items flew-row flex w-4/5 flex-wrap-reverse [--flex-items:5] [--gap:0.5rem]">
-          {columns.map(column => {
+          {columns.map((column, idx) => {
             const meta = column.meta;
             if (!meta?.filterComponent) return null;
-            return meta.filterComponent(table);
+            return (
+              <Fragment key={`filter-${idx}`}>
+                {meta.filterComponent(table)}
+              </Fragment>
+            );
           })}
         </div>
         <DropdownMenu>

@@ -74,7 +74,8 @@
   }
 
   .flex-items > * {
-    flex: 0 1 calc(100% / var(--flex-items) - var(--gap));
+    flex: 0 1
+      calc((100% - var(--gap) * (var(--flex-items) - 1)) / var(--flex-items));
     min-width: fit-content;
 
     margin-top: var(--gap);

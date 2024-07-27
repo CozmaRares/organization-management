@@ -38,7 +38,10 @@ export default function DialogContentDataForm({
       <div className="grid grid-cols-2 gap-4 py-2">
         {inputs.map(({ id, label, defaultValue, inputType }) => {
           return (
-            <div className="flex flex-col gap-2">
+            <div
+              key={`dialog-input-${id}`}
+              className="flex flex-col gap-2"
+            >
               <Label htmlFor={id}>{label}</Label>
               <Inp
                 id={id}

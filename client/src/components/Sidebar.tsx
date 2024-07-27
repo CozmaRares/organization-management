@@ -80,6 +80,7 @@ function Nav({ routes }: NavProps) {
     <ul className="space-y-2 p-2">
       {Object.entries(routes).map(([path, { text, icon, nested }]) => (
         <NavItem
+          key={`sidebar-nav-item-${path}`}
           path={path}
           text={text}
           icon={icon}
