@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { fuzzyFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
@@ -28,6 +27,7 @@ import {
 import DialogContentDataForm, {
   DialogContentDataFormProps,
 } from "@/components/DialogContentDataForm";
+import InputFilter from "@/components/filters/InputFilter";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -72,7 +72,7 @@ const columns: ColumnDef<Client>[] = [
     },
     meta: {
       filterComponent: (table: Table<Client>) => (
-        <Input
+        <InputFilter
           placeholder="Filtreaza CIF..."
           value={(table.getColumn("cif")?.getFilterValue() as string) ?? ""}
           onChange={event =>
@@ -87,7 +87,7 @@ const columns: ColumnDef<Client>[] = [
     header: "Nume",
     meta: {
       filterComponent: (table: Table<Client>) => (
-        <Input
+        <InputFilter
           placeholder="Filtreaza numele..."
           value={(table.getColumn("nume")?.getFilterValue() as string) ?? ""}
           onChange={event =>
@@ -103,7 +103,7 @@ const columns: ColumnDef<Client>[] = [
     filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
       filterComponent: (table: Table<Client>) => (
-        <Input
+        <InputFilter
           placeholder="Filtreaza adresa..."
           value={(table.getColumn("adresa")?.getFilterValue() as string) ?? ""}
           onChange={event =>
@@ -119,7 +119,7 @@ const columns: ColumnDef<Client>[] = [
     filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
       filterComponent: (table: Table<Client>) => (
-        <Input
+        <InputFilter
           placeholder="Filtreaza punct de lucru..."
           value={
             (table.getColumn("punct_lucru")?.getFilterValue() as string) ?? ""

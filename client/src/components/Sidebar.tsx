@@ -32,6 +32,7 @@ type RouteInfo = {
   icon: JSX.Element;
 };
 type RoutesGeneric<T> = Partial<Record<ValidRoute, RouteInfo & T>>;
+// eslint-disable-next-line @typescript-eslint/ban-types
 type Routes = RoutesGeneric<{ nested?: RoutesGeneric<{}> }>;
 
 const routes: Routes = Object.freeze({

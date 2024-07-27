@@ -195,10 +195,11 @@ type TblProps<TData, TValue> = Pick<Props<TData, TValue>, "columns"> & {
 
 function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
   const headersRef = useRef<HTMLTableSectionElement>(null);
+  const pageIdx = table.getState().pagination.pageIndex;
 
   useEffect(() => {
     headersRef.current!.scrollIntoView({ behavior: "smooth" });
-  }, [table.getState().pagination.pageIndex]);
+  }, [pageIdx]);
 
   if (table.getHeaderGroups()[0].headers.length == 0)
     return (
