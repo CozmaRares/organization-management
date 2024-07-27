@@ -33,7 +33,7 @@ export default function Shortcuts({ className }: Props) {
         ))}
       </ul>
       <button className="btn ml-auto rounded-lg p-2">
-        Modifica scurtaturile
+        Modifică scurtăturile
       </button>
       <ThemeSwitch />
     </div>

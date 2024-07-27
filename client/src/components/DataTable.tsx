@@ -163,7 +163,7 @@ export default function DataTable<TData, TValue>({
                 key={`table pagination show ${pageSize}`}
                 value={pageSize.toString()}
               >
-                Arata {pageSize}
+                Arată {pageSize}
               </SelectItem>
             ))}
           </SelectContent>
@@ -174,7 +174,7 @@ export default function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Inapoi
+          Înapoi
         </Button>
         <Button
           variant="outline"
@@ -182,7 +182,7 @@ export default function DataTable<TData, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Inainte
+          Înainte
         </Button>
       </div>
     </div>
@@ -209,7 +209,7 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
             colSpan={columns.length}
             className="text-center"
           >
-            Nici o coloana.
+            Nici o coloană.
           </TableHead>
         </TableRow>
       </Table>

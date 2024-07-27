@@ -36,10 +36,10 @@ type RoutesGeneric<T> = Partial<Record<ValidRoute, RouteInfo & T>>;
 type Routes = RoutesGeneric<{ nested?: RoutesGeneric<{}> }>;
 
 const routes: Routes = Object.freeze({
-  "/": { text: "Home", icon: <House /> },
+  "/": { text: "Acasă", icon: <House /> },
   "/furnizori": { text: "Furnizori", icon: <Truck /> },
   "/clienti": {
-    text: "Clienti",
+    text: "Clienți",
     icon: <Users />,
     nested: {
       "/clienti/contracte": { text: "Contracte", icon: <NotebookTabs /> },

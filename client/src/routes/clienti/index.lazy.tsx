@@ -53,7 +53,7 @@ const dialogContentInputs = [
   },
   {
     id: "adresa",
-    label: "Adresa",
+    label: "Adresă",
     inputType: "textarea",
   },
   {
@@ -73,7 +73,7 @@ const columns: ColumnDef<Client>[] = [
     meta: {
       filterComponent: (table: Table<Client>) => (
         <InputFilter
-          placeholder="Filtreaza CIF..."
+          placeholder="Filtrează CIF..."
           value={(table.getColumn("cif")?.getFilterValue() as string) ?? ""}
           onChange={event =>
             table.getColumn("cif")?.setFilterValue(event.target.value)
@@ -88,7 +88,7 @@ const columns: ColumnDef<Client>[] = [
     meta: {
       filterComponent: (table: Table<Client>) => (
         <InputFilter
-          placeholder="Filtreaza numele..."
+          placeholder="Filtrează numele..."
           value={(table.getColumn("nume")?.getFilterValue() as string) ?? ""}
           onChange={event =>
             table.getColumn("nume")?.setFilterValue(event.target.value)
@@ -99,12 +99,12 @@ const columns: ColumnDef<Client>[] = [
   },
   {
     accessorKey: "adresa",
-    header: "Adresa",
+    header: "Adresă",
     filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
       filterComponent: (table: Table<Client>) => (
         <InputFilter
-          placeholder="Filtreaza adresa..."
+          placeholder="Filtrează adresa..."
           value={(table.getColumn("adresa")?.getFilterValue() as string) ?? ""}
           onChange={event =>
             table.getColumn("adresa")?.setFilterValue(event.target.value)
@@ -120,7 +120,7 @@ const columns: ColumnDef<Client>[] = [
     meta: {
       filterComponent: (table: Table<Client>) => (
         <InputFilter
-          placeholder="Filtreaza punct de lucru..."
+          placeholder="Filtrează punct de lucru..."
           value={
             (table.getColumn("punct_lucru")?.getFilterValue() as string) ?? ""
           }
@@ -150,18 +150,18 @@ const columns: ColumnDef<Client>[] = [
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actiuni</DropdownMenuLabel>
+                <DropdownMenuLabel>Acțiuni</DropdownMenuLabel>
                 <DropdownMenuItem
                   onClick={() => navigator.clipboard.writeText(client.cif)}
                 >
-                  Copiaza CIF
+                  Copiază CIF
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <DialogTrigger>Schimba datele</DialogTrigger>
+                  <DialogTrigger>Schimbă datele</DialogTrigger>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <AlertDialogTrigger>Sterge client</AlertDialogTrigger>
+                  <AlertDialogTrigger>Șterge client</AlertDialogTrigger>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -170,11 +170,11 @@ const columns: ColumnDef<Client>[] = [
               title="Modifica Datele Clientului"
               description={
                 <>
-                  <p>Modifica datele clientului aici.</p>
-                  <p>Da click pe salveaza cand ai terminat.</p>
+                  <p>Modifică datele clientului aici.</p>
+                  <p>Dă click pe salveaza cand ai terminat.</p>
                 </>
               }
-              footer={<Button type="submit">Salveaza</Button>}
+              footer={<Button type="submit">Salvează</Button>}
               inputs={dialogContentInputs.map(inp => ({
                 ...inp,
                 defaultValue: client[inp.id],
@@ -185,14 +185,14 @@ const columns: ColumnDef<Client>[] = [
               <AlertDialogHeader>
                 <AlertDialogTitle>Esti absolut sigur?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  <p>Aceasta actinue nu poate fi anulata.</p>
-                  <p>Datele vor fi sterse definitiv de pe server.</p>
+                  <p>Această acținue nu poate fi anulată.</p>
+                  <p>Datele vor fi șterse definitiv de pe server.</p>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Anuleaza</AlertDialogCancel>
+                <AlertDialogCancel>Anulează</AlertDialogCancel>
                 <AlertDialogAction variant="destructive">
-                  Continua
+                  Continuă
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -247,12 +247,12 @@ function AddClient() {
           className="flex flex-row items-center gap-1"
         >
           <Plus className="h-4 w-4" />
-          Adauga Client
+          Adaugă Client
         </Button>
       </DialogTrigger>
       <DialogContentDataForm
-        title="Adauga Client"
-        footer={<Button type="submit">Adauga</Button>}
+        title="Adaugă Client"
+        footer={<Button type="submit">Adaugă</Button>}
         inputs={dialogContentInputs}
       />
     </Dialog>
