@@ -56,6 +56,7 @@ const columns = [
           }
         />
       ),
+      columnVisibilityName: "CIF",
     },
   },
   {
@@ -71,6 +72,7 @@ const columns = [
           }
         />
       ),
+      columnVisibilityName: "Nume",
     },
   },
   {
@@ -88,6 +90,7 @@ const columns = [
         />
       ),
       inputType: "textarea",
+      columnVisibilityName: "Adresă",
     },
   },
   {
@@ -107,6 +110,7 @@ const columns = [
         />
       ),
       inputType: "textarea",
+      columnVisibilityName: "Punct de lucru",
     },
   },
   {
@@ -121,10 +125,10 @@ const columns = [
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="h-8 w-8 p-0"
+                  className="aspect-square h-fit p-0"
                 >
                   <span className="sr-only">Deschide meniu</span>
-                  <MoreHorizontal className="h-4 w-4" />
+                  <MoreHorizontal className="h-[1em]" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

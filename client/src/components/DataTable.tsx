@@ -10,7 +10,6 @@ import {
   SortingState,
   getSortedRowModel,
   Table as TanStackTable,
-  RowData,
   PaginationState,
 } from "@tanstack/react-table";
 import {
@@ -38,21 +37,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "./ui/input";
-import { InputType } from "@/lib/types";
 
 type Props<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   footer?: ReactNode;
 };
-
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    inputType?: InputType;
-    filterComponent?: (table: TanStackTable<TData>) => React.ReactNode;
-  }
-}
 
 export default function DataTable<TData, TValue>({
   columns,
@@ -112,16 +102,18 @@ export default function DataTable<TData, TValue>({
           <DropdownMenuContent align="end">
             {table
               .getAllColumns()
-              .filter(column => column.getCanHide())
+              .filter(
+                column =>
+                  column.getCanHide() && column.columnDef.meta != undefined,
+              )
               .map(column => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
-                    {column.id}
+                    {column.columnDef.meta!.columnVisibilityName}
                   </DropdownMenuCheckboxItem>
                 );
               })}
@@ -206,7 +198,10 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
   if (table.getHeaderGroups()[0].headers.length == 0)
     return (
       <Table>
-        <TableRow className="border-0">
+        <TableRow
+          hoverable={false}
+          className="border-0"
+        >
           <TableHead
             colSpan={columns.length}
             className="text-center"
@@ -224,7 +219,10 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
         className="scroll-m-4"
       >
         {table.getHeaderGroups().map(headerGroup => (
-          <TableRow key={headerGroup.id}>
+          <TableRow
+            key={headerGroup.id}
+            hoverable={false}
+          >
             {headerGroup.headers.map(header => {
               return (
                 <TableHead
@@ -255,7 +253,7 @@ function Tbl<TData, TValue>({ table, columns }: TblProps<TData, TValue>) {
               {row.getVisibleCells().map(cell => (
                 <TableCell
                   key={cell.id}
-                  className="py-2"
+                  className="py-3"
                   style={{
                     width: computeCellSize(cell.column.getSize()),
                   }}
