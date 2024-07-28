@@ -27,17 +27,15 @@ import {
 import DialogContentDataForm from "@/components/DialogContentDataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { InputType } from "@/lib/types";
+import useQuery from "@/hooks/useQuery";
+import { z } from "zod";
+import { ClientValidator } from "@/lib/zod/client";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
 });
 
-type Client = {
-  nume: string;
-  adresa: string;
-  cif: string;
-  punct_lucru: string;
-};
+type Client = z.infer<typeof ClientValidator>;
 
 const columns = [
   {
@@ -60,15 +58,15 @@ const columns = [
     },
   },
   {
-    accessorKey: "nume",
+    accessorKey: "name",
     header: "Nume",
     meta: {
       filterComponent: (table: Table<Client>) => (
         <InputFilter
           placeholder="Filtrează numele..."
-          value={(table.getColumn("nume")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={event =>
-            table.getColumn("nume")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
         />
       ),
@@ -76,16 +74,16 @@ const columns = [
     },
   },
   {
-    accessorKey: "adresa",
+    accessorKey: "address",
     header: "Adresă",
     filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
       filterComponent: (table: Table<Client>) => (
         <InputFilter
           placeholder="Filtrează adresa..."
-          value={(table.getColumn("adresa")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
           onChange={event =>
-            table.getColumn("adresa")?.setFilterValue(event.target.value)
+            table.getColumn("address")?.setFilterValue(event.target.value)
           }
         />
       ),
@@ -94,7 +92,7 @@ const columns = [
     },
   },
   {
-    accessorKey: "punct_lucru",
+    accessorKey: "workplace",
     header: "Punct de Lucru",
     filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
@@ -102,10 +100,10 @@ const columns = [
         <InputFilter
           placeholder="Filtrează punct de lucru..."
           value={
-            (table.getColumn("punct_lucru")?.getFilterValue() as string) ?? ""
+            (table.getColumn("workplace")?.getFilterValue() as string) ?? ""
           }
           onChange={event =>
-            table.getColumn("punct_lucru")?.setFilterValue(event.target.value)
+            table.getColumn("workplace")?.setFilterValue(event.target.value)
           }
         />
       ),
@@ -196,30 +194,19 @@ const dialogContentInputs = columns
     inputType: ("inputType" in meta ? meta.inputType : "input") as InputType,
   }));
 
-const data = new Array(25)
-  .fill([
-    {
-      nume: "aa",
-      adresa: "a",
-      cif: "12345",
-      punct_lucru: "Aiud, Alba",
-    },
-    {
-      nume: "bb",
-      adresa: "b",
-      cif: "23456",
-      punct_lucru: "Gladiolelor, Alba Iulia",
-    },
-    {
-      nume: "cc",
-      adresa: "c",
-      cif: "34567",
-      punct_lucru: "Nu avem",
-    },
-  ])
-  .flat();
-
 function Page() {
+  const { isPending, error, data, isFetching } = useQuery({
+    queryKey: ["clients"],
+    url: "/api/clienti",
+    validator: z.array(ClientValidator),
+  });
+
+  if (isPending) return "Loading...";
+
+  if (isFetching) return "Fetching...";
+
+  if (error) return "An error has occurred: " + error.message;
+
   return (
     <DataTable
       columns={columns}
