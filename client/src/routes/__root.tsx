@@ -2,6 +2,7 @@ import Shortcuts from "@/components/Shortcuts";
 import Sidebar from "@/components/Sidebar";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { lazy } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -24,7 +25,8 @@ export const Route = createRootRoute({
           </div>
         </div>
       </div>
-      <TanStackRouterDevtools position="bottom-right" />
+      <TanStackRouterDevtools position="bottom-left" />
+      <ReactQueryDevtools />
     </div>
   ),
 });

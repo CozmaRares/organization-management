@@ -1,44 +1,41 @@
 <?php
 
-// TODO: remove unused
-// kept for reference
-
 declare(strict_types=1);
 
 namespace Server\DAO;
 
-use Server\Models\Employee;
+use Server\Models\Client;
 use Server\Database\Query\SelectQueryBuilder;
 use Server\Database\Connection;
 
 use function Server\Utils\getNullish;
 
-class EmployeeDAO implements DAO {
-    public const TABLE_NAME = "Employees";
+class ClientDAO implements DAO {
+    public const TABLE_NAME = "Client";
     public const COLUMNS = [
-        "id" => "ID",
-        "name" => "Name",
-        "position" => "Position",
-        "salary" => "Salary",
+        "name" => "nume",
+        "address" => "adresa",
+        "cif" => "cif",
+        "workplace" => "punct_lucru",
     ];
 
     private function __construct() {
     }
 
-    private static function createEmployee(array $data) {
-        return new Employee(
-            getNullish($data, EmployeeDAO::COLUMNS["id"]),
-            getNullish($data, EmployeeDAO::COLUMNS["name"]),
-            getNullish($data, EmployeeDAO::COLUMNS["position"]),
-            (float) getNullish($data, EmployeeDAO::COLUMNS["salary"]),
+    private static function createClient(array $data) {
+        return new Client(
+            getNullish($data, ClientDAO::COLUMNS["name"]),
+            getNullish($data, ClientDAO::COLUMNS["address"]),
+            getNullish($data, ClientDAO::COLUMNS["cif"]),
+            getNullish($data, ClientDAO::COLUMNS["workplace"]),
         );
     }
 
-    public static function findByID(Connection $connection, string $id) {
-        $col = EmployeeDAO::COLUMNS['id'];
+    public static function findUnique(Connection $connection, string $name) {
+        $col = ClientDAO::COLUMNS["name"];
 
         $query = (new SelectQueryBuilder())
-            ->where("$col = $id")
+            ->where("$col = $name")
             ->build(EmployeeDAO::TABLE_NAME);
 
         $result = $connection->runQuery($query);
@@ -49,11 +46,11 @@ class EmployeeDAO implements DAO {
 
         $row = $result->fetch_assoc();
 
-        return EmployeeDAO::createEmployee($row);
+        return ClientDAO::createClient($row);
     }
 
     public static function find(Connection $connection, SelectQueryBuilder $builder) {
-        $query = $builder->build(EmployeeDAO::TABLE_NAME);
+        $query = $builder->build(ClientDAO::TABLE_NAME);
 
         $result = $connection->runQuery($query);
 
@@ -61,7 +58,7 @@ class EmployeeDAO implements DAO {
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $results[] = EmployeeDAO::createEmployee($row);
+                $results[] = ClientDAO::createClient($row);
             }
         }
 

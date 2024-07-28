@@ -1,5 +1,8 @@
 <?php
 
+// TODO: remove unused
+// kept for reference
+
 namespace Server\Models;
 
 class Employee {
