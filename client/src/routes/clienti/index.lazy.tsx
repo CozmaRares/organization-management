@@ -30,6 +30,8 @@ import { InputType } from "@/lib/types";
 import useQuery from "@/hooks/useQuery";
 import { z } from "zod";
 import { ClientValidator } from "@/lib/zod/client";
+import Error from "@/components/Error";
+import AnimateEllipses from "@/components/AnimateEllipses";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -196,16 +198,16 @@ const dialogContentInputs = columns
 
 function Page() {
   const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ["clients"],
+    queryKey: ["clients", "get"],
     url: "/api/clienti",
     validator: z.array(ClientValidator),
   });
 
-  if (isPending) return "Loading...";
+  if (isPending) return <AnimateEllipses text="Se încarcă" />;
 
-  if (isFetching) return "Fetching...";
+  if (isFetching) return <AnimateEllipses text="Se colectează datele" />;
 
-  if (error) return "An error has occurred: " + error.message;
+  if (error) return <Error message={error.message} />;
 
   return (
     <DataTable
