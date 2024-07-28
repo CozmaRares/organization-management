@@ -172,7 +172,7 @@ function CollapsibleMenu({
           className={cn(
             "flex items-center justify-between p-3",
             className,
-            isOpen && "rounded-bl-none",
+            isOpen && "rounded-bl-none bg-primary/40",
           )}
         >
           <div className={linkStyles}>

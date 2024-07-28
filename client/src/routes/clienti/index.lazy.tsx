@@ -207,7 +207,7 @@ function Page() {
 
   if (isFetching) return <AnimateEllipses text="Se colectează datele" />;
 
-  if (error) return <Error message={error.message} />;
+  if (error) return <Error title="Hopa! E bai!">{error.message}</Error>;
 
   return (
     <DataTable
