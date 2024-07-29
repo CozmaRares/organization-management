@@ -145,7 +145,7 @@ type CollapsibleMenuProps = {
   className?: string;
 };
 
-const linkStyles = "flex w-full flex-row gap-2";
+const linkStyles = "flex w-full flex-row gap-2 rounded-md";
 const iconStyles = "flex w-[2em] items-center justify-center";
 
 function CollapsibleMenu({
@@ -167,9 +167,9 @@ function CollapsibleMenu({
         className="cursor-pointer"
         asChild
       >
-        <div
+        <button
           className={cn(
-            "flex items-center justify-between p-3 group-hover:bg-primary/40",
+            "flex w-full items-center justify-between p-3 group-hover:bg-primary/40",
             className,
             isOpen && "rounded-bl-none bg-primary/20",
           )}
@@ -184,7 +184,7 @@ function CollapsibleMenu({
             <ChevronDown className="h-4 w-4" />
           )}
           <span className="sr-only">Toggle</span>
-        </div>
+        </button>
       </CollapsibleTrigger>
       <CollapsibleContent className="relative">
         <div className="absolute left-0 top-0 z-0 h-full w-[3px] bg-primary/20 transition-colors group-hover:bg-primary/40" />
