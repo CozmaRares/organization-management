@@ -14,10 +14,6 @@ $router = new Router();
 $router->mount('/api', function () use ($router) {
     header('Content-Type: application/json; charset=utf-8');
 
-    $router->get('/', function () {
-        echo "hello from api";
-    });
-
     $router->get("/clienti", function () {
         $conn = ConnectionFactory::newConnection();
         $builder = new SelectQueryBuilder();

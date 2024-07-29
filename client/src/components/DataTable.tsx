@@ -44,6 +44,7 @@ type Props<TData, TValue> = {
   footer?: ReactNode;
 };
 
+// TODO: serverside pagination and filtering
 export default function DataTable<TData, TValue>({
   columns,
   data,

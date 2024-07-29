@@ -163,6 +163,7 @@ function CollapsibleMenu({
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
+      className="group"
     >
       <CollapsibleTrigger
         className="cursor-pointer"
@@ -170,9 +171,9 @@ function CollapsibleMenu({
       >
         <div
           className={cn(
-            "flex items-center justify-between p-3",
+            "flex items-center justify-between p-3 group-hover:bg-primary/40",
             className,
-            isOpen && "rounded-bl-none bg-primary/40",
+            isOpen && "rounded-bl-none bg-primary/20",
           )}
         >
           <div className={linkStyles}>
@@ -188,7 +189,7 @@ function CollapsibleMenu({
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className="relative">
-        <div className="absolute left-0 top-0 z-0 h-full w-[3px] bg-primary/30" />
+        <div className="absolute left-0 top-0 z-0 h-full w-[3px] bg-primary/20 group-hover:bg-primary/40" />
         <Nav
           routes={{
             [path]: {
