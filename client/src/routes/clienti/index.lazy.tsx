@@ -197,7 +197,7 @@ const dialogContentInputs = columns
   }));
 
 function Page() {
-  const { isPending, error, data, isFetching } = useQuery({
+  const { isPending, isFetching, error, data } = useQuery({
     queryKey: ["clients", "get"],
     url: "/api/clienti",
     validator: z.array(ClientValidator),
