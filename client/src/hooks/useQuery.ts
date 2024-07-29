@@ -5,16 +5,19 @@ type Args<Output, Def extends z.ZodTypeDef, Input> = {
   queryKey: string[];
   url: string;
   validator: z.ZodSchema<Output, Def, Input>;
+  staleTime?: number;
 };
 
 export default function useQuery<Output, Def extends z.ZodTypeDef, Input>({
   queryKey,
   url,
   validator,
+  staleTime = Infinity,
 }: Args<Output, Def, Input>) {
   const query = useQueryTanstack({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey,
+    staleTime,
     queryFn: async () => {
       const response = await fetch(url);
 
