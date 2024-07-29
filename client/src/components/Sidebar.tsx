@@ -7,7 +7,6 @@ import {
   ChevronUp,
   ClipboardMinus,
   Coins,
-  House,
   LayoutDashboard,
   ListCheck,
   NotebookTabs,
@@ -36,7 +35,6 @@ type RoutesGeneric<T> = Partial<Record<ValidRoute, RouteInfo & T>>;
 type Routes = RoutesGeneric<{ nested?: RoutesGeneric<{}> }>;
 
 const routes: Routes = Object.freeze({
-  "/": { text: "Acasă", icon: <House /> },
   "/furnizori": { text: "Furnizori", icon: <Truck /> },
   "/clienti": {
     text: "Clienți",
@@ -189,7 +187,7 @@ function CollapsibleMenu({
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className="relative">
-        <div className="absolute left-0 top-0 z-0 h-full w-[3px] bg-primary/20 group-hover:bg-primary/40" />
+        <div className="absolute left-0 top-0 z-0 h-full w-[3px] bg-primary/20 transition-colors group-hover:bg-primary/40" />
         <Nav
           routes={{
             [path]: {
