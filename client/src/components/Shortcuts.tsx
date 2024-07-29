@@ -4,13 +4,14 @@ import ThemeSwitch from "./ThemeSwitch";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -25,7 +26,6 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -65,7 +65,7 @@ export default function Shortcuts({ className }: Props) {
           ? path.substring(0, path.length - 1)
           : path;
       }),
-    [path],
+    [],
   );
 
   const addShortcutForm = useForm<Shortcut>({
@@ -74,6 +74,10 @@ export default function Shortcuts({ className }: Props) {
       path,
     },
   });
+
+  useEffect(() => {
+    addShortcutForm.reset({ path });
+  }, [path]);
 
   const addShortcut = ({ path, name }: Shortcut) => {
     setShortcuts(prev => ({ ...prev, [path]: name }));
@@ -111,13 +115,19 @@ export default function Shortcuts({ className }: Props) {
       </ul>
       <Dialog>
         <DialogTrigger asChild>
-          <button className="btn ml-auto rounded-lg p-2">
-            Modifică scurtăturile
+          <button
+            id="change-shortcuts"
+            className="btn ml-auto rounded-lg p-2"
+          >
+            Schimbă scurtăturile
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Modifică scurtăturile</DialogTitle>
+            <DialogTitle>Schimbă scurtăturile</DialogTitle>
+            <DialogDescription className="sr-only">
+              Schimbă scurtăturile aici. Salvează când ai terminat.
+            </DialogDescription>
           </DialogHeader>
           <Tabs
             defaultValue="modify"
@@ -132,6 +142,7 @@ export default function Shortcuts({ className }: Props) {
                 <form
                   onSubmit={addShortcutForm.handleSubmit(addShortcut)}
                   className="space-y-4"
+                  key={`modify-shortcut-${path}`}
                 >
                   <FormField
                     control={addShortcutForm.control}
@@ -176,9 +187,6 @@ export default function Shortcuts({ className }: Props) {
                             autoComplete="off"
                           />
                         </FormControl>
-                        <FormDescription>
-                          Acesta este numele cu care o să apară scurtătura.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -188,42 +196,48 @@ export default function Shortcuts({ className }: Props) {
               </Form>
             </TabsContent>
             <TabsContent value="delete">
-              <ul className="mb-2 space-y-2">
-                {Object.entries(shortcuts).map(([path, name]) => (
-                  <li
-                    key={`dialog-${path}`}
-                    className={cn(
-                      "flex flex-row items-center gap-3 rounded-md p-2",
-                      selectedShortcuts[path] && "bg-accent",
-                    )}
+              {Object.entries(shortcuts).length > 0 ? (
+                <>
+                  <ul className="mb-2 space-y-2">
+                    {Object.entries(shortcuts).map(([path, name]) => (
+                      <li
+                        key={`dialog-${path}`}
+                        className={cn(
+                          "flex flex-row items-center gap-3 rounded-md p-2",
+                          selectedShortcuts[path] && "bg-accent",
+                        )}
+                      >
+                        <Checkbox
+                          checked={selectedShortcuts[path]}
+                          onCheckedChange={checked =>
+                            checked != "indeterminate" &&
+                            setSelectedShortcuts(prev => ({
+                              ...prev,
+                              [path]: checked,
+                            }))
+                          }
+                        />
+                        {name}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    variant="destructive"
+                    type="submit"
+                    className="ml-auto block"
+                    onClick={deleteShortcuts}
+                    disabled={
+                      !Object.entries(selectedShortcuts).some(
+                        ([, isSelected]) => isSelected,
+                      )
+                    }
                   >
-                    <Checkbox
-                      checked={selectedShortcuts[path]}
-                      onCheckedChange={checked =>
-                        checked != "indeterminate" &&
-                        setSelectedShortcuts(prev => ({
-                          ...prev,
-                          [path]: checked,
-                        }))
-                      }
-                    />
-                    {name}
-                  </li>
-                ))}
-              </ul>
-              <Button
-                variant="destructive"
-                type="submit"
-                className="ml-auto block"
-                onClick={deleteShortcuts}
-                disabled={
-                  !Object.entries(selectedShortcuts).some(
-                    ([, isSelected]) => isSelected,
-                  )
-                }
-              >
-                Șterge
-              </Button>
+                    Șterge
+                  </Button>
+                </>
+              ) : (
+                <div className="pt-4 text-center">Nici o scurtătură.</div>
+              )}
             </TabsContent>
           </Tabs>
         </DialogContent>

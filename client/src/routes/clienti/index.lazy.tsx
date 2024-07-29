@@ -153,7 +153,7 @@ const columns = [
               description={
                 <>
                   <p>Modifică datele clientului aici.</p>
-                  <p>Dă click pe salveaza cand ai terminat.</p>
+                  <p>Salvează când ai terminat.</p>
                 </>
               }
               footer={<Button type="submit">Salvează</Button>}
@@ -233,6 +233,12 @@ function AddClient() {
       </DialogTrigger>
       <DialogContentDataForm
         title="Adaugă Client"
+        description={
+          <>
+            <p>Adaugă datele clientului aici.</p>
+            <p>Salvează când ai terminat.</p>
+          </>
+        }
         footer={<Button type="submit">Adaugă</Button>}
         inputs={dialogContentInputs}
       />

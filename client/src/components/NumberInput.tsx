@@ -25,7 +25,7 @@ export default function NumberInput({
       )}
     >
       <input
-        className="w-full focus-visible:outline-none"
+        className="w-full bg-inherit text-inherit focus-visible:outline-none"
         value={value}
         onChange={e => {
           const value = e.target.value;

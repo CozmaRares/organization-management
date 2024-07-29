@@ -13,7 +13,6 @@ import { InputType } from "@/lib/types";
 
 type Props = {
   title: string;
-  description?: ReactNode;
   footer: ReactNode;
   inputs: Array<{
     id: string;
@@ -21,19 +20,26 @@ type Props = {
     inputType: InputType;
     defaultValue?: string;
   }>;
-};
+} & ({ description: ReactNode } | { descriptionSR: string });
 
 export default function DialogContentDataForm({
   title,
-  description,
   footer,
   inputs,
+  ...description
 }: Props) {
   return (
     <DialogContent className="max-w-[600px]">
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
-        {description && <DialogDescription>{description}</DialogDescription>}
+        {description &&
+          ("description" in description ? (
+            <DialogDescription>{description.description}</DialogDescription>
+          ) : (
+            <DialogDescription className="sr-only">
+              {description.descriptionSR}
+            </DialogDescription>
+          ))}
       </DialogHeader>
       <div className="grid grid-cols-2 gap-4 py-2">
         {inputs.map(({ id, label, defaultValue, inputType }) => {
