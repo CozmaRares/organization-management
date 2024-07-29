@@ -1,27 +1,104 @@
 import { cn } from "@/lib/utils";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation, useRouter } from "@tanstack/react-router";
 import ThemeSwitch from "./ThemeSwitch";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { useMemo, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import useStateWithLocalStorage from "@/hooks/useStateWithLocalStorage";
+
+const ShortcutValidator = z.object({
+  path: z.string(),
+  name: z.string({ required_error: "Numele este obligatoriu." }),
+});
+
+type Shortcut = z.infer<typeof ShortcutValidator>;
 
 type Props = {
   className?: string;
 };
 
-// TODO: remove
-const jason = JSON.stringify([
-  ["/aa", "aa"],
-  ["/bb", "bb"],
-  ["/cc", "cc"],
-]);
-
 export default function Shortcuts({ className }: Props) {
-  const shortcuts = JSON.parse(
-    localStorage.getItem("shortcuts") ?? jason,
-  ) as string[];
+  const [shortcuts, setShortcuts] = useStateWithLocalStorage<
+    Record<string, string>
+  >("shortcuts", {});
+
+  const [selectedShortcuts, setSelectedShortcuts] = useState<
+    Record<string, boolean>
+  >({});
+
+  const path = useLocation().pathname;
+  const { flatRoutes } = useRouter();
+  const routes = useMemo(
+    () =>
+      flatRoutes.map(({ fullPath }) => {
+        const path = fullPath as string;
+
+        return path.endsWith("/") && path != "/"
+          ? path.substring(0, path.length - 1)
+          : path;
+      }),
+    [path],
+  );
+
+  const addShortcutForm = useForm<Shortcut>({
+    resolver: zodResolver(ShortcutValidator),
+    defaultValues: {
+      path,
+    },
+  });
+
+  const addShortcut = ({ path, name }: Shortcut) => {
+    setShortcuts(prev => ({ ...prev, [path]: name }));
+  };
+
+  const deleteShortcuts = () => {
+    setShortcuts(prev => {
+      const selected = new Set(
+        Object.entries(selectedShortcuts).map(([path]) => path),
+      );
+
+      const newShortcuts = Object.entries(prev).filter(
+        ([path]) => !selected.has(path),
+      );
+
+      setSelectedShortcuts({});
+
+      return Object.fromEntries(newShortcuts);
+    });
+  };
 
   return (
     <div className={cn("flex flex-row items-center gap-2", className)}>
       <ul className="contents">
-        {shortcuts.map(([path, name]) => (
+        {Object.entries(shortcuts).map(([path, name]) => (
           <li key={path}>
             <Link
               to={`/${path}`}
@@ -32,9 +109,125 @@ export default function Shortcuts({ className }: Props) {
           </li>
         ))}
       </ul>
-      <button className="btn ml-auto rounded-lg p-2">
-        Modifică scurtăturile
-      </button>
+      <Dialog>
+        <DialogTrigger asChild>
+          <button className="btn ml-auto rounded-lg p-2">
+            Modifică scurtăturile
+          </button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Modifică scurtăturile</DialogTitle>
+          </DialogHeader>
+          <Tabs
+            defaultValue="modify"
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2 bg-accent text-accent-foreground">
+              <TabsTrigger value="modify">Modifică</TabsTrigger>
+              <TabsTrigger value="delete">Șterge</TabsTrigger>
+            </TabsList>
+            <TabsContent value="modify">
+              <Form {...addShortcutForm}>
+                <form
+                  onSubmit={addShortcutForm.handleSubmit(addShortcut)}
+                  className="space-y-4"
+                >
+                  <FormField
+                    control={addShortcutForm.control}
+                    name="path"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Pagină</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Alege o pagină" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {routes.map(route => (
+                              <SelectItem
+                                key={`add-shortcut-form-${route}`}
+                                value={route}
+                              >
+                                {route}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={addShortcutForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Numele scurtăturii</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Scurtătură..."
+                            {...field}
+                            autoComplete="off"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Acesta este numele cu care o să apară scurtătura.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit">Salvează</Button>
+                </form>
+              </Form>
+            </TabsContent>
+            <TabsContent value="delete">
+              <ul className="mb-2 space-y-2">
+                {Object.entries(shortcuts).map(([path, name]) => (
+                  <li
+                    key={`dialog-${path}`}
+                    className={cn(
+                      "flex flex-row items-center gap-3 rounded-md p-2",
+                      selectedShortcuts[path] && "bg-accent",
+                    )}
+                  >
+                    <Checkbox
+                      checked={selectedShortcuts[path]}
+                      onCheckedChange={checked =>
+                        checked != "indeterminate" &&
+                        setSelectedShortcuts(prev => ({
+                          ...prev,
+                          [path]: checked,
+                        }))
+                      }
+                    />
+                    {name}
+                  </li>
+                ))}
+              </ul>
+              <Button
+                variant="destructive"
+                type="submit"
+                className="ml-auto block"
+                onClick={deleteShortcuts}
+                disabled={
+                  !Object.entries(selectedShortcuts).some(
+                    ([, isSelected]) => isSelected,
+                  )
+                }
+              >
+                Șterge
+              </Button>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
       <ThemeSwitch />
     </div>
   );

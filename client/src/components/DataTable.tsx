@@ -166,9 +166,7 @@ export default function DataTable<TData, TValue>({
                 Arată {pageSize}
               </SelectItem>
             ))}
-            <SelectItem value={data.length.toString()}>
-              Toate
-            </SelectItem>
+            <SelectItem value={data.length.toString()}>Toate</SelectItem>
           </SelectContent>
         </Select>
         <Button

@@ -9,7 +9,6 @@ source "$env_file"
 
 if [[ $ENVIRONMENT == "development" ]]; then
     VOLUMES=$(cat <<EOF
-
         volumes:
             - ./html:/var/www/html
             - ./vendor:/var/www/vendor
@@ -67,7 +66,7 @@ services:
             target: ${TARGET}
         ports:
             - 6969:80
-        ${VOLUMES}
+${VOLUMES}
         networks:
             org-management:
                 aliases:
