@@ -60,20 +60,27 @@ export default function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+
     onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
+    getSortedRowModel: getSortedRowModel(),
+
     onPaginationChange: setPagination,
+    getPaginationRowModel: getPaginationRowModel(),
+
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+
+    onColumnVisibilityChange: setColumnVisibility,
+
     state: {
-      pagination,
       sorting,
-      columnVisibility,
+      pagination,
       columnFilters,
+      columnVisibility,
     },
+
     defaultColumn: {
       minSize: 0,
       size: Number.MAX_SAFE_INTEGER,
