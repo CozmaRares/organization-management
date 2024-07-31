@@ -32,6 +32,7 @@ import { z } from "zod";
 import { ClientValidator } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import AnimateEllipses from "@/components/AnimateEllipses";
+import { api } from "@/lib/api";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -195,11 +196,7 @@ const dialogContentInputs = columns
   }));
 
 function Page() {
-  const { isPending, isFetching, error, data } = useQuery({
-    queryKey: ["clients", "get"],
-    url: "/api/clienti",
-    validator: z.array(ClientValidator),
-  });
+  const { isPending, isFetching, error, data } = api.clients.get.query();
 
   if (isPending) return <AnimateEllipses text="Se încarcă" />;
 

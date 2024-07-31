@@ -3,9 +3,10 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { Link, RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import Error from "./components/Error";
 import { Home } from "lucide-react";
+import { queryClient } from "./lib/api";
 
 const router = createRouter({
   routeTree,
@@ -23,8 +24,6 @@ const router = createRouter({
     );
   },
 });
-
-const queryClient = new QueryClient();
 
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
