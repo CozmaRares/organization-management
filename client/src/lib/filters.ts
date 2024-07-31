@@ -5,3 +5,10 @@ export const fuzzyFilter: FilterFn<unknown> = (row, columnId, value) => {
   const itemRank = rankItem(row.getValue(columnId), value);
   return itemRank.passed;
 };
+
+export const startsWithFilter: FilterFn<unknown> = (
+  row,
+  columnID,
+  filterValue,
+) =>
+  row.getValue<string>(columnID).toLowerCase().trim().startsWith(filterValue);

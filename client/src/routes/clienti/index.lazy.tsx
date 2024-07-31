@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { fuzzyFilter } from "@/lib/filters";
+import { fuzzyFilter, startsWithFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
@@ -43,9 +43,7 @@ const columns = [
   {
     accessorKey: "cif",
     header: "CIF",
-    filterFn: (row, columnID, filterValue) => {
-      return (row.getValue(columnID) as string).startsWith(filterValue);
-    },
+    filterFn: startsWithFilter as FilterFn<Client>,
     meta: {
       filterComponent: (table: Table<Client>) => (
         <InputFilter
