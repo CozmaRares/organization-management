@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { varchar } from "./utils";
 
 export const ClientValidator = z.object({
-  name: z.string(),
-  address: z.string(),
-  cif: z.string(),
-  workplace: z.string(),
+  name: varchar(),
+  address: varchar(),
+  cif: varchar(),
+  workplace: varchar(),
 });

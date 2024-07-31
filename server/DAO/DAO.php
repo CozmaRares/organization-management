@@ -9,9 +9,9 @@ interface DAO {
     public static function findUnique(Connection $connection, string $id);
     public static function find(Connection $connection, SelectQueryBuilder $builder);
 
-    public static function create(Connection $connection, array $data);
+    public static function create(Connection $connection, array $data): bool;
 
-    public function update(Connection $connection);
+    public static function update(Connection $connection, string $uniqueID, array $data): bool;
 
-    public function delete(Connection $connection);
+    public static function delete(Connection $connection, string $uniqueID): bool;
 }

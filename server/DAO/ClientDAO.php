@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Server\DAO;
 
 use Server\Models\Client;
-use Server\Database\Query\SelectQueryBuilder;
 use Server\Database\Connection;
+use Server\Database\Query\SelectQueryBuilder;
+use Server\Database\Query\InsertQueryBuilder;
+use Server\Database\Query\DeleteQueryBuilder;
+use Server\Database\Query\UpdateQueryBuilder;
 
+use function Server\Database\Query\_eq;
 use function Server\Utils\getNullish;
 
 class ClientDAO implements DAO {
@@ -18,6 +22,7 @@ class ClientDAO implements DAO {
         "cif" => "cif",
         "workplace" => "punct_lucru",
     ];
+    public const PK_COL = "name";
 
     private function __construct() {
     }
@@ -32,11 +37,12 @@ class ClientDAO implements DAO {
     }
 
     public static function findUnique(Connection $connection, string $name) {
-        $col = ClientDAO::COLUMNS["name"];
+        $col = ClientDAO::COLUMNS[ClientDAO::PK_COL];
 
         $query = (new SelectQueryBuilder())
-            ->where("$col = $name")
-            ->build(EmployeeDAO::TABLE_NAME);
+            ->where(_eq("`$col`", "'$name'"))
+            ->setTable(ClientDAO::TABLE_NAME)
+            ->build();
 
         $result = $connection->runQuery($query);
 
@@ -50,10 +56,11 @@ class ClientDAO implements DAO {
     }
 
     public static function find(Connection $connection, SelectQueryBuilder $builder) {
-        $query = $builder->build(ClientDAO::TABLE_NAME);
+        $query = $builder
+            ->setTable(ClientDAO::TABLE_NAME)
+            ->build();
 
         $result = $connection->runQuery($query);
-
         $results = [];
 
         if ($result->num_rows > 0) {
@@ -65,12 +72,55 @@ class ClientDAO implements DAO {
         return $results;
     }
 
-    public static function create(Connection $connection, array $data) {
+    public static function create(Connection $connection, array $data): bool {
+        $builder = new InsertQueryBuilder();
+        foreach ($data as $col => $value) {
+            $builder->addCol(ClientDAO::COLUMNS[$col], $value);
+        }
+        $builder->setTable(ClientDAO::TABLE_NAME);
+
+        $query = $builder->build();
+
+        $res = $connection->runQuery($query);
+
+        if (is_bool($res))
+            return $res;
+
+        return true;
     }
 
-    public function update(Connection $connection) {
+    public static function update(Connection $connection, string $uniqueID, array $data): bool {
+        $builder = new UpdateQueryBuilder();
+        foreach ($data as $col => $value) {
+            $builder->addCol(ClientDAO::COLUMNS[$col], $value);
+        }
+
+        $query = $builder
+            ->setTable(ClientDAO::TABLE_NAME)
+            ->setPkCol(ClientDAO::COLUMNS[ClientDAO::PK_COL])
+            ->setID($uniqueID)
+            ->build();
+
+        $res = $connection->runQuery($query);
+
+        if (is_bool($res))
+            return $res;
+
+        return true;
     }
 
-    public function delete(Connection $connection) {
+    public static function delete(Connection $connection, string $uniqueID): bool {
+        $query = (new DeleteQueryBuilder())
+            ->setTable(ClientDAO::TABLE_NAME)
+            ->setPkCol(ClientDAO::COLUMNS[ClientDAO::PK_COL])
+            ->setID($uniqueID)
+            ->build();
+
+        $res = $connection->runQuery($query);
+
+        if (is_bool($res))
+            return $res;
+
+        return true;
     }
 }

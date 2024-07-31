@@ -8,6 +8,7 @@ class SelectQueryBuilder {
     private $orderBy;
     private $limit;
     private $offset;
+    private $tableName;
 
     public function __construct() {
         $this->cols = [];
@@ -15,6 +16,11 @@ class SelectQueryBuilder {
         $this->orderBy = [];
         $this->limit = null;
         $this->offset = null;
+    }
+
+    public function setTable(string $tableName) {
+        $this->tableName = $tableName;
+        return $this;
     }
 
     public function addCol(string $col) {
@@ -48,8 +54,16 @@ class SelectQueryBuilder {
         return $this;
     }
 
-    public function build(string $tableName) {
-        $query = "select " . (count($this->cols) == 0 ? "*" : join(", ", $this->cols)) . " from $tableName";
+    public function build() {
+        $cols = array_map(
+            function ($col) {
+                return "`$col`";
+            },
+            $this->cols
+        );
+        $cols = implode(', ', $cols);
+
+        $query = "select " . (count($this->cols) == 0 ? "*" : $cols) . " from `$this->tableName`";
 
         if ($this->where !== null) {
             $query .= " where $this->where";

@@ -40,3 +40,8 @@ class Connection extends mysqli {
         return $this->query($query);
     }
 }
+
+// TODO:
+//
+// class QueryResult {
+// }

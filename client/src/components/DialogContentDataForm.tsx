@@ -1,33 +1,63 @@
 import {
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ReactNode } from "react";
-import { Label } from "./ui/label";
+import { forwardRef, ReactNode } from "react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { InputType } from "@/lib/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  ControllerRenderProps,
+  DefaultValues,
+  FieldValues,
+  Path,
+  useForm,
+} from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Button } from "./ui/button";
 
-type Props = {
+type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
   title: string;
-  footer: ReactNode;
   inputs: Array<{
     id: string;
     label: string;
     inputType: InputType;
-    defaultValue?: string;
   }>;
+  schema: z.ZodSchema<Output, Def, Input>;
+  defaultValues?: DefaultValues<Input>;
+  buttonText: string;
+  onSubmit: (data: Input) => void;
 } & ({ description: ReactNode } | { descriptionSR: string });
 
-export default function DialogContentDataForm({
+export default function DialogContentDataForm<
+  Output,
+  Def extends z.ZodTypeDef,
+  Input extends FieldValues,
+>({
   title,
-  footer,
   inputs,
+  schema,
+  defaultValues,
+  buttonText,
+  onSubmit,
   ...description
-}: Props) {
+}: Props<Output, Def, Input>) {
+  const form = useForm<Input>({
+    resolver: zodResolver(schema),
+    defaultValues,
+  });
+
   return (
     <DialogContent className="max-w-[600px]">
       <DialogHeader>
@@ -41,42 +71,74 @@ export default function DialogContentDataForm({
             </DialogDescription>
           ))}
       </DialogHeader>
-      <div className="grid grid-cols-2 gap-4 py-2">
-        {inputs.map(({ id, label, defaultValue, inputType }) => {
-          return (
-            <div
-              key={`dialog-input-${id}`}
-              className="flex flex-col gap-2"
-            >
-              <Label htmlFor={id}>{label}</Label>
-              <Inp
-                id={id}
-                placeholder={label}
-                inputType={inputType}
-                defaultValue={defaultValue}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-2 gap-4 py-2"
+        >
+          {inputs.map(({ id, label, inputType }) => {
+            return (
+              <FormField
+                key={`dialog-input-${id}`}
+                control={form.control}
+                name={id as Path<Input>}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{label}</FormLabel>
+                    <FormControl>
+                      <Inp
+                        placeholder={label}
+                        inputType={inputType}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          );
-        })}
-      </div>
-      <DialogFooter>{footer}</DialogFooter>
+            );
+          })}
+          <Button type="submit">{buttonText}</Button>
+        </form>
+      </Form>
     </DialogContent>
   );
 }
 
-type InpProps = {
-  id: string;
+type InpProps = ControllerRenderProps<FieldValues, Path<FieldValues>> & {
   placeholder: string;
   inputType: InputType;
-  defaultValue?: string;
 };
 
-function Inp({ inputType, ...props }: InpProps) {
-  if (inputType == "input") return <Input {...props} />;
+const Inp = forwardRef<HTMLElement, InpProps>(
+  ({ inputType, ...props }, ref) => {
+    if (inputType == "input")
+      return (
+        <Input
+          // @ts-expect-error overwrite ref warning
+          ref={ref}
+          {...props}
+        />
+      );
 
-  if (inputType == "textarea") return <Textarea {...props} />;
+    if (inputType == "textarea")
+      return (
+        <Textarea
+          // @ts-expect-error overwrite ref warning
+          ref={ref}
+          {...props}
+        />
+      );
 
-  if (inputType == "date") return <Input {...props} />;
+    if (inputType == "date")
+      return (
+        <Input
+          // @ts-expect-error overwrite ref warning
+          ref={ref}
+          {...props}
+        />
+      );
 
-  return null;
-}
+    return null;
+  },
+);

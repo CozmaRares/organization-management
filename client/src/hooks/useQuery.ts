@@ -14,7 +14,7 @@ export default function useQuery<Output, Def extends z.ZodTypeDef, Input>({
   validator,
   staleTime = Infinity,
 }: Args<Output, Def, Input>) {
-  const query = useQueryTanstack({
+  return useQueryTanstack({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey,
     staleTime,
@@ -28,6 +28,4 @@ export default function useQuery<Output, Def extends z.ZodTypeDef, Input>({
       return validator.parse(jason);
     },
   });
-
-  return query;
 }

@@ -1,7 +1,10 @@
 import useQuery from "@/hooks/useQuery";
 import { z } from "zod";
-import { ClientValidator } from "./zod/client";
 import { QueryClient } from "@tanstack/react-query";
+import useUpdate from "@/hooks/useUpdate";
+import { ClientValidator } from "./zod/client";
+import useCreate from "@/hooks/useCreate";
+import useDelete from "@/hooks/useDelete";
 
 export const queryClient = new QueryClient();
 
@@ -13,13 +16,19 @@ export const apiKeys = Object.freeze({
   },
 } as const satisfies API<string[]>);
 
-type Fn = (...args: unknown[]) => unknown;
-type APIEntries = { query: Fn; invalidate: Fn } | { mutate: Fn };
+type Client = z.infer<typeof ClientValidator>;
 
-export const api = {
+type APIEntries =
+  | {
+      useQuery: () => unknown;
+      invalidate: () => Promise<void>;
+    }
+  | { useMutation: (...args: unknown[]) => unknown };
+
+export const api = Object.freeze({
   clients: {
     get: {
-      query: () =>
+      useQuery: () =>
         useQuery({
           queryKey: apiKeys.clients.get,
           url: "/api/clienti",
@@ -28,5 +37,26 @@ export const api = {
       invalidate: () =>
         queryClient.invalidateQueries({ queryKey: apiKeys.clients.get }),
     },
+    create: {
+      useMutation: () =>
+        useCreate<Client>({
+          url: "/api/clienti",
+          onSuccessInvalidateKeys: apiKeys.clients.get,
+        }),
+    },
+    update: {
+      useMutation: () =>
+        useUpdate<Client>({
+          url: "/api/clienti",
+          onSuccessInvalidateKeys: apiKeys.clients.get,
+        }),
+    },
+    delete: {
+      useMutation: () =>
+        useDelete({
+          url: "/api/clienti",
+          onSuccessInvalidateKeys: apiKeys.clients.get,
+        }),
+    },
   },
-} as const satisfies API<APIEntries>;
+} as const satisfies API<APIEntries>);

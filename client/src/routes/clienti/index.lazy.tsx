@@ -27,7 +27,6 @@ import {
 import DialogContentDataForm from "@/components/DialogContentDataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { InputType } from "@/lib/types";
-import useQuery from "@/hooks/useQuery";
 import { z } from "zod";
 import { ClientValidator } from "@/lib/zod/client";
 import Error from "@/components/Error";
@@ -117,6 +116,9 @@ const columns = [
     cell: ({ row }) => {
       const client = row.original;
 
+      const deleteMutation = api.clients.delete.useMutation();
+      const updateMutation = api.clients.update.useMutation();
+
       return (
         <Dialog>
           <AlertDialog>
@@ -155,11 +157,13 @@ const columns = [
                   <p>Salvează când ai terminat.</p>
                 </>
               }
-              footer={<Button type="submit">Salvează</Button>}
-              inputs={dialogContentInputs.map(inp => ({
-                ...inp,
-                defaultValue: client[inp.id],
-              }))}
+              buttonText="Salvează"
+              onSubmit={data => {
+                updateMutation.mutate({ ...data, pathParam: client.name });
+              }}
+              inputs={dialogContentInputs}
+              defaultValues={client}
+              schema={ClientValidator}
             />
 
             <AlertDialogContent>
@@ -172,7 +176,10 @@ const columns = [
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Anulează</AlertDialogCancel>
-                <AlertDialogAction variant="destructive">
+                <AlertDialogAction
+                  onClick={() => deleteMutation.mutate(client.name)}
+                  variant="destructive"
+                >
                   Continuă
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -196,7 +203,7 @@ const dialogContentInputs = columns
   }));
 
 function Page() {
-  const { isPending, isFetching, error, data } = api.clients.get.query();
+  const { isPending, isFetching, error, data } = api.clients.get.useQuery();
 
   if (isPending) return <AnimateEllipses text="Se încarcă" />;
 
@@ -213,7 +220,11 @@ function Page() {
   );
 }
 
+// FIX: error messages
+// what if you insert a client with an already existing name?
 function AddClient() {
+  const createMutation = api.clients.create.useMutation();
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -234,8 +245,12 @@ function AddClient() {
             <p>Salvează când ai terminat.</p>
           </>
         }
-        footer={<Button type="submit">Adaugă</Button>}
+        buttonText="Adaugă"
+        onSubmit={data => {
+          createMutation.mutate(data);
+        }}
         inputs={dialogContentInputs}
+        schema={ClientValidator}
       />
     </Dialog>
   );
