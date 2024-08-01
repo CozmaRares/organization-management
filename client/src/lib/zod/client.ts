@@ -5,5 +5,5 @@ export const ClientValidator = z.object({
   name: varchar(),
   address: varchar(),
   cif: varchar(),
-  workplace: varchar(),
+  workpoint: varchar(),
 });

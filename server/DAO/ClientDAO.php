@@ -20,7 +20,7 @@ class ClientDAO implements DAO {
         "name" => "nume",
         "address" => "adresa",
         "cif" => "cif",
-        "workplace" => "punct_lucru",
+        "workpoint" => "punct_lucru",
     ];
     public const PK_COL = "name";
 
@@ -32,7 +32,7 @@ class ClientDAO implements DAO {
             getNullish($data, ClientDAO::COLUMNS["name"]),
             getNullish($data, ClientDAO::COLUMNS["address"]),
             getNullish($data, ClientDAO::COLUMNS["cif"]),
-            getNullish($data, ClientDAO::COLUMNS["workplace"]),
+            getNullish($data, ClientDAO::COLUMNS["workpoint"]),
         );
     }
 

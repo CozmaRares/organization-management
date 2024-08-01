@@ -6,18 +6,18 @@ class Client {
     private $name;
     private $address;
     private $cif;
-    private $workplace;
+    private $workpoint;
 
     public function __construct(
         ?string $name,
         ?string $address,
         ?string $cif,
-        ?string $workplace,
+        ?string $workpoint,
     ) {
         $this->name = $name;
         $this->address = $address;
         $this->cif = $cif;
-        $this->workplace = $workplace;
+        $this->workpoint = $workpoint;
     }
 
     public function getName(): string {
@@ -45,12 +45,12 @@ class Client {
     }
 
 
-    public function getWorkplace(): string {
-        return $this->workplace;
+    public function getWorkpoint(): string {
+        return $this->workpoint;
     }
 
-    public function setWorkplace(string $workplace): void {
-        $this->workplace = $workplace;
+    public function setWorkpoint(string $workpoint): void {
+        $this->workpoint = $workpoint;
     }
 }
 

@@ -74,17 +74,13 @@ $router->mount('/api', function () use ($router) {
             $res[] = [
                 "name" => $emp->getName(),
                 "address" => $emp->getAddress(),
-                "workplace" => $emp->getWorkplace(),
+                "workpoint" => $emp->getWorkpoint(),
                 "cif" => $emp->getCIF(),
             ];
         }
         sendJSON($res);
         $conn->close();
     });
-
-    /*$router->get('/(\d+)', function($id) {*/
-    /*    echo 'id id ' . htmlentities($id);*/
-    /*});*/
 });
 
 $router->run();

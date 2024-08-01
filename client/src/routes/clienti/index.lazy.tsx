@@ -92,7 +92,7 @@ const columns = [
     },
   },
   {
-    accessorKey: "workplace",
+    accessorKey: "workpoint",
     header: "Punct de Lucru",
     filterFn: fuzzyFilter as FilterFn<Client>,
     meta: {
@@ -100,10 +100,10 @@ const columns = [
         <InputFilter
           placeholder="Filtrează punct de lucru..."
           value={
-            (table.getColumn("workplace")?.getFilterValue() as string) ?? ""
+            (table.getColumn("workpoint")?.getFilterValue() as string) ?? ""
           }
           onChange={event =>
-            table.getColumn("workplace")?.setFilterValue(event.target.value)
+            table.getColumn("workpoint")?.setFilterValue(event.target.value)
           }
         />
       ),
