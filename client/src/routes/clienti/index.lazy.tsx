@@ -153,8 +153,8 @@ const columns = [
               title="Modifica Datele Clientului"
               description={
                 <>
-                  <p>Modifică datele clientului aici.</p>
-                  <p>Salvează când ai terminat.</p>
+                  <span className="block">Modifică datele clientului aici.</span>
+                  <span className="block">Salvează când ai terminat.</span>
                 </>
               }
               buttonText="Salvează"
@@ -227,22 +227,16 @@ function AddClient() {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button
-          type="button"
-          variant="outline"
-          className="flex flex-row items-center gap-1"
-        >
-          <Plus className="h-4 w-4" />
-          Adaugă Client
-        </Button>
+      <DialogTrigger className="flex h-10 flex-row items-center justify-center gap-1 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+        <Plus className="h-4 w-4" />
+        Adaugă Client
       </DialogTrigger>
       <DialogContentDataForm
         title="Adaugă Client"
         description={
           <>
-            <p>Adaugă datele clientului aici.</p>
-            <p>Salvează când ai terminat.</p>
+            <span className="block">Adaugă datele clientului aici.</span>
+            <span className="block">Salvează când ai terminat.</span>
           </>
         }
         buttonText="Adaugă"

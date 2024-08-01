@@ -98,7 +98,7 @@ export default function DialogContentDataForm<
               />
             );
           })}
-          <Button type="submit">{buttonText}</Button>
+          <Button className="col-span-full" type="submit">{buttonText}</Button>
         </form>
       </Form>
     </DialogContent>
