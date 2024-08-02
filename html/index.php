@@ -19,9 +19,9 @@ $router = new Router();
 // TODO: add documentation to the functions
 // FIX: data is not validated
 
-$router->mount('/api', function () use ($router) {
+$router->mount('/api/clienti', function () use ($router) {
 
-    $router->delete("/clienti/(\w+)", function (string $id) {
+    $router->delete("/(\w+)", function (string $id) {
         $conn = ConnectionFactory::newConnection();
         $result = ClientDAO::delete($conn, $id);
         $conn->close();
@@ -35,7 +35,7 @@ $router->mount('/api', function () use ($router) {
         echo "Nu s-a putut efectua ștergerea clientului";
     });
 
-    $router->put("/clienti/(\w+)", function (string $id) {
+    $router->put("/(\w+)", function (string $id) {
         $body = getJSONBody();
         $conn = ConnectionFactory::newConnection();
         $result = ClientDAO::update($conn, $id, $body);
@@ -50,7 +50,7 @@ $router->mount('/api', function () use ($router) {
         echo "Nu s-au putut actualiza datele clientului";
     });
 
-    $router->post("/clienti", function () {
+    $router->post("/", function () {
         $body = getJSONBody();
         $conn = ConnectionFactory::newConnection();
         $result = ClientDAO::create($conn, $body);
@@ -65,7 +65,7 @@ $router->mount('/api', function () use ($router) {
         echo "Nu s-a putut crea clientul";
     });
 
-    $router->get("/clienti", function () {
+    $router->get("/", function () {
         $builder = new SelectQueryBuilder();
         $conn = ConnectionFactory::newConnection();
         $result = ClientDAO::find($conn, $builder);

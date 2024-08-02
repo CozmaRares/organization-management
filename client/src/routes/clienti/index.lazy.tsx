@@ -220,8 +220,6 @@ function Page() {
   );
 }
 
-// FIX: error messages
-// what if you insert a client with an already existing name?
 function AddClient() {
   const createMutation = api.clients.create.useMutation();
 
