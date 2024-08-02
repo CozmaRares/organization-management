@@ -26,23 +26,13 @@ $router->mount('/api', function () use ($router) {
         $result = ClientDAO::delete($conn, $id);
         $conn->close();
 
-        if ($result->isError()) {
-            http_response_code(500);
-            $msg = $result->getError();
-            echo "Eroare internă: $msg";
+        if ($result->isSuccess()) {
+            http_response_code(204);
             return;
         }
 
-        $result = $result->getData();
-
-        if ($result === false) {
-            http_response_code(400);
-            echo "Nu s-a putut efectua ștergerea clientului";
-            return;
-        }
-
-        http_response_code(204);
-        return;
+        http_response_code(400);
+        echo "Nu s-a putut efectua ștergerea clientului";
     });
 
     $router->put("/clienti/(\w+)", function (string $id) {
@@ -51,23 +41,13 @@ $router->mount('/api', function () use ($router) {
         $result = ClientDAO::update($conn, $id, $body);
         $conn->close();
 
-        if ($result->isError()) {
-            http_response_code(500);
-            $msg = $result->getError();
-            echo "Eroare internă: $msg";
+        if ($result->isSuccess()) {
+            http_response_code(204);
             return;
         }
 
-        $result = $result->getData();
-
-        if ($result === false) {
-            http_response_code(400);
-            echo "Nu s-au putut actualiza datele clientului";
-            return;
-        }
-
-        http_response_code(204);
-        return;
+        http_response_code(400);
+        echo "Nu s-au putut actualiza datele clientului";
     });
 
     $router->post("/clienti", function () {
@@ -76,22 +56,13 @@ $router->mount('/api', function () use ($router) {
         $result = ClientDAO::create($conn, $body);
         $conn->close();
 
-        if ($result->isError()) {
-            http_response_code(500);
-            $msg = $result->getError();
-            echo "Eroare internă: $msg";
+        if ($result->isSuccess()) {
+            http_response_code(204);
             return;
         }
 
-        $result = $result->getData();
-
-        if ($result === false) {
-            http_response_code(400);
-            echo "Nu s-a putut adăuga clientul";
-            return;
-        }
-
-        http_response_code(204);
+        http_response_code(400);
+        echo "Nu s-a putut crea clientul";
     });
 
     $router->get("/clienti", function () {
