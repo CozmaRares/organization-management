@@ -2,7 +2,8 @@
     "autoload": {
         "files": [
             "server/Database/Query/Operators.php",
-            "server/Database/ConnectionFactory.php",
+            "server/Database/Connection.php",
+            "server/DAO/DAO.php",
             "server/utils.php"
         ],
         "psr-4": {

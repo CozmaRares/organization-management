@@ -36,7 +36,7 @@ class ClientDAO implements DAO {
         );
     }
 
-    public static function findUnique(Connection $connection, string $name) {
+    public static function findUnique(Connection $connection, string $name): DAOResult {
         $col = ClientDAO::COLUMNS[ClientDAO::PK_COL];
 
         $query = (new SelectQueryBuilder())
@@ -46,33 +46,40 @@ class ClientDAO implements DAO {
 
         $result = $connection->runQuery($query);
 
-        if ($result->num_rows <= 0) {
-            return null;
+        if ($result->isError()) {
+            return DAOResult::error($result->getError());
         }
 
-        $row = $result->fetch_assoc();
+        $result = $result->getRows();
 
-        return ClientDAO::createClient($row);
+        if (count($result) <= 0) {
+            return DAOResult::success(null);
+        }
+
+        $row = $result[0];
+
+        return DAOResult::success(ClientDAO::createClient($row));
     }
 
-    public static function find(Connection $connection, SelectQueryBuilder $builder) {
+    public static function find(Connection $connection, SelectQueryBuilder $builder): DAOResult {
         $query = $builder
             ->setTable(ClientDAO::TABLE_NAME)
             ->build();
 
         $result = $connection->runQuery($query);
-        $results = [];
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $results[] = ClientDAO::createClient($row);
-            }
+        if ($result->isError()) {
+            return DAOResult::error($result->getError());
         }
 
-        return $results;
+        return DAOResult::success(
+            array_map(function ($row) {
+                return ClientDAO::createClient($row);
+            }, $result->getRows())
+        );
     }
 
-    public static function create(Connection $connection, array $data): bool {
+    public static function create(Connection $connection, array $data): DAOResult {
         $builder = new InsertQueryBuilder();
         foreach ($data as $col => $value) {
             $builder->addCol(ClientDAO::COLUMNS[$col], $value);
@@ -81,15 +88,16 @@ class ClientDAO implements DAO {
 
         $query = $builder->build();
 
-        $res = $connection->runQuery($query);
+        $result = $connection->runQuery($query);
 
-        if (is_bool($res))
-            return $res;
+        if ($result->isError()) {
+            return DAOResult::error($result->getError());
+        }
 
-        return true;
+        return DAOResult::success($result);
     }
 
-    public static function update(Connection $connection, string $uniqueID, array $data): bool {
+    public static function update(Connection $connection, string $uniqueID, array $data): DAOResult {
         $builder = new UpdateQueryBuilder();
         foreach ($data as $col => $value) {
             $builder->addCol(ClientDAO::COLUMNS[$col], $value);
@@ -101,26 +109,28 @@ class ClientDAO implements DAO {
             ->setID($uniqueID)
             ->build();
 
-        $res = $connection->runQuery($query);
+        $result = $connection->runQuery($query);
 
-        if (is_bool($res))
-            return $res;
+        if ($result->isError()) {
+            return DAOResult::error($result->getError());
+        }
 
-        return true;
+        return DAOResult::success($result);
     }
 
-    public static function delete(Connection $connection, string $uniqueID): bool {
+    public static function delete(Connection $connection, string $uniqueID): DAOResult {
         $query = (new DeleteQueryBuilder())
             ->setTable(ClientDAO::TABLE_NAME)
             ->setPkCol(ClientDAO::COLUMNS[ClientDAO::PK_COL])
             ->setID($uniqueID)
             ->build();
 
-        $res = $connection->runQuery($query);
+        $result = $connection->runQuery($query);
 
-        if (is_bool($res))
-            return $res;
+        if ($result->isError()) {
+            return DAOResult::error($result->getError());
+        }
 
-        return true;
+        return DAOResult::success($result);
     }
 }
