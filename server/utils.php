@@ -20,11 +20,3 @@ function sendJSON(array $data) {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data);
 }
-
-function set204() {
-    header('HTTP/1.1 204 No Content');
-}
-
-function set500() {
-    header('HTTP/1.1 500 Internal Server Error');
-}

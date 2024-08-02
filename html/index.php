@@ -11,8 +11,6 @@ use Bramus\Router\Router;
 
 use function Server\Utils\getJSONBody;
 use function Server\Utils\sendJSON;
-use function Server\Utils\set204;
-use function Server\Utils\set500;
 
 $router = new Router();
 

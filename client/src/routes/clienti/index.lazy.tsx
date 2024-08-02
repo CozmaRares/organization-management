@@ -140,11 +140,15 @@ const columns = [
                   Copiază CIF
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <DialogTrigger>Schimbă datele</DialogTrigger>
+                <DropdownMenuItem className="p-0">
+                  <DialogTrigger className="w-full px-2 py-1.5 text-left">
+                    Schimbă datele
+                  </DialogTrigger>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <AlertDialogTrigger>Șterge client</AlertDialogTrigger>
+                <DropdownMenuItem className="p-0">
+                  <AlertDialogTrigger className="w-full px-2 py-1.5 text-left">
+                    Șterge client
+                  </AlertDialogTrigger>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -153,7 +157,9 @@ const columns = [
               title="Modifica Datele Clientului"
               description={
                 <>
-                  <span className="block">Modifică datele clientului aici.</span>
+                  <span className="block">
+                    Modifică datele clientului aici.
+                  </span>
                   <span className="block">Salvează când ai terminat.</span>
                 </>
               }
