@@ -112,24 +112,25 @@ export default function Shortcuts({ className }: Props) {
     >
       <Link
         to="/"
-        className="grid w-fit grid-cols-[auto,minmax(0,1fr)] grid-rows-2 items-center gap-x-2 rounded-md p-1 font-bold"
+        className="group grid w-fit grid-cols-[auto,minmax(0,1fr)] grid-rows-2 items-center gap-x-2 rounded-md p-1 font-bold"
       >
         <PiggyBank className="row-span-full h-12 w-12 transition-all group-hover:scale-110" />
         <span className="text-lg text-primary">Bill</span>
         <span className="">Ledger</span>
       </Link>
-      <ul className="flex items-center gap-2">
+      <ul className="ml-auto flex h-full max-w-[75%] flex-row-reverse items-center gap-2 overflow-hidden">
         {Object.entries(shortcuts).map(([path, name]) => (
           <li key={path}>
             <Link
               to={`/${path}`}
-              className="btn block min-w-[4ch] rounded-full px-2 py-1 text-center"
+              className="btn block w-fit min-w-[4ch] text-nowrap rounded-lg p-2 text-center"
             >
               {name}
             </Link>
           </li>
         ))}
       </ul>
+      <div className="mx-2 h-full w-[2px] bg-accent" />
       <div className="flex flex-row items-center gap-2">
         <Dialog>
           <DialogTrigger asChild>
