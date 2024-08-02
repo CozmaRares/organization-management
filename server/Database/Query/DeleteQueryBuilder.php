@@ -7,7 +7,6 @@ class DeleteQueryBuilder {
     private $id;
     private $tableName;
 
-
     public function __construct() {
         $this->pkCol = null;
         $this->id = null;
@@ -29,7 +28,6 @@ class DeleteQueryBuilder {
         return $this;
     }
 
-    // TODO: null checks, for the other builders as well
     public function build() {
         return " DELETE FROM `$this->tableName` WHERE `$this->pkCol` = '$this->id';";
     }

@@ -7,8 +7,6 @@ type Args = {
   onSuccessInvalidateKeys: string[];
 };
 
-// TODO: refactor useUpdate, useCreate and useDelete
-// TODO: proper error handling
 export default function useUpdate<T>({ url, onSuccessInvalidateKeys }: Args) {
   return useMutationTanstack({
     mutationFn: async ({ pathParam, ...data }: T & { pathParam: string }) => {

@@ -16,6 +16,7 @@ class SelectQueryBuilder {
         $this->orderBy = [];
         $this->limit = null;
         $this->offset = null;
+        $this->tableName = null;
     }
 
     public function setTable(string $tableName) {

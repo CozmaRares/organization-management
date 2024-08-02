@@ -68,6 +68,7 @@ export default function Shortcuts({ className }: Props) {
           ? path.substring(0, path.length - 1)
           : path;
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -80,7 +81,7 @@ export default function Shortcuts({ className }: Props) {
 
   useEffect(() => {
     addShortcutForm.reset({ path });
-  }, [path]);
+  }, [path, addShortcutForm]);
 
   const addShortcut = ({ path, name }: Shortcut) => {
     setShortcuts(prev => ({ ...prev, [path]: name }));
