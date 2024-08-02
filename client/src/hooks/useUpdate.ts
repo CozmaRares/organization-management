@@ -20,10 +20,20 @@ export default function useUpdate<T>({ url, onSuccessInvalidateKeys }: Args) {
         body: JSON.stringify(data),
       });
 
-      if (res.status != 204)
-        return toast({
+      if (res.ok) return;
+
+      const description = await res.text();
+
+      if (res.status >= 500)
+        toast({
           title: "Eroare de la server",
-          description: "Serverul a avut un răspuns neașteptat",
+          description,
+          variant: "destructive",
+        });
+      else
+        toast({
+          title: "Eroare",
+          description,
           variant: "destructive",
         });
     },

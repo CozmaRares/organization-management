@@ -14,12 +14,20 @@ export default function useDelete({ url, onSuccessInvalidateKeys }: Args) {
         method: "DELETE",
       });
 
-      console.log(await res.text());
+      if (res.ok) return;
 
-      if (res.status != 204)
-        return toast({
+      const description = await res.text();
+
+      if (res.status >= 500)
+        toast({
           title: "Eroare de la server",
-          description: "Serverul a avut un răspuns neașteptat",
+          description,
+          variant: "destructive",
+        });
+      else
+        toast({
+          title: "Eroare",
+          description,
           variant: "destructive",
         });
     },
