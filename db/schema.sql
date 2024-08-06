@@ -19,14 +19,15 @@ CREATE TABLE Client (
 
 DROP TABLE IF EXISTS Contract_Client;
 CREATE TABLE Contract_Client (
-  nume_client  INT NOT NULL PRIMARY KEY REFERENCES Client(nume),
-  licenta    VARCHAR(255) NOT NULL,
-  buc        INT NOT NULL,
-  pret       DOUBLE NOT NULL,
-  tip        ENUM('permanent', 'sezonier') NOT NULL,
-  data_ef    DATE NOT NULL DEFAULT (CURRENT_DATE()),
-  detalii    VARCHAR(255) NOT NULL,
-  status     ENUM('acceptat', 'standby', 'respins', 'suspendat') NOT NULL DEFAULT('standby')
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  nume_client VARCHAR(255) NOT NULL REFERENCES Client(nume),
+  licenta     VARCHAR(255) NOT NULL,
+  buc         INT NOT NULL,
+  pret        DOUBLE NOT NULL,
+  tip         ENUM('permanent', 'sezonier') NOT NULL,
+  data_ef     DATE NOT NULL DEFAULT (CURRENT_DATE()),
+  detalii     VARCHAR(255) NOT NULL,
+  status      ENUM('acceptat', 'standby', 'respins', 'suspendat') NOT NULL DEFAULT('standby')
 );
 
 DROP TABLE IF EXISTS Factura_Intrare;
