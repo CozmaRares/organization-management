@@ -41,6 +41,7 @@ const columns = [
       ),
       toggleVisibility: true,
       inputType: { type: "input" },
+      columnName: "Client",
     },
   },
   {
@@ -59,6 +60,7 @@ const columns = [
       ),
       toggleVisibility: true,
       inputType: { type: "input" },
+      columnName: "Licență",
     },
   },
   {
@@ -68,6 +70,7 @@ const columns = [
     meta: {
       toggleVisibility: true,
       inputType: { type: "select", options: clientContractType },
+      columnName: "Tip",
     },
   },
   {
@@ -82,6 +85,7 @@ const columns = [
         type: "select",
         options: clientContractStatus,
       },
+      columnName: "Status",
     },
   },
   {
@@ -94,6 +98,7 @@ const columns = [
     meta: {
       toggleVisibility: true,
       inputType: { type: "input" },
+      columnName: "Bucați",
     },
   },
   {
@@ -108,6 +113,7 @@ const columns = [
     meta: {
       toggleVisibility: true,
       inputType: { type: "input" },
+      columnName: "Preț",
     },
   },
   {
@@ -116,6 +122,7 @@ const columns = [
     meta: {
       toggleVisibility: true,
       inputType: { type: "date" },
+      columnName: "Data Ef.",
     },
   },
   {
@@ -124,6 +131,7 @@ const columns = [
     meta: {
       toggleVisibility: true,
       inputType: { type: "textarea" },
+      columnName: "Detalii",
     },
   },
 ] as const satisfies ColumnDef<Contract>[];
@@ -136,9 +144,9 @@ const dialogContentInputs: DialogContentDataFormProps<
   .filter(col => {
     return "accessorKey" in col && "meta" in col;
   })
-  .map(({ accessorKey, header, meta }) => ({
+  .map(({ accessorKey, meta }) => ({
     id: accessorKey,
-    label: header,
+    label: meta.columnName,
     inputType: meta.inputType,
   }));
 

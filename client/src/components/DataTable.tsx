@@ -11,7 +11,6 @@ import {
   getSortedRowModel,
   Table as TanStackTable,
   PaginationState,
-  Header,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -127,11 +126,7 @@ export default function DataTable<TData, TValue>({
                     checked={column.getIsVisible()}
                     onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
-                    {flexRender(column.columnDef.header, {
-                      table,
-                      column,
-                      header: { column } as Header<TData, TValue>,
-                    })}
+                    {column.columnDef.meta?.columnName ?? column.id}
                   </DropdownMenuCheckboxItem>
                 );
               })}
