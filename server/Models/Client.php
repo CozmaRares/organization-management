@@ -24,33 +24,16 @@ class Client {
         return $this->name;
     }
 
-    public function setName(string $name): void {
-        $this->name = $name;
-    }
-
     public function getAddress(): string {
         return $this->address;
-    }
-
-    public function setAddress(string $address): void {
-        $this->address = $address;
     }
 
     public function getCIF(): string {
         return $this->cif;
     }
 
-    public function setCIF(string $cif): void {
-        $this->cif = $cif;
-    }
-
-
     public function getWorkpoint(): string {
         return $this->workpoint;
-    }
-
-    public function setWorkpoint(string $workpoint): void {
-        $this->workpoint = $workpoint;
     }
 }
 
