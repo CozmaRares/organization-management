@@ -116,7 +116,8 @@ export default function DataTable<TData, TValue>({
               .getAllColumns()
               .filter(
                 column =>
-                  column.getCanHide() && column.columnDef.meta != undefined,
+                  column.getCanHide() &&
+                  column.columnDef.meta?.toggleVisibility === true,
               )
               .map(column => {
                 return (
@@ -125,7 +126,7 @@ export default function DataTable<TData, TValue>({
                     checked={column.getIsVisible()}
                     onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
-                    {column.columnDef.meta!.columnVisibilityName}
+                    {column.columnDef.header as string}
                   </DropdownMenuCheckboxItem>
                 );
               })}

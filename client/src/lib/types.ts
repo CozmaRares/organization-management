@@ -7,6 +7,6 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     inputType?: InputType;
     filterComponent?: (table: Table<TData>) => React.ReactNode;
-    columnVisibilityName: string;
+    toggleVisibility?: boolean;
   }
 }

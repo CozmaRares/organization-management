@@ -54,7 +54,7 @@ const columns = [
           }
         />
       ),
-      columnVisibilityName: "CIF",
+      toggleVisibility: true,
     },
   },
   {
@@ -70,7 +70,7 @@ const columns = [
           }
         />
       ),
-      columnVisibilityName: "Nume",
+      toggleVisibility: true,
     },
   },
   {
@@ -88,7 +88,7 @@ const columns = [
         />
       ),
       inputType: "textarea",
-      columnVisibilityName: "Adresă",
+      toggleVisibility: true,
     },
   },
   {
@@ -108,7 +108,7 @@ const columns = [
         />
       ),
       inputType: "textarea",
-      columnVisibilityName: "Punct de lucru",
+      toggleVisibility: true,
     },
   },
   {

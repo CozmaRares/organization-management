@@ -36,7 +36,7 @@ const columns = [
           }
         />
       ),
-      columnVisibilityName: "Nume Client",
+      toggleVisibility: true
     },
   },
   {
@@ -53,49 +53,49 @@ const columns = [
           }
         />
       ),
-      columnVisibilityName: "Licență",
+      toggleVisibility: true
     },
   },
   {
     accessorKey: "quantity",
     header: "Bucăți",
     meta: {
-      columnVisibilityName: "Bucăți",
+      toggleVisibility: true
     },
   },
   {
     accessorKey: "price",
     header: "Preț",
     meta: {
-      columnVisibilityName: "Preț",
+      toggleVisibility: true
     },
   },
   {
     accessorKey: "type",
     header: "Tip",
     meta: {
-      columnVisibilityName: "Tip",
+      toggleVisibility: true
     },
   },
   {
     accessorKey: "date",
     header: "Data Ef.",
     meta: {
-      columnVisibilityName: "Data Ef.",
+      toggleVisibility: true
     },
   },
   {
     accessorKey: "details",
     header: "Detalii",
     meta: {
-      columnVisibilityName: "Detalii",
+      toggleVisibility: true
     },
   },
   {
     accessorKey: "status",
     header: "Status",
     meta: {
-      columnVisibilityName: "Status",
+      toggleVisibility: true
     },
   },
 ] as const satisfies ColumnDef<Contract>[];
