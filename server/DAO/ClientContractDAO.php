@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Server\DAO;
 
-use Server\Models\Client;
+use Server\Models\ClientContract;
 use Server\Database\Connection;
 use Server\Database\Query\SelectQueryBuilder;
 use Server\Database\Query\InsertQueryBuilder;
@@ -14,34 +14,44 @@ use Server\Database\Query\UpdateQueryBuilder;
 use function Server\Database\Query\_eq;
 use function Server\Utils\getNullish;
 
-class ClientDAO implements DAO {
-    private const TABLE_NAME = "Client";
+class ClientContractDAO implements DAO {
+    private const TABLE_NAME = "Contract_Client";
     private const COLUMNS = [
-        "name" => "nume",
-        "address" => "adresa",
-        "cif" => "cif",
-        "workpoint" => "punct_lucru",
+        "id" => "id",
+        "clientName" => "nume_client",
+        "license" => "licenta",
+        "quantity" => "buc",
+        "price" => "pret",
+        "type" => "tip",
+        "date" => "data_ef",
+        "details" => "detalii",
+        "status" => "status",
     ];
-    private const PK_COL = "name";
+    private const PK_COL = "id";
 
     private function __construct() {
     }
 
-    private static function createClient(array $data) {
-        return new Client(
-            getNullish($data, ClientDAO::COLUMNS["name"]),
-            getNullish($data, ClientDAO::COLUMNS["address"]),
-            getNullish($data, ClientDAO::COLUMNS["cif"]),
-            getNullish($data, ClientDAO::COLUMNS["workpoint"]),
+    private static function createContract(array $data) {
+        return new ClientContract(
+            (int) getNullish($data, ClientContractDAO::COLUMNS["id"]),
+            getNullish($data, ClientContractDAO::COLUMNS["clientName"]),
+            getNullish($data, ClientContractDAO::COLUMNS["license"]),
+            (int) getNullish($data, ClientContractDAO::COLUMNS["quantity"]),
+            (float) getNullish($data, ClientContractDAO::COLUMNS["price"]),
+            getNullish($data, ClientContractDAO::COLUMNS["type"]),
+            getNullish($data, ClientContractDAO::COLUMNS["date"]),
+            getNullish($data, ClientContractDAO::COLUMNS["details"]),
+            getNullish($data, ClientContractDAO::COLUMNS["status"]),
         );
     }
 
-    public static function findUnique(Connection $connection, string $name): DAOResult {
-        $col = ClientDAO::COLUMNS[ClientDAO::PK_COL];
+    public static function findUnique(Connection $connection, string $id): DAOResult {
+        $col = ClientContractDAO::COLUMNS[ClientContractDAO::PK_COL];
 
         $query = (new SelectQueryBuilder())
-            ->where(_eq("`$col`", "'$name'"))
-            ->setTable(ClientDAO::TABLE_NAME)
+            ->where(_eq("`$col`", "'$id'"))
+            ->setTable(ClientContractDAO::TABLE_NAME)
             ->build();
 
         $result = $connection->runQuery($query);
@@ -58,12 +68,12 @@ class ClientDAO implements DAO {
 
         $row = $result[0];
 
-        return DAOResult::success(ClientDAO::createClient($row));
+        return DAOResult::success(ClientContractDAO::createContract($row));
     }
 
     public static function find(Connection $connection, SelectQueryBuilder $builder): DAOResult {
         $query = $builder
-            ->setTable(ClientDAO::TABLE_NAME)
+            ->setTable(ClientContractDAO::TABLE_NAME)
             ->build();
 
         $result = $connection->runQuery($query);
@@ -74,7 +84,7 @@ class ClientDAO implements DAO {
 
         return DAOResult::success(
             array_map(function ($row) {
-                return ClientDAO::createClient($row);
+                return ClientContractDAO::createContract($row);
             }, $result->getRows())
         );
     }
@@ -82,9 +92,9 @@ class ClientDAO implements DAO {
     public static function create(Connection $connection, array $data): DAOResult {
         $builder = new InsertQueryBuilder();
         foreach ($data as $col => $value) {
-            $builder->addCol(ClientDAO::COLUMNS[$col], $value);
+            $builder->addCol(ClientContractDAO::COLUMNS[$col], $value);
         }
-        $builder->setTable(ClientDAO::TABLE_NAME);
+        $builder->setTable(ClientContractDAO::TABLE_NAME);
 
         $query = $builder->build();
 
@@ -100,12 +110,12 @@ class ClientDAO implements DAO {
     public static function update(Connection $connection, string $uniqueID, array $data): DAOResult {
         $builder = new UpdateQueryBuilder();
         foreach ($data as $col => $value) {
-            $builder->addCol(ClientDAO::COLUMNS[$col], $value);
+            $builder->addCol(ClientContractDAO::COLUMNS[$col], $value);
         }
 
         $query = $builder
-            ->setTable(ClientDAO::TABLE_NAME)
-            ->setPkCol(ClientDAO::COLUMNS[ClientDAO::PK_COL])
+            ->setTable(ClientContractDAO::TABLE_NAME)
+            ->setPkCol(ClientContractDAO::COLUMNS[ClientContractDAO::PK_COL])
             ->setID($uniqueID)
             ->build();
 
@@ -120,8 +130,8 @@ class ClientDAO implements DAO {
 
     public static function delete(Connection $connection, string $uniqueID): DAOResult {
         $query = (new DeleteQueryBuilder())
-            ->setTable(ClientDAO::TABLE_NAME)
-            ->setPkCol(ClientDAO::COLUMNS[ClientDAO::PK_COL])
+            ->setTable(ClientContractDAO::TABLE_NAME)
+            ->setPkCol(ClientContractDAO::COLUMNS[ClientContractDAO::PK_COL])
             ->setID($uniqueID)
             ->build();
 

@@ -35,6 +35,15 @@ class Client {
     public function getWorkpoint(): string {
         return $this->workpoint;
     }
+
+    public function getJSON(): array {
+        return [
+            "name" => $this->name,
+            "address" => $this->address,
+            "cif" => $this->cif,
+            "workpoint" => $this->workpoint,
+        ];
+    }
 }
 
 // TODO: script to generate model and DAO

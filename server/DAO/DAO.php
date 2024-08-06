@@ -6,7 +6,7 @@ use Server\Database\Connection;
 use Server\Database\Query\SelectQueryBuilder;
 
 interface DAO {
-    public static function findUnique(Connection $connection, string $id): DAOResult;
+    public static function findUnique(Connection $connection, string $uniqueID): DAOResult;
     public static function find(Connection $connection, SelectQueryBuilder $builder): DAOResult;
 
     public static function create(Connection $connection, array $data): DAOResult;
