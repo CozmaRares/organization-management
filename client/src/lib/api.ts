@@ -2,61 +2,109 @@ import useQuery from "@/hooks/useQuery";
 import { z } from "zod";
 import { QueryClient } from "@tanstack/react-query";
 import useUpdate from "@/hooks/useUpdate";
-import { ClientValidator } from "./zod/client";
+import { ClientContractSchema, ClientSchema } from "./zod/client";
 import useCreate from "@/hooks/useCreate";
 import useDelete from "@/hooks/useDelete";
 
 export const queryClient = new QueryClient();
 
-type API<T> = Record<string, Record<string, T>>;
+type APIData = {
+  url: string;
+  key: string[];
+};
 
-export const apiKeys = Object.freeze({
+const apiData = Object.freeze({
   clients: {
-    get: ["clients", "get"],
+    url: "/api/clienti",
+    key: ["clients"],
   },
-} as const satisfies API<string[]>);
+  clientContracts: {
+    url: "/api/contracte-clienti",
+    key: ["client contracts"],
+  },
+} as const satisfies Record<string, APIData>);
 
-type Client = z.infer<typeof ClientValidator>;
+type Client = z.infer<typeof ClientSchema>;
+type ClientContract = z.infer<typeof ClientContractSchema>;
 
-type APIEntries =
+type APIEntry =
   | {
       useQuery: () => unknown;
       invalidate: () => Promise<void>;
     }
   | { useMutation: (...args: unknown[]) => unknown };
 
+type API = {
+  [key: string]: API | APIEntry;
+};
+
 export const api = Object.freeze({
   clients: {
     get: {
       useQuery: () =>
         useQuery({
-          queryKey: apiKeys.clients.get,
-          url: "/api/clienti",
-          validator: z.array(ClientValidator),
+          url: apiData.clients.url,
+          queryKey: apiData.clients.key,
+          validator: z.array(ClientSchema),
         }),
       invalidate: () =>
-        queryClient.invalidateQueries({ queryKey: apiKeys.clients.get }),
+        queryClient.invalidateQueries({ queryKey: apiData.clients.key }),
     },
     create: {
       useMutation: () =>
         useCreate<Client>({
-          url: "/api/clienti",
-          onSuccessInvalidateKeys: apiKeys.clients.get,
+          url: apiData.clients.url,
+          onSuccessInvalidateKeys: apiData.clients.key,
         }),
     },
     update: {
       useMutation: () =>
         useUpdate<Client>({
-          url: "/api/clienti",
-          onSuccessInvalidateKeys: apiKeys.clients.get,
+          url: apiData.clients.url,
+          onSuccessInvalidateKeys: apiData.clients.key,
         }),
     },
     delete: {
       useMutation: () =>
         useDelete({
-          url: "/api/clienti",
-          onSuccessInvalidateKeys: apiKeys.clients.get,
+          url: apiData.clients.url,
+          onSuccessInvalidateKeys: apiData.clients.key,
         }),
     },
+    contracts: {
+      get: {
+        useQuery: () =>
+          useQuery({
+            url: apiData.clientContracts.url,
+            queryKey: apiData.clientContracts.key,
+            validator: z.array(ClientContractSchema),
+          }),
+        invalidate: () =>
+          queryClient.invalidateQueries({
+            queryKey: apiData.clientContracts.key,
+          }),
+      },
+      create: {
+        useMutation: () =>
+          useCreate<ClientContract>({
+            url: apiData.clientContracts.url,
+            onSuccessInvalidateKeys: apiData.clientContracts.key,
+          }),
+      },
+      update: {
+        useMutation: () =>
+          useUpdate<ClientContract>({
+            url: apiData.clientContracts.url,
+            onSuccessInvalidateKeys: apiData.clientContracts.key,
+          }),
+      },
+      delete: {
+        useMutation: () =>
+          useDelete({
+            url: apiData.clientContracts.url,
+            onSuccessInvalidateKeys: apiData.clientContracts.key,
+          }),
+      },
+    },
   },
-} as const satisfies API<APIEntries>);
+} as const satisfies API);

@@ -28,7 +28,7 @@ import DialogContentDataForm from "@/components/DialogContentDataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { InputType } from "@/lib/types";
 import { z } from "zod";
-import { ClientValidator } from "@/lib/zod/client";
+import { ClientSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import AnimateEllipses from "@/components/AnimateEllipses";
 import { api } from "@/lib/api";
@@ -37,7 +37,7 @@ export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
 });
 
-type Client = z.infer<typeof ClientValidator>;
+type Client = z.infer<typeof ClientSchema>;
 
 const columns = [
   {
@@ -169,7 +169,7 @@ const columns = [
               }}
               inputs={dialogContentInputs}
               defaultValues={client}
-              schema={ClientValidator}
+              schema={ClientSchema}
             />
 
             <AlertDialogContent>
@@ -248,7 +248,7 @@ function AddClient() {
           createMutation.mutate(data);
         }}
         inputs={dialogContentInputs}
-        schema={ClientValidator}
+        schema={ClientSchema}
       />
     </Dialog>
   );
