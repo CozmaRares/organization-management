@@ -92,7 +92,7 @@ class ClientContractDAO implements DAO {
     public static function create(Connection $connection, array $data): DAOResult {
         $builder = new InsertQueryBuilder();
         foreach ($data as $col => $value) {
-            $builder->addCol(ClientContractDAO::COLUMNS[$col], $value);
+            $builder->addCol(ClientContractDAO::COLUMNS[$col], "$value");
         }
         $builder->setTable(ClientContractDAO::TABLE_NAME);
 

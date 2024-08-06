@@ -1,4 +1,4 @@
-import { formatDate } from "@/lib/utils";
+import { formatDateDisplay } from "@/lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
@@ -64,11 +64,11 @@ type DatesProps = {
 function Dates({ from, to }: DatesProps) {
   if (!from) return <span>Alege o data</span>;
 
-  if (!to) return formatDate(from);
+  if (!to) return formatDateDisplay(from);
 
   return (
     <>
-      {formatDate(from)} - {formatDate(to)}
+      {formatDateDisplay(from)} - {formatDateDisplay(to)}
     </>
   );
 }

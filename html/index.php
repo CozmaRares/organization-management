@@ -9,6 +9,7 @@ use Server\DAO\ClientContractDAO;
 use Server\Database\ConnectionFactory;
 use Server\Database\Query\SelectQueryBuilder;
 use Bramus\Router\Router;
+use Server\Logger;
 
 use function Server\Utils\getJSONBody;
 use function Server\Utils\sendJSON;
@@ -134,7 +135,7 @@ $router->mount('/api/contracte-clienti', function () use ($router) {
         }
 
         http_response_code(400);
-        echo "Nu s-a putut efectua ștergerea clientului";
+        echo "Nu s-a putut efectua ștergerea contractului";
     });
 
     $router->put("/(\w+)", function (string $id) {
@@ -149,7 +150,7 @@ $router->mount('/api/contracte-clienti', function () use ($router) {
         }
 
         http_response_code(400);
-        echo "Nu s-au putut actualiza datele clientului";
+        echo "Nu s-au putut actualiza datele contractului";
     });
 
     $router->post("/", function () {
@@ -164,7 +165,7 @@ $router->mount('/api/contracte-clienti', function () use ($router) {
         }
 
         http_response_code(400);
-        echo "Nu s-a putut crea clientul";
+        echo "Nu s-a putut crea contractul";
     });
 
     $router->get("/", function () {
@@ -191,4 +192,17 @@ $router->mount('/api/contracte-clienti', function () use ($router) {
     });
 });
 
-$router->run();
+$router->set404('/api(/.*)?', function () {
+    http_response_code(404);
+    $json = array();
+    $json['status'] = "404";
+    $json['status_text'] = "route not defined";
+    sendJSON($json);
+});
+
+$router->run(function () {
+    $method = $_SERVER['REQUEST_METHOD'];
+    $url = $_SERVER['REQUEST_URI'];
+    $status = http_response_code();
+    Logger::info("$method -> $url $status");
+});

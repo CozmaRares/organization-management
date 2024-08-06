@@ -24,8 +24,8 @@ const apiData = Object.freeze({
   },
 } as const satisfies Record<string, APIData>);
 
-type Client = z.infer<typeof ClientSchema>;
-type ClientContract = z.infer<typeof ClientContractSchema>;
+type Client = z.input<typeof ClientSchema>;
+type ClientContract = z.input<typeof ClientContractSchema>;
 
 type APIEntry =
   | {

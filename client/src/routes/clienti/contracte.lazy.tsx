@@ -4,39 +4,43 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import DialogContentDataForm from "@/components/DialogContentDataForm";
+import DialogContentDataForm, {
+  DialogContentDataFormProps,
+} from "@/components/DialogContentDataForm";
 import InputFilter from "@/components/filters/InputFilter";
-import { InputType } from "@/lib/types";
 import { z } from "zod";
 import { ClientContractSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import AnimateEllipses from "@/components/AnimateEllipses";
 import { api } from "@/lib/api";
+import { clientContractStatus, clientContractType } from "@/lib/dbEnums";
+import { formatCurrency } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/clienti/contracte")({
   component: Page,
 });
 
-type Contract = z.infer<typeof ClientContractSchema>;
+type Contract = z.output<typeof ClientContractSchema>;
 
 const columns = [
   {
-    accessorKey: "client_name",
-    header: "Nume Client",
+    accessorKey: "clientName",
+    header: "Client",
     filterFn: startsWithFilter as FilterFn<Contract>,
     meta: {
       filterComponent: (table: Table<Contract>) => (
         <InputFilter
           placeholder="Filtrează client..."
           value={
-            (table.getColumn("client_name")?.getFilterValue() as string) ?? ""
+            (table.getColumn("clientName")?.getFilterValue() as string) ?? ""
           }
           onChange={event =>
-            table.getColumn("client_name")?.setFilterValue(event.target.value)
+            table.getColumn("clientName")?.setFilterValue(event.target.value)
           }
         />
       ),
-      toggleVisibility: true
+      toggleVisibility: true,
+      inputType: { type: "input" },
     },
   },
   {
@@ -53,61 +57,89 @@ const columns = [
           }
         />
       ),
-      toggleVisibility: true
-    },
-  },
-  {
-    accessorKey: "quantity",
-    header: "Bucăți",
-    meta: {
-      toggleVisibility: true
-    },
-  },
-  {
-    accessorKey: "price",
-    header: "Preț",
-    meta: {
-      toggleVisibility: true
+      toggleVisibility: true,
+      inputType: { type: "input" },
     },
   },
   {
     accessorKey: "type",
     header: "Tip",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
     meta: {
-      toggleVisibility: true
+      toggleVisibility: true,
+      inputType: { type: "select", options: clientContractType },
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("status")}</div>
+    ),
+    meta: {
+      toggleVisibility: true,
+      inputType: {
+        type: "select",
+        options: clientContractStatus,
+      },
+    },
+  },
+  {
+    accessorKey: "quantity",
+    header: () => <div className="text-right">Bucăți</div>,
+    cell: props => {
+      const amount = parseFloat(props.getValue() as string);
+      return <div className="text-right font-medium">{amount}</div>;
+    },
+    meta: {
+      toggleVisibility: true,
+      inputType: { type: "input" },
+    },
+  },
+  {
+    accessorKey: "price",
+    header: () => <div className="text-right">Preț</div>,
+    cell: props => {
+      const amount = parseFloat(props.getValue() as string);
+      const formatted = formatCurrency(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+    meta: {
+      toggleVisibility: true,
+      inputType: { type: "input" },
     },
   },
   {
     accessorKey: "date",
     header: "Data Ef.",
     meta: {
-      toggleVisibility: true
+      toggleVisibility: true,
+      inputType: { type: "date" },
     },
   },
   {
     accessorKey: "details",
     header: "Detalii",
     meta: {
-      toggleVisibility: true
-    },
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    meta: {
-      toggleVisibility: true
+      toggleVisibility: true,
+      inputType: { type: "textarea" },
     },
   },
 ] as const satisfies ColumnDef<Contract>[];
 
-const dialogContentInputs = columns
+const dialogContentInputs: DialogContentDataFormProps<
+  never,
+  never,
+  never
+>["inputs"] = columns
   .filter(col => {
-    return "accessorKey" in col;
+    return "accessorKey" in col && "meta" in col;
   })
   .map(({ accessorKey, header, meta }) => ({
     id: accessorKey,
     label: header,
-    inputType: ("inputType" in meta ? meta.inputType : "input") as InputType,
+    inputType: meta.inputType,
   }));
 
 function Page() {
@@ -139,17 +171,15 @@ function AddContract() {
         Adaugă Contract
       </DialogTrigger>
       <DialogContentDataForm
-        title="Adaugă Client"
+        title="Adaugă Contract"
         description={
           <>
-            <span className="block">Adaugă datele clientului aici.</span>
+            <span className="block">Adaugă datele contractului aici.</span>
             <span className="block">Salvează când ai terminat.</span>
           </>
         }
         buttonText="Adaugă"
-        onSubmit={data => {
-          createMutation.mutate(data);
-        }}
+        onSubmit={data => createMutation.mutate(data)}
         inputs={dialogContentInputs}
         schema={ClientContractSchema}
       />

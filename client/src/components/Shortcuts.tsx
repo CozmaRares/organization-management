@@ -40,7 +40,7 @@ const ShortcutValidator = z.object({
   name: z.string({ required_error: "Numele este obligatoriu." }),
 });
 
-type Shortcut = z.infer<typeof ShortcutValidator>;
+type Shortcut = z.output<typeof ShortcutValidator>;
 
 type Props = {
   className?: string;

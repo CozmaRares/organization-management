@@ -24,9 +24,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import DialogContentDataForm from "@/components/DialogContentDataForm";
+import DialogContentDataForm, {
+  DialogContentDataFormProps,
+} from "@/components/DialogContentDataForm";
 import InputFilter from "@/components/filters/InputFilter";
-import { InputType } from "@/lib/types";
 import { z } from "zod";
 import { ClientSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
@@ -37,7 +38,7 @@ export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
 });
 
-type Client = z.infer<typeof ClientSchema>;
+type Client = z.output<typeof ClientSchema>;
 
 const columns = [
   {
@@ -55,6 +56,7 @@ const columns = [
         />
       ),
       toggleVisibility: true,
+      inputType: { type: "input" },
     },
   },
   {
@@ -71,6 +73,7 @@ const columns = [
         />
       ),
       toggleVisibility: true,
+      inputType: { type: "input" },
     },
   },
   {
@@ -87,7 +90,7 @@ const columns = [
           }
         />
       ),
-      inputType: "textarea",
+      inputType: { type: "textarea" },
       toggleVisibility: true,
     },
   },
@@ -107,7 +110,7 @@ const columns = [
           }
         />
       ),
-      inputType: "textarea",
+      inputType: { type: "textarea" },
       toggleVisibility: true,
     },
   },
@@ -198,14 +201,18 @@ const columns = [
   },
 ] as const satisfies ColumnDef<Client>[];
 
-const dialogContentInputs = columns
+const dialogContentInputs: DialogContentDataFormProps<
+  never,
+  never,
+  never
+>["inputs"] = columns
   .filter(col => {
-    return "accessorKey" in col;
+    return "accessorKey" in col && "meta" in col;
   })
   .map(({ accessorKey, header, meta }) => ({
     id: accessorKey,
     label: header,
-    inputType: ("inputType" in meta ? meta.inputType : "input") as InputType,
+    inputType: meta.inputType,
   }));
 
 function Page() {
@@ -244,9 +251,7 @@ function AddClient() {
           </>
         }
         buttonText="Adaugă"
-        onSubmit={data => {
-          createMutation.mutate(data);
-        }}
+        onSubmit={data => createMutation.mutate(data)}
         inputs={dialogContentInputs}
         schema={ClientSchema}
       />

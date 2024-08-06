@@ -26,8 +26,23 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
+import { cn, formatDateDisplay } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Calendar } from "./ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
-type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
+export type DialogContentDataFormProps<
+  Output,
+  Def extends z.ZodTypeDef,
+  Input extends FieldValues,
+> = {
   title: string;
   inputs: Array<{
     id: string;
@@ -52,7 +67,7 @@ export default function DialogContentDataForm<
   buttonText,
   onSubmit,
   ...description
-}: Props<Output, Def, Input>) {
+}: DialogContentDataFormProps<Output, Def, Input>) {
   const form = useForm<Input>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -85,13 +100,11 @@ export default function DialogContentDataForm<
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{label}</FormLabel>
-                    <FormControl>
-                      <Inp
-                        placeholder={label}
-                        inputType={inputType}
-                        {...field}
-                      />
-                    </FormControl>
+                    <Inp
+                      placeholder={label}
+                      inputType={inputType}
+                      {...field}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -117,33 +130,99 @@ type InpProps = ControllerRenderProps<FieldValues, Path<FieldValues>> & {
 
 const Inp = forwardRef<HTMLElement, InpProps>(
   ({ inputType, ...props }, ref) => {
-    if (inputType == "input")
-      return (
-        <Input
-          // @ts-expect-error overwrite ref warning
-          ref={ref}
-          {...props}
-        />
-      );
+    switch (inputType.type) {
+      case "input":
+        return (
+          <FormControl>
+            <Input
+              // @ts-expect-error overwrite ref warning
+              ref={ref}
+              {...props}
+            />
+          </FormControl>
+        );
+      case "textarea":
+        return (
+          <FormControl>
+            <Textarea
+              // @ts-expect-error overwrite ref warning
+              ref={ref}
+              {...props}
+            />
+          </FormControl>
+        );
+      case "date":
+        return (
+          <Popover>
+            <PopoverTrigger asChild>
+              <FormControl>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full pl-3 text-left font-normal",
+                    !props.value && "text-muted-foreground",
+                  )}
+                >
+                  {props.value ? (
+                    formatDateDisplay(props.value)
+                  ) : (
+                    <span>Alege o dată</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </FormControl>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-auto p-0"
+              align="start"
+            >
+              <Calendar
+                mode="single"
+                selected={props.value}
+                onSelect={props.onChange}
+                disabled={date => date > new Date()}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        );
+      case "select": {
+        const { onChange, value, ...props2 } = props;
+        return (
+          <Select
+            onValueChange={onChange}
+            defaultValue={value}
+          >
+            <FormControl>
+              <SelectTrigger
+                className={cn(
+                  "[&>span]:capitalize",
+                  value == undefined && "[&>span]:text-muted-foreground",
+                )}
+              >
+                <SelectValue
+                  // @ts-expect-error overwrite ref warning
+                  ref={ref}
+                  {...props2}
+                />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className="capitalize">
+              {inputType.options.map(option => (
+                <SelectItem
+                  key={`dialog-data-form-input-select-${option}`}
+                  value={option}
+                >
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      }
 
-    if (inputType == "textarea")
-      return (
-        <Textarea
-          // @ts-expect-error overwrite ref warning
-          ref={ref}
-          {...props}
-        />
-      );
-
-    if (inputType == "date")
-      return (
-        <Input
-          // @ts-expect-error overwrite ref warning
-          ref={ref}
-          {...props}
-        />
-      );
-
-    return null;
+      default:
+        return null;
+    }
   },
 );
