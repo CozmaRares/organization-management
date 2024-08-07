@@ -1,10 +1,4 @@
-import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { forwardRef, ReactNode } from "react";
+import { forwardRef } from "react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { InputType } from "@/lib/types";
@@ -38,12 +32,11 @@ import {
   SelectValue,
 } from "./ui/select";
 
-export type DialogContentDataFormProps<
+export type DataFormProps<
   Output,
   Def extends z.ZodTypeDef,
   Input extends FieldValues,
 > = {
-  title: string;
   inputs: Array<{
     id: string;
     label: string;
@@ -53,73 +46,58 @@ export type DialogContentDataFormProps<
   defaultValues?: DefaultValues<Input>;
   buttonText: string;
   onSubmit: (data: Input) => void;
-} & ({ description: ReactNode } | { descriptionSR: string });
+};
 
-export default function DialogContentDataForm<
+export default function DataForm<
   Output,
   Def extends z.ZodTypeDef,
   Input extends FieldValues,
 >({
-  title,
   inputs,
   schema,
   defaultValues,
   buttonText,
   onSubmit,
-  ...description
-}: DialogContentDataFormProps<Output, Def, Input>) {
+}: DataFormProps<Output, Def, Input>) {
   const form = useForm<Input>({
     resolver: zodResolver(schema),
     defaultValues,
   });
 
   return (
-    <DialogContent className="max-w-[600px]">
-      <DialogHeader>
-        <DialogTitle>{title}</DialogTitle>
-        {description &&
-          ("description" in description ? (
-            <DialogDescription>{description.description}</DialogDescription>
-          ) : (
-            <DialogDescription className="sr-only">
-              {description.descriptionSR}
-            </DialogDescription>
-          ))}
-      </DialogHeader>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-2 gap-4 py-2"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid grid-cols-2 gap-4 py-2"
+      >
+        {inputs.map(({ id, label, inputType }) => {
+          return (
+            <FormField
+              key={`dialog-input-${id}`}
+              control={form.control}
+              name={id as Path<Input>}
+              render={({ field }) => (
+                <FormItem className="last-of-type:odd:col-span-full">
+                  <FormLabel>{label}</FormLabel>
+                  <Inp
+                    placeholder={label}
+                    inputType={inputType}
+                    {...field}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          );
+        })}
+        <Button
+          className="col-span-full"
+          type="submit"
         >
-          {inputs.map(({ id, label, inputType }) => {
-            return (
-              <FormField
-                key={`dialog-input-${id}`}
-                control={form.control}
-                name={id as Path<Input>}
-                render={({ field }) => (
-                  <FormItem className="last-of-type:odd:col-span-full">
-                    <FormLabel>{label}</FormLabel>
-                    <Inp
-                      placeholder={label}
-                      inputType={inputType}
-                      {...field}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            );
-          })}
-          <Button
-            className="col-span-full"
-            type="submit"
-          >
-            {buttonText}
-          </Button>
-        </form>
-      </Form>
-    </DialogContent>
+          {buttonText}
+        </Button>
+      </form>
+    </Form>
   );
 }
 

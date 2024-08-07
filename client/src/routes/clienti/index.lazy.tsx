@@ -1,18 +1,26 @@
-import DataTable from "@/components/DataTable";
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import DataTable from "@/components/DataTable";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { fuzzyFilter, startsWithFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
-import { MoreHorizontal, Plus } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { MoreHorizontal, Plus, X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,15 +32,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import DialogContentDataForm, {
-  DialogContentDataFormProps,
-} from "@/components/DialogContentDataForm";
+import DataForm, { DataFormProps } from "@/components/DataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import { ClientSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import AnimateEllipses from "@/components/AnimateEllipses";
 import { api } from "@/lib/api";
+import { toast } from "@/components/ui/use-toast";
+import { useRef } from "react";
+import { cn } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -101,104 +110,84 @@ const columns = [
     cell: ({ row }) => {
       const client = row.original;
 
-      const deleteMutation = api.clients.delete.useMutation();
-      const updateMutation = api.clients.update.useMutation();
+      const classes = cn(
+        buttonVariants({ variant: "ghost" }),
+        "w-full justify-start",
+      );
+
+      const closeRef = useRef<HTMLButtonElement | null>(null);
 
       return (
-        <Dialog>
-          <AlertDialog>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="aspect-square h-fit p-0"
-                >
-                  <span className="sr-only">Deschide meniu</span>
-                  <MoreHorizontal className="h-[1em]" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel className="text-center">
-                  Acțiuni
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-accent" />
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => navigator.clipboard.writeText(client.cif)}
+        <Sheet>
+          <SheetTrigger
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "aspect-square h-fit p-0",
+            )}
+          >
+            <span className="sr-only">Deschide meniul</span>
+            <MoreHorizontal className="h-[1em]" />
+          </SheetTrigger>
+          <SheetContent>
+            <SheetClose
+              ref={closeRef}
+              className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </SheetClose>
+
+            <SheetHeader className="items-center">
+              <SheetTitle>Acțiuni</SheetTitle>
+              <SheetDescription>Execută acțiuni extra</SheetDescription>
+            </SheetHeader>
+
+            <ul className="space-y-2 pt-4">
+              <li>
+                <button
+                  className={classes}
+                  onClick={() =>
+                    navigator.clipboard
+                      .writeText(client.cif)
+                      .then(() => toast({ title: "Copiat CIF cu success" }))
+                  }
                 >
                   Copiază CIF
-                </DropdownMenuItem>
-                <DropdownMenuItem className="p-0">
-                  <DialogTrigger className="w-full px-2 py-1.5 text-left">
-                    Schimbă datele
-                  </DialogTrigger>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="p-0">
-                  <AlertDialogTrigger className="w-full px-2 py-1.5 text-left">
-                    Șterge client
-                  </AlertDialogTrigger>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DialogContentDataForm
-              title="Modifica Datele Clientului"
-              description={
-                <>
-                  <span className="block">
-                    Modifică datele clientului aici.
-                  </span>
-                  <span className="block">Salvează când ai terminat.</span>
-                </>
-              }
-              buttonText="Salvează"
-              onSubmit={data => {
-                updateMutation.mutate({ ...data, pathParam: client.name });
-              }}
-              inputs={dialogContentInputs}
-              defaultValues={client}
-              schema={ClientSchema}
-            />
-
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Esti absolut sigur?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  <p>Această acținue nu poate fi anulată.</p>
-                  <p>Datele vor fi șterse definitiv de pe server.</p>
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Anulează</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => deleteMutation.mutate(client.name)}
-                  variant="destructive"
-                >
-                  Continuă
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </Dialog>
+                </button>
+              </li>
+              <div className="h-[1px] w-full bg-accent" />
+              <li>
+                <EditClient
+                  data={client}
+                  className={classes}
+                />
+              </li>
+              <div className="h-[1px] w-full bg-accent" />
+              <li>
+                <DeleteClient
+                  clientName={client.name}
+                  className={classes}
+                />
+              </li>
+            </ul>
+          </SheetContent>
+        </Sheet>
       );
     },
     size: 70,
   },
 ] as const satisfies ColumnDef<Client>[];
 
-const dialogContentInputs: DialogContentDataFormProps<
-  never,
-  never,
-  never
->["inputs"] = columns
-  .filter(col => {
-    return "accessorKey" in col && "meta" in col;
-  })
-  .map(({ accessorKey, header, meta }) => ({
-    id: accessorKey,
-    label: header,
-    inputType: meta.inputType,
-  }));
+const dialogContentInputs: DataFormProps<never, never, never>["inputs"] =
+  columns
+    .filter(col => {
+      return "accessorKey" in col && "meta" in col;
+    })
+    .map(({ accessorKey, header, meta }) => ({
+      id: accessorKey,
+      label: header,
+      inputType: meta.inputType,
+    }));
 
 function Page() {
   const { isPending, isFetching, error, data } = api.clients.get.useQuery();
@@ -227,19 +216,84 @@ function AddClient() {
         <Plus className="h-4 w-4" />
         Adaugă Client
       </DialogTrigger>
-      <DialogContentDataForm
-        title="Adaugă Client"
-        description={
-          <>
-            <span className="block">Adaugă datele clientului aici.</span>
-            <span className="block">Salvează când ai terminat.</span>
-          </>
-        }
-        buttonText="Adaugă"
-        onSubmit={data => createMutation.mutate(data)}
-        inputs={dialogContentInputs}
-        schema={ClientSchema}
-      />
+
+      <DialogContent className="max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Adaugă Client</DialogTitle>
+          <DialogDescription>Adaugă datele clientului aici.</DialogDescription>
+        </DialogHeader>
+        <DataForm
+          buttonText="Adaugă"
+          onSubmit={data => createMutation.mutate(data)}
+          inputs={dialogContentInputs}
+          schema={ClientSchema}
+        />
+      </DialogContent>
     </Dialog>
+  );
+}
+
+function EditClient({ data, className }: { data: Client; className?: string }) {
+  const updateMutation = api.clients.update.useMutation();
+
+  return (
+    <Dialog>
+      <DialogTrigger className={className}>Schimbă datele</DialogTrigger>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Modifica Datele Clientului</DialogTitle>
+          <DialogDescription>
+            <span className="block">Modifică datele clientului aici.</span>
+          </DialogDescription>
+        </DialogHeader>
+
+        <DataForm
+          buttonText="Salvează"
+          onSubmit={data => {
+            updateMutation.mutate({ ...data, pathParam: data.name });
+          }}
+          inputs={dialogContentInputs}
+          defaultValues={data}
+          schema={ClientSchema}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function DeleteClient({
+  clientName,
+  className,
+}: {
+  clientName: string;
+  className?: string;
+}) {
+  const deleteMutation = api.clients.delete.useMutation();
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger className={className}>
+        Șterge client
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Esti absolut sigur?</AlertDialogTitle>
+          <AlertDialogDescription>
+            <p>Această acținue nu poate fi anulată.</p>
+            <p>Datele vor fi șterse definitiv de pe server.</p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Anulează</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => deleteMutation.mutate(clientName)}
+            variant="destructive"
+          >
+            Continuă
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

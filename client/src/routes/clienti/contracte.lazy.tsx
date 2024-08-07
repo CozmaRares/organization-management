@@ -3,10 +3,15 @@ import { startsWithFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import DialogContentDataForm, {
-  DialogContentDataFormProps,
-} from "@/components/DialogContentDataForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import DataForm, { DataFormProps } from "@/components/DataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import { ClientContractSchema } from "@/lib/zod/client";
@@ -136,19 +141,16 @@ const columns = [
   },
 ] as const satisfies ColumnDef<Contract>[];
 
-const dialogContentInputs: DialogContentDataFormProps<
-  never,
-  never,
-  never
->["inputs"] = columns
-  .filter(col => {
-    return "accessorKey" in col && "meta" in col;
-  })
-  .map(({ accessorKey, meta }) => ({
-    id: accessorKey,
-    label: meta.columnName,
-    inputType: meta.inputType,
-  }));
+const dialogContentInputs: DataFormProps<never, never, never>["inputs"] =
+  columns
+    .filter(col => {
+      return "accessorKey" in col && "meta" in col;
+    })
+    .map(({ accessorKey, meta }) => ({
+      id: accessorKey,
+      label: meta.columnName,
+      inputType: meta.inputType,
+    }));
 
 function Page() {
   const { isPending, isFetching, error, data } =
@@ -178,19 +180,22 @@ function AddContract() {
         <Plus className="h-4 w-4" />
         Adaugă Contract
       </DialogTrigger>
-      <DialogContentDataForm
-        title="Adaugă Contract"
-        description={
-          <>
-            <span className="block">Adaugă datele contractului aici.</span>
-            <span className="block">Salvează când ai terminat.</span>
-          </>
-        }
-        buttonText="Adaugă"
-        onSubmit={data => createMutation.mutate(data)}
-        inputs={dialogContentInputs}
-        schema={ClientContractSchema}
-      />
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Adaugă Contract</DialogTitle>
+          <DialogDescription>
+            Adaugă datele contractului aici.
+          </DialogDescription>
+        </DialogHeader>
+
+        <DataForm
+          buttonText="Adaugă"
+          onSubmit={data => createMutation.mutate(data)}
+          inputs={dialogContentInputs}
+          schema={ClientContractSchema}
+        />
+      </DialogContent>
     </Dialog>
   );
 }
