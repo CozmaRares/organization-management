@@ -7,7 +7,6 @@ export const ClientSchema = z.object({
   name: varchar(),
   address: varchar(),
   cif: varchar(),
-  workpoint: varchar(),
 });
 
 export const ClientContractSchema = z.object({

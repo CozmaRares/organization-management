@@ -42,6 +42,23 @@ type Client = z.output<typeof ClientSchema>;
 
 const columns = [
   {
+    accessorKey: "name",
+    header: "Nume",
+    meta: {
+      filterComponent: (table: Table<Client>) => (
+        <InputFilter
+          placeholder="Filtrează numele..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={event =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+        />
+      ),
+      inputType: { type: "input" },
+      columnName: "Nume",
+    },
+  },
+  {
     accessorKey: "cif",
     header: "CIF",
     filterFn: startsWithFilter as FilterFn<Client>,
@@ -61,24 +78,6 @@ const columns = [
     },
   },
   {
-    accessorKey: "name",
-    header: "Nume",
-    meta: {
-      filterComponent: (table: Table<Client>) => (
-        <InputFilter
-          placeholder="Filtrează numele..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={event =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-        />
-      ),
-      toggleVisibility: true,
-      inputType: { type: "input" },
-      columnName: "Nume",
-    },
-  },
-  {
     accessorKey: "address",
     header: "Adresă",
     filterFn: fuzzyFilter as FilterFn<Client>,
@@ -95,27 +94,6 @@ const columns = [
       inputType: { type: "textarea" },
       toggleVisibility: true,
       columnName: "Adresă",
-    },
-  },
-  {
-    accessorKey: "workpoint",
-    header: "Punct de Lucru",
-    filterFn: fuzzyFilter as FilterFn<Client>,
-    meta: {
-      filterComponent: (table: Table<Client>) => (
-        <InputFilter
-          placeholder="Filtrează punct de lucru..."
-          value={
-            (table.getColumn("workpoint")?.getFilterValue() as string) ?? ""
-          }
-          onChange={event =>
-            table.getColumn("workpoint")?.setFilterValue(event.target.value)
-          }
-        />
-      ),
-      inputType: { type: "textarea" },
-      toggleVisibility: true,
-      columnName: "Punct de Lucru",
     },
   },
   {

@@ -16,11 +16,10 @@ use function Server\Utils\getNullish;
 
 class ClientDAO implements DAO {
     private const TABLE_NAME = "Client";
-    private const COLUMNS = [
+    public const COLUMNS = [
         "name" => "nume",
         "address" => "adresa",
         "cif" => "cif",
-        "workpoint" => "punct_lucru",
     ];
     private const PK_COL = "name";
 
@@ -32,7 +31,6 @@ class ClientDAO implements DAO {
             getNullish($data, ClientDAO::COLUMNS["name"]),
             getNullish($data, ClientDAO::COLUMNS["address"]),
             getNullish($data, ClientDAO::COLUMNS["cif"]),
-            getNullish($data, ClientDAO::COLUMNS["workpoint"]),
         );
     }
 

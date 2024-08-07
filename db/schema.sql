@@ -13,7 +13,12 @@ DROP TABLE IF EXISTS Client;
 CREATE TABLE Client (
   nume        VARCHAR(255) NOT NULL PRIMARY KEY,
   adresa      VARCHAR(255) NOT NULL,
-  cif         VARCHAR(255) NOT NULL,
+  cif         VARCHAR(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS Punct_Lucru_Client;
+CREATE TABLE Punct_Lucru_Client(
+  nume_client VARCHAR(255) PRIMARY KEY REFERENCES Client(nume),
   punct_lucru VARCHAR(255) NOT NULL
 );
 

@@ -16,7 +16,7 @@ use function Server\Utils\getNullish;
 
 class ClientContractDAO implements DAO {
     private const TABLE_NAME = "Contract_Client";
-    private const COLUMNS = [
+    public const COLUMNS = [
         "id" => "id",
         "clientName" => "nume_client",
         "license" => "licenta",
