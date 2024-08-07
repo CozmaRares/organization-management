@@ -98,7 +98,7 @@ export default function DialogContentDataForm<
                 control={form.control}
                 name={id as Path<Input>}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="last-of-type:odd:col-span-full">
                     <FormLabel>{label}</FormLabel>
                     <Inp
                       placeholder={label}

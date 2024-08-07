@@ -118,13 +118,16 @@ const columns = [
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Acțiuni</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-center">
+                  Acțiuni
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-accent" />
                 <DropdownMenuItem
+                  className="cursor-pointer"
                   onClick={() => navigator.clipboard.writeText(client.cif)}
                 >
                   Copiază CIF
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem className="p-0">
                   <DialogTrigger className="w-full px-2 py-1.5 text-left">
                     Schimbă datele
