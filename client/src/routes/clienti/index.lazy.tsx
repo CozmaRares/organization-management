@@ -8,7 +8,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import DataTable from "@/components/DataTable";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { fuzzyFilter, startsWithFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
@@ -115,6 +115,7 @@ const columns = [
         "w-full justify-start",
       );
 
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const closeRef = useRef<HTMLButtonElement | null>(null);
 
       return (
