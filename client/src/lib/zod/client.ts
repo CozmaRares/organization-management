@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { varchar } from "./utils";
-import { clientContractStatus, clientContractType } from "../dbEnums";
+import { clientContractStatus } from "../dbEnums";
 import { formatDateStore } from "../utils";
 
 export const ClientSchema = z.object({
@@ -11,27 +11,6 @@ export const ClientSchema = z.object({
 
 export const ClientContractSchema = z.object({
   clientName: varchar(),
-  license: varchar(),
-  quantity: z
-    .string({ required_error: "Este obligatoriu" })
-    .min(1, "Câmpul trebuie să aibă cel puțin 1 caracter")
-    .or(z.number())
-    .pipe(
-      z.coerce
-        .number({ invalid_type_error: "Cămpul nu este număr" })
-        .positive("Numărul trebuie să fie pozitiv")
-        .int("Numărul trebuie să fie întreg"),
-    ),
-  price: z
-    .string({ required_error: "Este obligatoriu" })
-    .min(1, "Câmpul trebuie să aibă cel puțin 1 caracter")
-    .or(z.number())
-    .pipe(
-      z.coerce
-        .number({ invalid_type_error: "Cămpul nu este număr" })
-        .positive("Numărul trebuie să fie pozitiv"),
-    ),
-  type: z.enum(clientContractType, { required_error: "Este obligatoriu" }),
   date: z
     .date({ required_error: "Este obligatoriu" })
     .or(z.string())

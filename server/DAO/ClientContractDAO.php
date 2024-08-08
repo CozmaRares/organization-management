@@ -19,10 +19,6 @@ class ClientContractDAO implements DAO {
     public const COLUMNS = [
         "id" => "id",
         "clientName" => "nume_client",
-        "license" => "licenta",
-        "quantity" => "buc",
-        "price" => "pret",
-        "type" => "tip",
         "date" => "data_ef",
         "details" => "detalii",
         "status" => "status",
@@ -36,10 +32,6 @@ class ClientContractDAO implements DAO {
         return new ClientContract(
             (int) getNullish($data, ClientContractDAO::COLUMNS["id"]),
             getNullish($data, ClientContractDAO::COLUMNS["clientName"]),
-            getNullish($data, ClientContractDAO::COLUMNS["license"]),
-            (int) getNullish($data, ClientContractDAO::COLUMNS["quantity"]),
-            (float) getNullish($data, ClientContractDAO::COLUMNS["price"]),
-            getNullish($data, ClientContractDAO::COLUMNS["type"]),
             getNullish($data, ClientContractDAO::COLUMNS["date"]),
             getNullish($data, ClientContractDAO::COLUMNS["details"]),
             getNullish($data, ClientContractDAO::COLUMNS["status"]),

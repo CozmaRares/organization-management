@@ -18,8 +18,7 @@ import { ClientContractSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import AnimateEllipses from "@/components/AnimateEllipses";
 import { api } from "@/lib/api";
-import { clientContractStatus, clientContractType } from "@/lib/dbEnums";
-import { formatCurrency } from "@/lib/utils";
+import { clientContractStatus } from "@/lib/dbEnums";
 
 export const Route = createLazyFileRoute("/clienti/contracte")({
   component: Page,
@@ -50,35 +49,6 @@ const columns = [
     },
   },
   {
-    accessorKey: "license",
-    header: "Licență",
-    filterFn: startsWithFilter as FilterFn<Contract>,
-    meta: {
-      filterComponent: (table: Table<Contract>) => (
-        <InputFilter
-          placeholder="Filtrează licența..."
-          value={(table.getColumn("license")?.getFilterValue() as string) ?? ""}
-          onChange={event =>
-            table.getColumn("license")?.setFilterValue(event.target.value)
-          }
-        />
-      ),
-      toggleVisibility: true,
-      inputType: { type: "input" },
-      columnName: "Licență",
-    },
-  },
-  {
-    accessorKey: "type",
-    header: "Tip",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("type")}</div>,
-    meta: {
-      toggleVisibility: true,
-      inputType: { type: "select", options: clientContractType },
-      columnName: "Tip",
-    },
-  },
-  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
@@ -91,34 +61,6 @@ const columns = [
         options: clientContractStatus,
       },
       columnName: "Status",
-    },
-  },
-  {
-    accessorKey: "quantity",
-    header: () => <div className="text-right">Bucăți</div>,
-    cell: props => {
-      const amount = parseFloat(props.getValue() as string);
-      return <div className="text-right font-medium">{amount}</div>;
-    },
-    meta: {
-      toggleVisibility: true,
-      inputType: { type: "input" },
-      columnName: "Bucați",
-    },
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className="text-right">Preț</div>,
-    cell: props => {
-      const amount = parseFloat(props.getValue() as string);
-      const formatted = formatCurrency(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-    meta: {
-      toggleVisibility: true,
-      inputType: { type: "input" },
-      columnName: "Preț",
     },
   },
   {
