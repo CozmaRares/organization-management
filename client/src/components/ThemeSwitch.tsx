@@ -26,6 +26,10 @@ export default function ThemeSwitch() {
     } else {
       setLight();
     }
+
+    document.body.classList.add("no-duration");
+
+    setTimeout(() => document.body.classList.remove("no-duration"), 1);
   };
 
   useEffect(() => {

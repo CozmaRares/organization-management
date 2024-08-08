@@ -82,3 +82,13 @@
     margin-right: var(--gap);
   }
 }
+
+.no-duration,
+.no-duration::before,
+.no-duration::after,
+.no-duration *,
+.no-duration *::before,
+.no-duration *::after {
+  animation-duration: 0s !important;
+  transition-duration: 0s !important;
+}

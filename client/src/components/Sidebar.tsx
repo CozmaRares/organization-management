@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import {
   Banknote,
   ChevronDown,
-  ChevronUp,
   ClipboardMinus,
   Coins,
   LayoutDashboard,
@@ -169,7 +168,7 @@ function CollapsibleMenu({
       >
         <button
           className={cn(
-            "flex w-full items-center justify-between p-3 group-hover:bg-primary/40 transition-[border-bottom-left-radius]",
+            "flex w-full items-center justify-between p-3 transition-[border-bottom-left-radius] group-hover:bg-primary/40",
             className,
             isOpen && "rounded-bl-none bg-primary/20",
           )}
@@ -178,11 +177,12 @@ function CollapsibleMenu({
             <span className={iconStyles}>{icon}</span>
             {text}
           </div>
-          {isOpen ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform",
+              isOpen && "rotate-180",
+            )}
+          />
           <span className="sr-only">Toggle</span>
         </button>
       </CollapsibleTrigger>
