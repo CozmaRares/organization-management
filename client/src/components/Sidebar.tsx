@@ -169,7 +169,7 @@ function CollapsibleMenu({
       >
         <button
           className={cn(
-            "flex w-full items-center justify-between p-3 group-hover:bg-primary/40",
+            "flex w-full items-center justify-between p-3 group-hover:bg-primary/40 transition-[border-bottom-left-radius]",
             className,
             isOpen && "rounded-bl-none bg-primary/20",
           )}
