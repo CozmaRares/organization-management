@@ -1,5 +1,5 @@
 import { routeTree } from "@/routeTree.gen";
-import { Link, ParseRoute, useRouterState } from "@tanstack/react-router";
+import { Link, ParseRoute, useLocation } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import {
   Banknote,
@@ -13,7 +13,7 @@ import {
   Truck,
   Users,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -26,32 +26,37 @@ type Props = {
 
 type ValidRoute = ParseRoute<typeof routeTree>["fullPath"];
 type RouteInfo = {
+  path: ValidRoute;
   text: string;
   icon: JSX.Element;
 };
-type RoutesGeneric<T> = Partial<Record<ValidRoute, RouteInfo & T>>;
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Routes = RoutesGeneric<{ nested?: RoutesGeneric<{}> }>;
+type Route =
+  | RouteInfo
+  | { text: string; icon: JSX.Element; nested: RouteInfo[] };
 
-const routes: Routes = Object.freeze({
-  "/furnizori": { text: "Furnizori", icon: <Truck /> },
-  "/clienti": {
+const routes: readonly Route[] = Object.freeze([
+  { path: "/furnizori", text: "Furnizori", icon: <Truck /> },
+  {
     text: "Clienți",
     icon: <Users />,
-    nested: {
-      "/clienti/contracte": { text: "Contracte", icon: <NotebookTabs /> },
-    },
+    nested: [
+      { path: "/clienti", text: "Dashboard", icon: <LayoutDashboard /> },
+      { path: "/clienti/contracte", text: "Contracte", icon: <NotebookTabs /> },
+    ],
   },
-  "/facturi": {
+  {
     text: "Facturi",
     icon: <ReceiptText />,
-    nested: {},
+    nested: [
+      { path: "/facturi/furnizori", text: "Furnizori", icon: <Truck /> },
+      { path: "/facturi/clienti", text: "Clienți", icon: <Users /> },
+    ],
   },
-  "/cheltuieli": { text: "Cheltuieli", icon: <Coins /> },
-  "/taskuri": { text: "Task-uri", icon: <ListCheck /> },
-  "/rapoarte": { text: "Raporte", icon: <ClipboardMinus /> },
-  "/salarii": { text: "Salarii", icon: <Banknote /> },
-} satisfies Routes);
+  { path: "/cheltuieli", text: "Cheltuieli", icon: <Coins /> },
+  { path: "/taskuri", text: "Task-uri", icon: <ListCheck /> },
+  { path: "/rapoarte", text: "Raporte", icon: <ClipboardMinus /> },
+  { path: "/salarii", text: "Salarii", icon: <Banknote /> },
+]);
 
 export default function Sidebar({ className }: Props) {
   return (
@@ -68,57 +73,42 @@ export default function Sidebar({ className }: Props) {
   );
 }
 
-type NavProps = { routes: Routes };
+type NavProps = { routes: readonly Route[] };
 
 function Nav({ routes }: NavProps) {
-  const location = useRouterState().location.pathname;
-
   return (
     <ul className="space-y-2 p-2">
-      {Object.entries(routes).map(([path, { text, icon, nested }]) => (
+      {routes.map((route, idx) => (
         <NavItem
-          key={`sidebar-nav-item-${path}`}
-          path={path}
-          text={text}
-          icon={icon}
-          nested={nested}
-          active={isLinkActive(location, path, text)}
+          key={`sidebar-nav-item-${idx}`}
+          route={route}
         />
       ))}
     </ul>
   );
 }
 
-function isLinkActive(location: string, path: string, text: string) {
-  if (path == "/") return location == "/";
-
-  if (text == "Dashboard") return location == path;
-
-  return location.startsWith(path);
-}
-
 type NavItemProps = {
-  path: string;
-  text: string;
-  icon: JSX.Element;
-  nested?: Routes;
-  active: boolean;
+  route: Route;
 };
 
-const activeBg = "bg-primary/30";
+function NavItem({ route }: NavItemProps) {
+  const hasNested = "nested" in route;
 
-function NavItem({ path, text, icon, nested, active }: NavItemProps) {
-  const hasNested = nested && Object.entries(nested).length > 0;
-
-  const itemStyles = cn("btn bg-background rounded-md", active && activeBg);
+  const itemStyles = "btn bg-background rounded-md";
 
   if (!hasNested)
     return (
-      <li className={itemStyles}>
+      <li
+        className={cn(
+          itemStyles,
+          "hover:bg-primary/40 has-[[data-active=true]]:bg-primary/30",
+        )}
+      >
         <NavLink
-          path={path}
-          text={text}
-          icon={icon}
+          path={route.path}
+          text={route.text}
+          icon={route.icon}
         />
       </li>
     );
@@ -126,10 +116,9 @@ function NavItem({ path, text, icon, nested, active }: NavItemProps) {
   return (
     <li>
       <CollapsibleMenu
-        path={path}
-        text={text}
-        icon={icon}
-        nested={nested}
+        text={route.text}
+        icon={route.icon}
+        nested={route.nested}
         className={itemStyles}
       />
     </li>
@@ -137,10 +126,9 @@ function NavItem({ path, text, icon, nested, active }: NavItemProps) {
 }
 
 type CollapsibleMenuProps = {
-  path: string;
   text: string;
   icon: JSX.Element;
-  nested: Routes;
+  nested: RouteInfo[];
   className?: string;
 };
 
@@ -148,13 +136,19 @@ const linkStyles = "flex w-full flex-row gap-2 rounded-md";
 const iconStyles = "flex w-[2em] items-center justify-center";
 
 function CollapsibleMenu({
-  path,
   text,
   icon,
   nested,
   className,
 }: CollapsibleMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const location = useLocation().pathname;
+
+  const isActive = useMemo(
+    () => nested.some(route => route.path.startsWith(location)),
+    [location],
+  );
 
   return (
     <Collapsible
@@ -171,6 +165,7 @@ function CollapsibleMenu({
             "flex w-full items-center justify-between p-3 transition-[border-bottom-left-radius] group-hover:bg-primary/40",
             className,
             isOpen && "rounded-bl-none bg-primary/20",
+            isActive && "bg-primary/30",
           )}
         >
           <div className={linkStyles}>
@@ -188,15 +183,7 @@ function CollapsibleMenu({
       </CollapsibleTrigger>
       <CollapsibleContent className="relative">
         <div className="absolute left-0 top-0 z-0 h-full w-[3px] bg-primary/20 transition-colors group-hover:bg-primary/40" />
-        <Nav
-          routes={{
-            [path]: {
-              text: "Dashboard",
-              icon: <LayoutDashboard />,
-            },
-            ...nested,
-          }}
-        />
+        <Nav routes={nested} />
       </CollapsibleContent>
     </Collapsible>
   );
@@ -209,10 +196,13 @@ type NavLinkProps = {
 };
 
 function NavLink({ path, text, icon }: NavLinkProps) {
+  const location = useLocation().pathname;
+
   return (
     <Link
       to={path}
       className={cn(linkStyles, "p-3")}
+      data-active={location === path}
     >
       <span className={iconStyles}>{icon}</span>
       {text}
