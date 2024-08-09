@@ -19,6 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./ui/collapsible";
+import { ScrollArea } from "./ui/scroll-area";
 
 type Props = {
   className?: string;
@@ -61,14 +62,13 @@ const routes: readonly Route[] = Object.freeze([
 export default function Sidebar({ className }: Props) {
   return (
     <aside
-      className={cn(
-        "flex max-h-full flex-col justify-between overflow-scroll p-3",
-        className,
-      )}
+      className={cn("flex max-h-full flex-col justify-between p-3", className)}
     >
-      <nav>
-        <Nav routes={routes} />
-      </nav>
+      <ScrollArea className="max-h-full">
+        <nav>
+          <Nav routes={routes} />
+        </nav>
+      </ScrollArea>
     </aside>
   );
 }
@@ -148,7 +148,7 @@ function CollapsibleMenu({
 
   const isActive = useMemo(
     () => nested.some(route => route.path.startsWith(location)),
-    [location],
+    [location, nested],
   );
 
   return (
