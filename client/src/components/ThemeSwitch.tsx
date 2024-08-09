@@ -12,12 +12,14 @@ export default function ThemeSwitch() {
     setTheme("dark");
     window.localStorage.setItem("theme", "dark");
     document.body.classList.add("dark");
+    document.documentElement.style.colorScheme = "dark";
   };
 
   const setLight = () => {
     setTheme("light");
     window.localStorage.setItem("theme", "light");
     document.body.classList.remove("dark");
+    document.documentElement.style.colorScheme = "light";
   };
 
   const toggleTheme = (): void => {
@@ -50,7 +52,7 @@ export default function ThemeSwitch() {
   return (
     <button
       onClick={toggleTheme}
-      className="btn rounded-lg p-2"
+      className="btn rounded-lg p-2 outline-none ring-offset-background transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2"
     >
       {theme == "light" ? <Sun /> : <Moon />}
     </button>

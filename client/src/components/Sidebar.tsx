@@ -103,6 +103,7 @@ function NavItem({ route }: NavItemProps) {
         className={cn(
           itemStyles,
           "hover:bg-primary/40 has-[[data-active=true]]:bg-primary/30",
+          "ring-offset-background transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
         )}
       >
         <NavLink
@@ -132,7 +133,7 @@ type CollapsibleMenuProps = {
   className?: string;
 };
 
-const linkStyles = "flex w-full flex-row gap-2 rounded-md";
+const linkStyles = "flex w-full flex-row gap-2 rounded-md outline-none";
 const iconStyles = "flex w-[2em] items-center justify-center";
 
 function CollapsibleMenu({
@@ -163,6 +164,7 @@ function CollapsibleMenu({
         <button
           className={cn(
             "flex w-full items-center justify-between p-3 transition-[border-bottom-left-radius] group-hover:bg-primary/40",
+            "outline-none ring-offset-background transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2",
             className,
             isOpen && "rounded-bl-none bg-primary/20",
             isActive && "bg-primary/30",

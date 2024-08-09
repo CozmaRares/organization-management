@@ -112,7 +112,7 @@ export default function Shortcuts({ className }: Props) {
     >
       <Link
         to="/"
-        className="group grid w-fit grid-cols-[auto,minmax(0,1fr)] grid-rows-2 items-center gap-x-2 rounded-md p-1 font-bold"
+        className="group grid w-fit grid-cols-[auto,minmax(0,1fr)] grid-rows-2 items-center gap-x-2 rounded-md p-1 font-bold outline-none ring-offset-background transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2"
       >
         <PiggyBank className="row-span-full h-12 w-12 transition-all group-hover:scale-110" />
         <span className="text-lg text-primary">Bill</span>
@@ -136,7 +136,7 @@ export default function Shortcuts({ className }: Props) {
           <DialogTrigger asChild>
             <button
               id="change-shortcuts"
-              className="btn rounded-lg p-2"
+              className="btn rounded-lg p-2 outline-none ring-offset-background transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
               {numShortcuts == 0 ? "Adaugă scurtături" : "Schimbă scurtăturile"}
             </button>
