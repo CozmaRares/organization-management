@@ -52,10 +52,10 @@ export default function DataTable<TData, TValue>({
 }: Props<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [pagination, setPagination] = useState<PaginationState>({
+  const [pagination, setPagination] = useState<PaginationState>(() => ({
     pageIndex: 0,
-    pageSize: 10,
-  });
+    pageSize: Math.min(10, data.length),
+  }));
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -166,14 +166,16 @@ export default function DataTable<TData, TValue>({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <SelectItem
-                key={`table pagination show ${pageSize}`}
-                value={pageSize.toString()}
-              >
-                Arată {pageSize}
-              </SelectItem>
-            ))}
+            {[10, 20, 30, 40, 50]
+              .filter(pageSize => pageSize < data.length)
+              .map(pageSize => (
+                <SelectItem
+                  key={`table pagination show ${pageSize}`}
+                  value={pageSize.toString()}
+                >
+                  Arată {pageSize}
+                </SelectItem>
+              ))}
             <SelectItem value={data.length.toString()}>Toate</SelectItem>
           </SelectContent>
         </Select>
