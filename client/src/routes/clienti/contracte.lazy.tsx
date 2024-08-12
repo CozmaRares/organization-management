@@ -19,6 +19,7 @@ import Error from "@/components/Error";
 import { api } from "@/lib/api";
 import { clientContractStatus } from "@/lib/dbEnums";
 import GridLoader from "@/components/GridLoader";
+import AddX from "@/components/mutations/AddX";
 
 export const Route = createLazyFileRoute("/clienti/contracte")({
   component: Page,
@@ -95,36 +96,15 @@ function Page() {
     <DataTable
       columns={columns}
       data={data}
-      footer={<AddContract />}
-    />
-  );
-}
-
-function AddContract() {
-  const createMutation = api.clients.contracts.create.useMutation();
-
-  return (
-    <Dialog>
-      <DialogTrigger className="flex h-10 flex-row items-center justify-center gap-1 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-        <Plus className="h-4 w-4" />
-        Adaugă Contract
-      </DialogTrigger>
-
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Adaugă Contract</DialogTitle>
-          <DialogDescription>
-            Adaugă datele contractului aici.
-          </DialogDescription>
-        </DialogHeader>
-
-        <DataForm
-          buttonText="Adaugă"
-          onSubmit={data => createMutation.mutate(data)}
+      footer={
+        <AddX
+          title="Adaugă Contract"
+          desctiption="Adaugă datele contractului aici."
           columns={columns}
           schema={ClientContractSchema}
+          apiCreate={api.clients.contracts.create.useMutation}
         />
-      </DialogContent>
-    </Dialog>
+      }
+    />
   );
 }

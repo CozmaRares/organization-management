@@ -12,7 +12,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { fuzzyFilter, startsWithFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
-import { MoreHorizontal, Plus, X } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +41,7 @@ import { api } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
+import AddX from "@/components/mutations/AddX";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -183,34 +184,16 @@ function Page() {
     <DataTable
       columns={columns}
       data={data}
-      footer={<AddClient />}
-    />
-  );
-}
-
-function AddClient() {
-  const createMutation = api.clients.create.useMutation();
-
-  return (
-    <Dialog>
-      <DialogTrigger className="flex h-10 flex-row items-center justify-center gap-1 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-        <Plus className="h-4 w-4" />
-        Adaugă Client
-      </DialogTrigger>
-
-      <DialogContent className="max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Adaugă Client</DialogTitle>
-          <DialogDescription>Adaugă datele clientului aici.</DialogDescription>
-        </DialogHeader>
-        <DataForm
-          buttonText="Adaugă"
-          onSubmit={data => createMutation.mutate(data)}
+      footer={
+        <AddX
+          title="Adaugă Client"
+          desctiption="Adaugă datele clientului aici."
           columns={columns}
           schema={ClientSchema}
+          apiCreate={api.clients.create.useMutation}
         />
-      </DialogContent>
-    </Dialog>
+      }
+    />
   );
 }
 

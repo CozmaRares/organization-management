@@ -33,11 +33,7 @@ import {
 } from "./ui/select";
 import { ColumnDef } from "@tanstack/react-table";
 
-export type DataFormProps<
-  Output,
-  Def extends z.ZodTypeDef,
-  Input extends FieldValues,
-> = {
+type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
   columns: ColumnDef<Output>[];
   schema: z.ZodSchema<Output, Def, Input>;
   defaultValues?: DefaultValues<Input>;
@@ -55,7 +51,7 @@ export default function DataForm<
   defaultValues,
   buttonText,
   onSubmit,
-}: DataFormProps<Output, Def, Input>) {
+}: Props<Output, Def, Input>) {
   const form = useForm<Input>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -64,11 +60,16 @@ export default function DataForm<
   const inputs = useMemo(
     () =>
       columns
-        .filter(col => "accessorKey" in col && "meta" in col)
+        .filter(
+          col =>
+            "accessorKey" in col &&
+            "meta" in col &&
+            col.meta!.inputType !== undefined,
+        )
         .map(col => ({
           id: (col as { accessorKey: string }).accessorKey,
           label: col.meta!.columnName,
-          inputType: col.meta!.inputType,
+          inputType: col.meta!.inputType!,
         })),
     [columns],
   );

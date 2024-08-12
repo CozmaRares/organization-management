@@ -12,7 +12,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { equalsFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
-import { MoreHorizontal, Plus, X } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -40,6 +40,7 @@ import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
 import { ProductDefaults, ProductSchema } from "@/lib/zod/product";
+import AddX from "@/components/mutations/AddX";
 
 export const Route = createLazyFileRoute("/produse/")({
   component: Page,
@@ -180,35 +181,17 @@ function Page() {
     <DataTable
       columns={columns}
       data={data}
-      footer={<AddProduct />}
-    />
-  );
-}
-
-function AddProduct() {
-  const createMutation = api.products.create.useMutation();
-
-  return (
-    <Dialog>
-      <DialogTrigger className="flex h-10 flex-row items-center justify-center gap-1 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-        <Plus className="h-4 w-4" />
-        Adaugă Produs
-      </DialogTrigger>
-
-      <DialogContent className="max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Adaugă Poodus</DialogTitle>
-          <DialogDescription>Adaugă datele produsului aici.</DialogDescription>
-        </DialogHeader>
-        <DataForm
-          buttonText="Adaugă"
-          onSubmit={data => createMutation.mutate(data)}
-          defaultValues={ProductDefaults}
+      footer={
+        <AddX
+          title="Adaugă Produs"
+          desctiption="Adaugă datele produsului aici."
           columns={columns}
           schema={ProductSchema}
+          defaultValues={ProductDefaults}
+          apiCreate={api.products.create.useMutation}
         />
-      </DialogContent>
-    </Dialog>
+      }
+    />
   );
 }
 
