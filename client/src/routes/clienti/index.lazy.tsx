@@ -32,7 +32,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import DataForm, { DataFormProps } from "@/components/DataForm";
+import DataForm from "@/components/DataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import { ClientSchema } from "@/lib/zod/client";
@@ -40,8 +40,7 @@ import Error from "@/components/Error";
 import AnimateEllipses from "@/components/AnimateEllipses";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
-import { useRef } from "react";
-import { cn } from "@/lib/utils";
+import { cn, makeDataFormInputs } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -49,7 +48,7 @@ export const Route = createLazyFileRoute("/clienti/")({
 
 type Client = z.output<typeof ClientSchema>;
 
-const columns = [
+const columns: ColumnDef<Client>[] = [
   {
     accessorKey: "name",
     header: "Nume",
@@ -115,9 +114,6 @@ const columns = [
         "w-full justify-start",
       );
 
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const closeRef = useRef<HTMLButtonElement | null>(null);
-
       return (
         <Sheet>
           <SheetTrigger
@@ -130,10 +126,7 @@ const columns = [
             <MoreHorizontal className="h-[1em]" />
           </SheetTrigger>
           <SheetContent>
-            <SheetClose
-              ref={closeRef}
-              className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"
-            >
+            <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </SheetClose>
@@ -177,18 +170,9 @@ const columns = [
     },
     size: 70,
   },
-] as const satisfies ColumnDef<Client>[];
+];
 
-const dialogContentInputs: DataFormProps<never, never, never>["inputs"] =
-  columns
-    .filter(col => {
-      return "accessorKey" in col && "meta" in col;
-    })
-    .map(({ accessorKey, header, meta }) => ({
-      id: accessorKey,
-      label: header,
-      inputType: meta.inputType,
-    }));
+const dataFormInputs = makeDataFormInputs(columns);
 
 function Page() {
   const { isPending, isFetching, error, data } = api.clients.get.useQuery();
@@ -226,7 +210,7 @@ function AddClient() {
         <DataForm
           buttonText="Adaugă"
           onSubmit={data => createMutation.mutate(data)}
-          inputs={dialogContentInputs}
+          inputs={dataFormInputs}
           schema={ClientSchema}
         />
       </DialogContent>
@@ -254,7 +238,7 @@ function EditClient({ data, className }: { data: Client; className?: string }) {
           onSubmit={data => {
             updateMutation.mutate({ ...data, pathParam: data.name });
           }}
-          inputs={dialogContentInputs}
+          inputs={dataFormInputs}
           defaultValues={data}
           schema={ClientSchema}
         />

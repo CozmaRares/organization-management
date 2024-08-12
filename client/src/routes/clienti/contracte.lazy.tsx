@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import DataForm, { DataFormProps } from "@/components/DataForm";
+import DataForm from "@/components/DataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import { ClientContractSchema } from "@/lib/zod/client";
@@ -19,6 +19,7 @@ import Error from "@/components/Error";
 import AnimateEllipses from "@/components/AnimateEllipses";
 import { api } from "@/lib/api";
 import { clientContractStatus } from "@/lib/dbEnums";
+import { makeDataFormInputs } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/clienti/contracte")({
   component: Page,
@@ -83,16 +84,7 @@ const columns = [
   },
 ] as const satisfies ColumnDef<Contract>[];
 
-const dialogContentInputs: DataFormProps<never, never, never>["inputs"] =
-  columns
-    .filter(col => {
-      return "accessorKey" in col && "meta" in col;
-    })
-    .map(({ accessorKey, meta }) => ({
-      id: accessorKey,
-      label: meta.columnName,
-      inputType: meta.inputType,
-    }));
+const dataFormInputs = makeDataFormInputs(columns);
 
 function Page() {
   const { isPending, isFetching, error, data } =
@@ -134,7 +126,7 @@ function AddContract() {
         <DataForm
           buttonText="Adaugă"
           onSubmit={data => createMutation.mutate(data)}
-          inputs={dialogContentInputs}
+          inputs={dataFormInputs}
           schema={ClientContractSchema}
         />
       </DialogContent>
