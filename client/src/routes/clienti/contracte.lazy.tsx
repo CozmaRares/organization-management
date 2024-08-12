@@ -18,7 +18,6 @@ import { ClientContractSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import { api } from "@/lib/api";
 import { clientContractStatus } from "@/lib/dbEnums";
-import { makeDataFormInputs } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
 
 export const Route = createLazyFileRoute("/clienti/contracte")({
@@ -84,8 +83,6 @@ const columns = [
   },
 ] as const satisfies ColumnDef<Contract>[];
 
-const dataFormInputs = makeDataFormInputs(columns);
-
 function Page() {
   const { isPending, isFetching, error, data } =
     api.clients.contracts.get.useQuery();
@@ -124,7 +121,7 @@ function AddContract() {
         <DataForm
           buttonText="Adaugă"
           onSubmit={data => createMutation.mutate(data)}
-          inputs={dataFormInputs}
+          columns={columns}
           schema={ClientContractSchema}
         />
       </DialogContent>

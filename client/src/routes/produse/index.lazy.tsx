@@ -37,7 +37,7 @@ import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import Error from "@/components/Error";
 import { api } from "@/lib/api";
-import { cn, makeDataFormInputs } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
 import { ProductDefaults, ProductSchema } from "@/lib/zod/product";
 
@@ -169,8 +169,6 @@ const columns: ColumnDef<Product>[] = [
 
 // TODO: add show supplier stock action
 
-const dataFormInputs = makeDataFormInputs(columns);
-
 function Page() {
   const { isPending, isFetching, error, data } = api.products.get.useQuery();
 
@@ -206,7 +204,7 @@ function AddProduct() {
           buttonText="Adaugă"
           onSubmit={data => createMutation.mutate(data)}
           defaultValues={ProductDefaults}
-          inputs={dataFormInputs}
+          columns={columns}
           schema={ProductSchema}
         />
       </DialogContent>
@@ -240,7 +238,7 @@ function EditProduct({
           onSubmit={data => {
             updateMutation.mutate({ ...data, pathParam: data.name });
           }}
-          inputs={dataFormInputs}
+          columns={columns}
           defaultValues={data}
           schema={ProductSchema}
         />

@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { InputType } from "@/lib/types";
@@ -31,17 +31,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { ColumnDef } from "@tanstack/react-table";
 
 export type DataFormProps<
   Output,
   Def extends z.ZodTypeDef,
   Input extends FieldValues,
 > = {
-  inputs: Array<{
-    id: string;
-    label: string;
-    inputType: InputType;
-  }>;
+  columns: ColumnDef<Output>[];
   schema: z.ZodSchema<Output, Def, Input>;
   defaultValues?: DefaultValues<Input>;
   buttonText: string;
@@ -53,7 +50,7 @@ export default function DataForm<
   Def extends z.ZodTypeDef,
   Input extends FieldValues,
 >({
-  inputs,
+  columns,
   schema,
   defaultValues,
   buttonText,
@@ -63,6 +60,18 @@ export default function DataForm<
     resolver: zodResolver(schema),
     defaultValues,
   });
+
+  const inputs = useMemo(
+    () =>
+      columns
+        .filter(col => "accessorKey" in col && "meta" in col)
+        .map(col => ({
+          id: (col as { accessorKey: string }).accessorKey,
+          label: col.meta!.columnName,
+          inputType: col.meta!.inputType,
+        })),
+    [columns],
+  );
 
   return (
     <Form {...form}>

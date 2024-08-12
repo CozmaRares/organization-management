@@ -39,7 +39,7 @@ import { ClientSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
-import { cn, makeDataFormInputs } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
 
 export const Route = createLazyFileRoute("/clienti/")({
@@ -172,8 +172,6 @@ const columns: ColumnDef<Client>[] = [
   },
 ];
 
-const dataFormInputs = makeDataFormInputs(columns);
-
 function Page() {
   const { isPending, isFetching, error, data } = api.clients.get.useQuery();
 
@@ -208,7 +206,7 @@ function AddClient() {
         <DataForm
           buttonText="Adaugă"
           onSubmit={data => createMutation.mutate(data)}
-          inputs={dataFormInputs}
+          columns={columns}
           schema={ClientSchema}
         />
       </DialogContent>
@@ -236,7 +234,7 @@ function EditClient({ data, className }: { data: Client; className?: string }) {
           onSubmit={data => {
             updateMutation.mutate({ ...data, pathParam: data.name });
           }}
-          inputs={dataFormInputs}
+          columns={columns}
           defaultValues={data}
           schema={ClientSchema}
         />
