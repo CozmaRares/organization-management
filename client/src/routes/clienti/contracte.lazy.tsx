@@ -42,8 +42,8 @@ const columns = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+    cell: ({ cell }) => (
+      <div className="capitalize">{cell.getValue<string>()}</div>
     ),
     meta: {
       toggleVisibility: true,

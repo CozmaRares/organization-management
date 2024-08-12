@@ -9,3 +9,9 @@ export const clientContractStatus = Object.freeze([
   "respins",
   "suspendat",
 ] as const);
+
+export const supplierStatus = Object.freeze([
+  "activ",
+  "suspendat",
+  "anulat",
+] as const);

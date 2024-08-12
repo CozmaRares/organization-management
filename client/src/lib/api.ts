@@ -6,6 +6,7 @@ import { ClientContractSchema, ClientSchema } from "./zod/client";
 import useCreate from "@/hooks/useCreate";
 import useDelete from "@/hooks/useDelete";
 import { ProductSchema } from "./zod/product";
+import { SupplierSchema } from "./zod/supplier";
 
 export const queryClient = new QueryClient();
 
@@ -27,11 +28,16 @@ const apiData = Object.freeze({
     url: "/api/produse",
     key: ["products"],
   },
+  suppliers: {
+    url: "/api/furnizori",
+    key: ["suppliers"],
+  },
 } as const satisfies Record<string, APIData>);
 
 type Client = z.input<typeof ClientSchema>;
 type ClientContract = z.input<typeof ClientContractSchema>;
 type Product = z.input<typeof ProductSchema>;
+type Supplier = z.input<typeof SupplierSchema>;
 
 type APIEntry =
   | {
@@ -143,6 +149,39 @@ export const api = Object.freeze({
         useDelete({
           url: apiData.products.url,
           onSuccessInvalidateKeys: apiData.products.key,
+        }),
+    },
+  },
+  suppliers: {
+    get: {
+      useQuery: () =>
+        useQuery({
+          url: apiData.suppliers.url,
+          queryKey: apiData.suppliers.key,
+          validator: z.array(SupplierSchema),
+        }),
+      invalidate: () =>
+        queryClient.invalidateQueries({ queryKey: apiData.suppliers.key }),
+    },
+    create: {
+      useMutation: () =>
+        useCreate<Supplier>({
+          url: apiData.suppliers.url,
+          onSuccessInvalidateKeys: apiData.suppliers.key,
+        }),
+    },
+    update: {
+      useMutation: () =>
+        useUpdate<Supplier>({
+          url: apiData.suppliers.url,
+          onSuccessInvalidateKeys: apiData.suppliers.key,
+        }),
+    },
+    delete: {
+      useMutation: () =>
+        useDelete({
+          url: apiData.suppliers.url,
+          onSuccessInvalidateKeys: apiData.suppliers.key,
         }),
     },
   },
