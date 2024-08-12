@@ -5,6 +5,7 @@ import useUpdate from "@/hooks/useUpdate";
 import { ClientContractSchema, ClientSchema } from "./zod/client";
 import useCreate from "@/hooks/useCreate";
 import useDelete from "@/hooks/useDelete";
+import { ProductSchema } from "./zod/product";
 
 export const queryClient = new QueryClient();
 
@@ -22,10 +23,15 @@ const apiData = Object.freeze({
     url: "/api/contracte-clienti",
     key: ["client contracts"],
   },
+  products: {
+    url: "/api/produse",
+    key: ["products"],
+  },
 } as const satisfies Record<string, APIData>);
 
 type Client = z.input<typeof ClientSchema>;
 type ClientContract = z.input<typeof ClientContractSchema>;
+type Product = z.input<typeof ProductSchema>;
 
 type APIEntry =
   | {
@@ -105,6 +111,39 @@ export const api = Object.freeze({
             onSuccessInvalidateKeys: apiData.clientContracts.key,
           }),
       },
+    },
+  },
+  products: {
+    get: {
+      useQuery: () =>
+        useQuery({
+          url: apiData.products.url,
+          queryKey: apiData.products.key,
+          validator: z.array(ProductSchema),
+        }),
+      invalidate: () =>
+        queryClient.invalidateQueries({ queryKey: apiData.products.key }),
+    },
+    create: {
+      useMutation: () =>
+        useCreate<Product>({
+          url: apiData.products.url,
+          onSuccessInvalidateKeys: apiData.products.key,
+        }),
+    },
+    update: {
+      useMutation: () =>
+        useUpdate<Product>({
+          url: apiData.products.url,
+          onSuccessInvalidateKeys: apiData.products.key,
+        }),
+    },
+    delete: {
+      useMutation: () =>
+        useDelete({
+          url: apiData.products.url,
+          onSuccessInvalidateKeys: apiData.products.key,
+        }),
     },
   },
 } as const satisfies API);

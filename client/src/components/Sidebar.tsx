@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   ListCheck,
   NotebookTabs,
+  PackageSearch,
   ReceiptText,
   Truck,
   Users,
@@ -36,6 +37,7 @@ type Route =
   | { text: string; icon: JSX.Element; nested: RouteInfo[] };
 
 const routes: readonly Route[] = Object.freeze([
+  { path: "/produse", text: "Produse", icon: <PackageSearch /> },
   { path: "/furnizori", text: "Furnizori", icon: <Truck /> },
   {
     text: "Clienți",

@@ -1,7 +1,7 @@
 import { Input } from "../ui/input";
 
 type Props = {
-  value: string;
+  value: string | number;
   placeholder: string;
   onChange: React.InputHTMLAttributes<HTMLInputElement>["onChange"];
   className?: string;

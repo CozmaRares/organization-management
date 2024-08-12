@@ -16,7 +16,7 @@ use function Server\Utils\getNullish;
 
 class ProductDAO implements DAO {
     private const TABLE_NAME = "Produs";
-    public const COLUMNS = [
+    private const COLUMNS = [
         "name" => "nume",
         "vat" => "tva",
         "stock" => "stoc",
@@ -80,7 +80,7 @@ class ProductDAO implements DAO {
     public static function create(Connection $connection, array $data): DAOResult {
         $builder = new InsertQueryBuilder();
         foreach ($data as $col => $value) {
-            $builder->addCol(ClientContractDAO::COLUMNS[$col], "$value");
+            $builder->addCol(ProductDAO::COLUMNS[$col], "$value");
         }
         $builder->setTable(ProductDAO::TABLE_NAME);
 
@@ -98,7 +98,7 @@ class ProductDAO implements DAO {
     public static function update(Connection $connection, string $uniqueID, array $data): DAOResult {
         $builder = new UpdateQueryBuilder();
         foreach ($data as $col => $value) {
-            $builder->addCol(ClientContractDAO::COLUMNS[$col], $value);
+            $builder->addCol(ProductDAO::COLUMNS[$col], "$value");
         }
 
         $query = $builder

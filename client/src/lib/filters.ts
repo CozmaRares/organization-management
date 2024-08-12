@@ -12,3 +12,13 @@ export const startsWithFilter: FilterFn<unknown> = (
   filterValue,
 ) =>
   row.getValue<string>(columnID).toLowerCase().trim().startsWith(filterValue);
+
+export const equalsFilter: FilterFn<unknown> = (row, columnID, filterValue) => {
+  console.log({
+    value: row.getValue<number>(columnID),
+    filterValue,
+    result: row.getValue<number>(columnID) === filterValue,
+  });
+
+  return row.getValue<number>(columnID) === filterValue;
+};

@@ -16,7 +16,7 @@ use function Server\Utils\getNullish;
 
 class ClientContractDAO implements DAO {
     private const TABLE_NAME = "Contract_Client";
-    public const COLUMNS = [
+    private const COLUMNS = [
         "id" => "id",
         "clientName" => "nume_client",
         "date" => "data_ef",
@@ -103,7 +103,7 @@ class ClientContractDAO implements DAO {
     public static function update(Connection $connection, string $uniqueID, array $data): DAOResult {
         $builder = new UpdateQueryBuilder();
         foreach ($data as $col => $value) {
-            $builder->addCol(ClientContractDAO::COLUMNS[$col], $value);
+            $builder->addCol(ClientContractDAO::COLUMNS[$col], "$value");
         }
 
         $query = $builder
