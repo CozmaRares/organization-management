@@ -61,8 +61,8 @@ CREATE TABLE Factura_Intrare(
   data_ef DATE NOT NULL DEFAULT (CURRENT_DATE())
 );
 
-DROP TABLE IF EXISTS Marfa_Factura_Intrare;
-CREATE TABLE Marfa_Factura_Intrare (
+DROP TABLE IF EXISTS Marfa_Intrare;
+CREATE TABLE Marfa_Intrare (
   id_factura  INT          REFERENCES Factura_Intrare(id),
   nume_produs VARCHAR(255) REFERENCES Produs(nume),
 
@@ -119,10 +119,12 @@ CREATE TABLE Factura_Iesire (
   CHECK (reducere >= 0)
 );
 
-DROP TABLE IF EXISTS Marfa_Factura_Iesire;
-CREATE TABLE Marfa_Factura_Iesire (
-  id_factura  INT          REFERENCES Factura_Iesire(id),
-  nume_produs VARCHAR(255) REFERENCES Produs(nume),
+DROP TABLE IF EXISTS Marfa_Iesire;
+CREATE TABLE Marfa_Iesire (
+  id_factura_iesire INT          REFERENCES Factura_Iesire(id),
+  nume_produs       VARCHAR(255) REFERENCES Produs(nume),
+
+  id_factura_intrare INT NOT NULL REFERENCES Factura_Intrare(id),
 
   tva      INT            NOT NULL DEFAULT 19,
   reducere INT            NOT NULL DEFAULT 0,
