@@ -13,17 +13,6 @@ import { equalsFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { MoreHorizontal, X } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import Error from "@/components/Error";
@@ -33,6 +22,7 @@ import GridLoader from "@/components/GridLoader";
 import { ProductDefaults, ProductSchema } from "@/lib/zod/product";
 import AddX from "@/components/mutations/AddX";
 import UpdateX from "@/components/mutations/UpdateX";
+import DeleteX from "@/components/mutations/DeleteX";
 
 export const Route = createLazyFileRoute("/produse/")({
   component: Page,
@@ -152,9 +142,11 @@ const columns: ColumnDef<Product>[] = [
               </li>
               <div className="h-[1px] w-full bg-accent" />
               <li>
-                <DeleteProduct
-                  productName={product.name}
+                <DeleteX
+                  triggerText="Șterge produs"
+                  id={product.name}
                   className={classes}
+                  apiDelete={api.products.delete.useMutation}
                 />
               </li>
             </ul>
@@ -190,41 +182,5 @@ function Page() {
         />
       }
     />
-  );
-}
-
-function DeleteProduct({
-  productName,
-  className,
-}: {
-  productName: string;
-  className?: string;
-}) {
-  const deleteMutation = api.products.delete.useMutation();
-
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger className={className}>
-        Șterge client
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Esti absolut sigur?</AlertDialogTitle>
-          <AlertDialogDescription>
-            <p>Această acținue nu poate fi anulată.</p>
-            <p>Datele vor fi șterse definitiv de pe server.</p>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Anulează</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => deleteMutation.mutate(productName)}
-            variant="destructive"
-          >
-            Continuă
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 }

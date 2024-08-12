@@ -13,26 +13,6 @@ import { fuzzyFilter, startsWithFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { MoreHorizontal, X } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import DataForm from "@/components/DataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import { ClientSchema } from "@/lib/zod/client";
@@ -43,6 +23,7 @@ import { cn } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
 import AddX from "@/components/mutations/AddX";
 import UpdateX from "@/components/mutations/UpdateX";
+import DeleteX from "@/components/mutations/DeleteX";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -166,9 +147,11 @@ const columns: ColumnDef<Client>[] = [
               </li>
               <div className="h-[1px] w-full bg-accent" />
               <li>
-                <DeleteClient
-                  clientName={client.name}
+                <DeleteX
+                  triggerText="Șterge client"
+                  id={client.name}
                   className={classes}
+                  apiDelete={api.clients.delete.useMutation}
                 />
               </li>
             </ul>
@@ -201,41 +184,5 @@ function Page() {
         />
       }
     />
-  );
-}
-
-function DeleteClient({
-  clientName,
-  className,
-}: {
-  clientName: string;
-  className?: string;
-}) {
-  const deleteMutation = api.clients.delete.useMutation();
-
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger className={className}>
-        Șterge client
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Esti absolut sigur?</AlertDialogTitle>
-          <AlertDialogDescription>
-            <p>Această acținue nu poate fi anulată.</p>
-            <p>Datele vor fi șterse definitiv de pe server.</p>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Anulează</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => deleteMutation.mutate(clientName)}
-            variant="destructive"
-          >
-            Continuă
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 }
