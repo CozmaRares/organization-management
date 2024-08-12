@@ -37,5 +37,3 @@ class Client {
         ];
     }
 }
-
-// TODO: script to generate model and DAO

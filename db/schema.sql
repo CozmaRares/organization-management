@@ -146,7 +146,7 @@ CREATE TABLE Marfa_Iesire (
   buc      DECIMAL(10, 2) NOT NULL,
   pret     DECIMAL(10, 2) NOT NULL,
 
-  PRIMARY KEY (id_factura, nume_produs),
+  PRIMARY KEY (id_factura_iesire, nume_produs),
 
   CHECK (tva >= 0 AND reducere >= 0 AND buc > 0 AND pret > 0)
 );
