@@ -42,6 +42,7 @@ import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
 import AddX from "@/components/mutations/AddX";
+import UpdateX from "@/components/mutations/UpdateX";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -152,8 +153,14 @@ const columns: ColumnDef<Client>[] = [
               </li>
               <div className="h-[1px] w-full bg-accent" />
               <li>
-                <EditClient
-                  data={client}
+                <UpdateX
+                  triggerText="Schimbă datele"
+                  title="Modifica Datele Clientului"
+                  desctiption="Modifică datele clientului  aici."
+                  columns={columns}
+                  schema={ClientSchema}
+                  apiUpdate={api.clients.update.useMutation}
+                  defaultValues={client}
                   className={classes}
                 />
               </li>
@@ -194,35 +201,6 @@ function Page() {
         />
       }
     />
-  );
-}
-
-function EditClient({ data, className }: { data: Client; className?: string }) {
-  const updateMutation = api.clients.update.useMutation();
-
-  return (
-    <Dialog>
-      <DialogTrigger className={className}>Schimbă datele</DialogTrigger>
-
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Modifica Datele Clientului</DialogTitle>
-          <DialogDescription>
-            <span className="block">Modifică datele clientului aici.</span>
-          </DialogDescription>
-        </DialogHeader>
-
-        <DataForm
-          buttonText="Salvează"
-          onSubmit={data => {
-            updateMutation.mutate({ ...data, pathParam: data.name });
-          }}
-          columns={columns}
-          defaultValues={data}
-          schema={ClientSchema}
-        />
-      </DialogContent>
-    </Dialog>
   );
 }
 

@@ -2,16 +2,6 @@ import DataTable from "@/components/DataTable";
 import { startsWithFilter } from "@/lib/filters";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import DataForm from "@/components/DataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import { ClientContractSchema } from "@/lib/zod/client";

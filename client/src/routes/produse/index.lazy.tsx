@@ -14,14 +14,6 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import { MoreHorizontal, X } from "lucide-react";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -32,7 +24,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import DataForm from "@/components/DataForm";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import Error from "@/components/Error";
@@ -41,6 +32,7 @@ import { cn } from "@/lib/utils";
 import GridLoader from "@/components/GridLoader";
 import { ProductDefaults, ProductSchema } from "@/lib/zod/product";
 import AddX from "@/components/mutations/AddX";
+import UpdateX from "@/components/mutations/UpdateX";
 
 export const Route = createLazyFileRoute("/produse/")({
   component: Page,
@@ -147,8 +139,14 @@ const columns: ColumnDef<Product>[] = [
             <ul className="space-y-2 pt-4">
               <div className="h-[1px] w-full bg-accent" />
               <li>
-                <EditProduct
-                  data={product}
+                <UpdateX
+                  triggerText="Schimbă datele"
+                  title="Modifica Datele Produsului"
+                  desctiption="Modifică datele produsului aici."
+                  columns={columns}
+                  schema={ProductSchema}
+                  apiUpdate={api.products.update.useMutation}
+                  defaultValues={product}
                   className={classes}
                 />
               </li>
@@ -192,41 +190,6 @@ function Page() {
         />
       }
     />
-  );
-}
-
-function EditProduct({
-  data,
-  className,
-}: {
-  data: Product;
-  className?: string;
-}) {
-  const updateMutation = api.products.update.useMutation();
-
-  return (
-    <Dialog>
-      <DialogTrigger className={className}>Schimbă datele</DialogTrigger>
-
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Modifica Datele Produsului</DialogTitle>
-          <DialogDescription>
-            <span className="block">Modifică datele produsului aici.</span>
-          </DialogDescription>
-        </DialogHeader>
-
-        <DataForm
-          buttonText="Salvează"
-          onSubmit={data => {
-            updateMutation.mutate({ ...data, pathParam: data.name });
-          }}
-          columns={columns}
-          defaultValues={data}
-          schema={ProductSchema}
-        />
-      </DialogContent>
-    </Dialog>
   );
 }
 
