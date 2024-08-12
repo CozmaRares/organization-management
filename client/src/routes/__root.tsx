@@ -21,7 +21,7 @@ export const Route = createRootRoute({
       <div className="grid max-h-screen min-h-screen w-full grid-cols-[repeat(32,minmax(0,1fr))] grid-rows-[auto,minmax(0,1fr)] [--sidebar-cols:4]">
         <Shortcuts className="col-span-full border-b p-3" />
         <Sidebar className="col-[span_var(--sidebar-cols)/span_var(--sidebar-cols)] col-start-1 row-start-2 row-end-4 border-r" />
-        <ScrollArea className="col-[calc(var(--sidebar-cols)+1)/-1] row-start-2 max-h-full">
+        <ScrollArea className="col-[calc(var(--sidebar-cols)+1)/-1] row-start-2 max-h-full relative">
           <div className="container px-4 py-4">
             <Outlet />
           </div>

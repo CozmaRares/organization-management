@@ -37,10 +37,10 @@ import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
 import { ClientSchema } from "@/lib/zod/client";
 import Error from "@/components/Error";
-import AnimateEllipses from "@/components/AnimateEllipses";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
 import { cn, makeDataFormInputs } from "@/lib/utils";
+import GridLoader from "@/components/GridLoader";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
@@ -177,9 +177,7 @@ const dataFormInputs = makeDataFormInputs(columns);
 function Page() {
   const { isPending, isFetching, error, data } = api.clients.get.useQuery();
 
-  if (isPending) return <AnimateEllipses text="Se încarcă" />;
-
-  if (isFetching) return <AnimateEllipses text="Se colectează datele" />;
+  if (isPending || isFetching) return <GridLoader />;
 
   if (error) return <Error title="Hopa! E bai!">{error.message}</Error>;
 
