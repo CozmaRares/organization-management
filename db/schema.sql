@@ -2,9 +2,10 @@ DROP TABLE IF EXISTS Produs;
 CREATE TABLE Produs (
   nume VARCHAR(255) PRIMARY KEY,
 
+  tva  INT NOT NULL DEFAULT 19,
   stoc INT NOT NULL DEFAULT 0,
 
-  CHECK (stoc >= 0)
+  CHECK (tva >=0 AND stoc >= 0)
 );
 
 DROP TABLE IF EXISTS Furnizor;
@@ -58,7 +59,15 @@ CREATE TABLE Factura_Intrare(
 
   nume_furnizor VARCHAR(255) NOT NULL REFERENCES Furnizor(nume),
 
-  data_ef DATE NOT NULL DEFAULT (CURRENT_DATE())
+  data_emisa    DATE NOT NULL DEFAULT (CURRENT_DATE()),
+  data_scadenta DATE NOT NULL DEFAULT (CURRENT_DATE()),
+
+  status ENUM('emis' , 'depasit', 'partial plătit', 'plătit', 'plătit exces') NOT NULL DEFAULT ('emis'),
+
+  total  DECIMAL(10, 2) NOT NULL,
+  platit DECIMAL(10, 2) NOT NULL,
+
+  CHECK (total >= 0 AND platit >= 0)
 );
 
 DROP TABLE IF EXISTS Marfa_Intrare;
@@ -112,11 +121,17 @@ CREATE TABLE Factura_Iesire (
 
   nume_client VARCHAR(255) NOT NULL REFERENCES Client(nume),
 
-  reducere      INT  NOT NULL DEFAULT 0,
+  reducere INT  NOT NULL DEFAULT 0,
+
   data_emisa    DATE NOT NULL DEFAULT (CURRENT_DATE()),
   data_scadenta DATE NOT NULL DEFAULT (CURRENT_DATE()),
 
-  CHECK (reducere >= 0)
+  status ENUM('emis' , 'depasit', 'partial plătit', 'plătit', 'plătit exces') NOT NULL DEFAULT ('emis'),
+
+  total  DECIMAL(10, 2) NOT NULL,
+  platit DECIMAL(10, 2) NOT NULL,
+
+  CHECK (reducere >= 0 AND total >= 0 AND platit >= 0)
 );
 
 DROP TABLE IF EXISTS Marfa_Iesire;
@@ -156,8 +171,7 @@ CREATE TABLE Incasare (
   id_factura INT          NOT NULL REFERENCES Factura_Intrare(id),
   tip        VARCHAR(255) NOT NULL REFERENCES Tip_Tranzactie(tip),
 
-  data_ef DATE                                                NOT NULL DEFAULT (CURRENT_DATE()),
-  status  ENUM('emisă', 'în procesare', 'eșuată', 'completă') NOT NULL DEFAULT ('emisă'),
+  data_ef DATE NOT NULL DEFAULT (CURRENT_DATE()),
 
   document_plata VARCHAR(255)   NOT NULL,
   detalii        VARCHAR(1023)  NOT NULL,
