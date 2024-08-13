@@ -1,24 +1,10 @@
 import { z } from "zod";
-import { varchar } from "./utils";
+import { zint, zvarchar } from "./utils";
 
 export const ProductSchema = z.object({
-  name: varchar(),
-  vat: z
-    .number({ required_error: "Este obligatoriu" })
-    .nonnegative("Numărul trebuie să fie non-negativ")
-    .or(z.string())
-    .transform(num => {
-      if (typeof num == "number") return num;
-      return Number(num);
-    }),
-  stock: z
-    .number({ required_error: "Este obligatoriu" })
-    .nonnegative("Numărul trebuie să fie non-negativ")
-    .or(z.string())
-    .transform(num => {
-      if (typeof num == "number") return num;
-      return Number(num);
-    }),
+  name: zvarchar(),
+  vat: zint(),
+  stock: zint(),
 });
 
 type Product = z.input<typeof ProductSchema>;
