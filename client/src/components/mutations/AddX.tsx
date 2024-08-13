@@ -18,7 +18,7 @@ type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
   desctiption: string;
   columns: ColumnDef<Output>[];
   schema: z.ZodSchema<Output, Def, Input>;
-  defaultValues?: DefaultValues<Input>;
+  defaultValues?: Partial<DefaultValues<Input>>;
   apiCreate: () => UseMutationResult<void, Error, Input>;
 };
 

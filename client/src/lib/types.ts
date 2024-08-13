@@ -1,4 +1,5 @@
 import { RowData, Table } from "@tanstack/react-table";
+import { z } from "zod";
 
 export type InputType =
   | { type: "input" }
@@ -15,3 +16,9 @@ declare module "@tanstack/react-table" {
     toggleVisibility?: boolean;
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ZodCustom<T extends z.ZodSchema<any, any, any>> = {
+  schema: T;
+  defaultValues?: Partial<z.input<T>>;
+};

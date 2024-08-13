@@ -36,7 +36,7 @@ import { ColumnDef } from "@tanstack/react-table";
 type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
   columns: ColumnDef<Output>[];
   schema: z.ZodSchema<Output, Def, Input>;
-  defaultValues?: DefaultValues<Input>;
+  defaultValues?: Partial<DefaultValues<Input>>;
   buttonText: string;
   onSubmit: (data: Input) => void;
 };
@@ -54,7 +54,7 @@ export default function DataForm<
 }: Props<Output, Def, Input>) {
   const form = useForm<Input>({
     resolver: zodResolver(schema),
-    defaultValues,
+    defaultValues: defaultValues as DefaultValues<Input>,
   });
 
   const inputs = useMemo(

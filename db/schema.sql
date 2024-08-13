@@ -63,7 +63,7 @@ CREATE TABLE Factura_Furnizor(
   data_scadenta DATE NOT NULL DEFAULT (CURRENT_DATE()),
 
   total  DECIMAL(10, 2) NOT NULL,
-  platit DECIMAL(10, 2) NOT NULL,
+  platit DECIMAL(10, 2) NOT NULL DEFAULT 0,
 
   CHECK (total >= 0 AND platit >= 0)
 );
@@ -125,7 +125,7 @@ CREATE TABLE Factura_Client (
   data_scadenta DATE NOT NULL DEFAULT (CURRENT_DATE()),
 
   total  DECIMAL(10, 2) NOT NULL,
-  platit DECIMAL(10, 2) NOT NULL,
+  platit DECIMAL(10, 2) NOT NULL DEFAULT 0,
 
   CHECK (reducere >= 0 AND total >= 0 AND platit >= 0)
 );

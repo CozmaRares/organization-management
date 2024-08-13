@@ -2,11 +2,11 @@ import useQuery from "@/hooks/useQuery";
 import { z } from "zod";
 import { QueryClient } from "@tanstack/react-query";
 import useUpdate from "@/hooks/useUpdate";
-import { ClientContractSchema, ClientSchema } from "./zod/client";
+import { ClientContract, Client} from "./zod/client";
 import useCreate from "@/hooks/useCreate";
 import useDelete from "@/hooks/useDelete";
-import { ProductSchema } from "./zod/product";
-import { SupplierSchema } from "./zod/supplier";
+import { Product} from "./zod/product";
+import { Supplier} from "./zod/supplier";
 
 export const queryClient = new QueryClient();
 
@@ -34,10 +34,10 @@ const apiData = Object.freeze({
   },
 } as const satisfies Record<string, APIData>);
 
-type Client = z.input<typeof ClientSchema>;
-type ClientContract = z.input<typeof ClientContractSchema>;
-type Product = z.input<typeof ProductSchema>;
-type Supplier = z.input<typeof SupplierSchema>;
+type ClientInput = z.input<typeof Client.schema>;
+type ClientContractInput = z.input<typeof ClientContract.schema>;
+type ProductInput = z.input<typeof Product.schema>;
+type SupplierInput = z.input<typeof Supplier.schema>;
 
 type APIEntry =
   | {
@@ -57,21 +57,21 @@ export const api = Object.freeze({
         useQuery({
           url: apiData.clients.url,
           queryKey: apiData.clients.key,
-          validator: z.array(ClientSchema),
+          validator: z.array(Client.schema),
         }),
       invalidate: () =>
         queryClient.invalidateQueries({ queryKey: apiData.clients.key }),
     },
     create: {
       useMutation: () =>
-        useCreate<Client>({
+        useCreate<ClientInput>({
           url: apiData.clients.url,
           onSuccessInvalidateKeys: apiData.clients.key,
         }),
     },
     update: {
       useMutation: () =>
-        useUpdate<Client>({
+        useUpdate<ClientInput>({
           url: apiData.clients.url,
           onSuccessInvalidateKeys: apiData.clients.key,
         }),
@@ -89,7 +89,7 @@ export const api = Object.freeze({
           useQuery({
             url: apiData.clientContracts.url,
             queryKey: apiData.clientContracts.key,
-            validator: z.array(ClientContractSchema),
+            validator: z.array(ClientContract.schema),
           }),
         invalidate: () =>
           queryClient.invalidateQueries({
@@ -98,14 +98,14 @@ export const api = Object.freeze({
       },
       create: {
         useMutation: () =>
-          useCreate<ClientContract>({
+          useCreate<ClientContractInput>({
             url: apiData.clientContracts.url,
             onSuccessInvalidateKeys: apiData.clientContracts.key,
           }),
       },
       update: {
         useMutation: () =>
-          useUpdate<ClientContract>({
+          useUpdate<ClientContractInput>({
             url: apiData.clientContracts.url,
             onSuccessInvalidateKeys: apiData.clientContracts.key,
           }),
@@ -125,21 +125,21 @@ export const api = Object.freeze({
         useQuery({
           url: apiData.products.url,
           queryKey: apiData.products.key,
-          validator: z.array(ProductSchema),
+          validator: z.array(Product.schema),
         }),
       invalidate: () =>
         queryClient.invalidateQueries({ queryKey: apiData.products.key }),
     },
     create: {
       useMutation: () =>
-        useCreate<Product>({
+        useCreate<ProductInput>({
           url: apiData.products.url,
           onSuccessInvalidateKeys: apiData.products.key,
         }),
     },
     update: {
       useMutation: () =>
-        useUpdate<Product>({
+        useUpdate<ProductInput>({
           url: apiData.products.url,
           onSuccessInvalidateKeys: apiData.products.key,
         }),
@@ -158,21 +158,21 @@ export const api = Object.freeze({
         useQuery({
           url: apiData.suppliers.url,
           queryKey: apiData.suppliers.key,
-          validator: z.array(SupplierSchema),
+          validator: z.array(Supplier.schema),
         }),
       invalidate: () =>
         queryClient.invalidateQueries({ queryKey: apiData.suppliers.key }),
     },
     create: {
       useMutation: () =>
-        useCreate<Supplier>({
+        useCreate<SupplierInput>({
           url: apiData.suppliers.url,
           onSuccessInvalidateKeys: apiData.suppliers.key,
         }),
     },
     update: {
       useMutation: () =>
-        useUpdate<Supplier>({
+        useUpdate<SupplierInput>({
           url: apiData.suppliers.url,
           onSuccessInvalidateKeys: apiData.suppliers.key,
         }),

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { formatDateStore } from "../utils";
 
-const requiredError = "Este obligatoriu"
+const requiredError = "Este obligatoriu";
 
 export const zvarchar = (max = 255) =>
   z
@@ -39,5 +39,5 @@ export const zfloat = () =>
       return Number(num);
     });
 
-export const zenum = (options: readonly [string, ...string[]]) =>
+export const zenum = <T extends readonly [string, ...string[]]>(options: T) =>
   z.enum(options, { required_error: requiredError });

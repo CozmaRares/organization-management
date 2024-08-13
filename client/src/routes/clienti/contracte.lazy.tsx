@@ -4,7 +4,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
-import { ClientContractSchema } from "@/lib/zod/client";
+import { ClientContract } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import { api } from "@/lib/api";
 import { clientContractStatus } from "@/lib/dbEnums";
@@ -15,15 +15,15 @@ export const Route = createLazyFileRoute("/clienti/contracte")({
   component: Page,
 });
 
-type Contract = z.output<typeof ClientContractSchema>;
+type ClientContractOutput = z.output<typeof ClientContract.schema>;
 
 const columns = [
   {
     accessorKey: "clientName",
     header: "Client",
-    filterFn: startsWithFilter as FilterFn<Contract>,
+    filterFn: startsWithFilter as FilterFn<ClientContractOutput>,
     meta: {
-      filterComponent: (table: Table<Contract>) => (
+      filterComponent: (table: Table<ClientContractOutput>) => (
         <InputFilter
           placeholder="Filtrează client..."
           value={
@@ -72,7 +72,7 @@ const columns = [
       columnName: "Detalii",
     },
   },
-] as const satisfies ColumnDef<Contract>[];
+] as const satisfies ColumnDef<ClientContractOutput>[];
 
 function Page() {
   const { isPending, isFetching, error, data } =
@@ -91,8 +91,8 @@ function Page() {
           title="Adaugă Contract"
           desctiption="Adaugă datele contractului aici."
           columns={columns}
-          schema={ClientContractSchema}
           apiCreate={api.clients.contracts.create.useMutation}
+          {...ClientContract}
         />
       }
     />

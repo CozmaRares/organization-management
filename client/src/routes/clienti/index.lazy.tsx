@@ -4,7 +4,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { ColumnDef, FilterFn, Table } from "@tanstack/react-table";
 import InputFilter from "@/components/filters/InputFilter";
 import { z } from "zod";
-import { ClientSchema } from "@/lib/zod/client";
+import { Client } from "@/lib/zod/client";
 import Error from "@/components/Error";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
@@ -18,14 +18,14 @@ export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
 });
 
-type Client = z.output<typeof ClientSchema>;
+type ClientOutput = z.output<typeof Client.schema>;
 
-const columns: ColumnDef<Client>[] = [
+const columns: ColumnDef<ClientOutput>[] = [
   {
     accessorKey: "name",
     header: "Nume",
     meta: {
-      filterComponent: (table: Table<Client>) => (
+      filterComponent: (table: Table<ClientOutput>) => (
         <InputFilter
           placeholder="Filtrează numele..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -41,9 +41,9 @@ const columns: ColumnDef<Client>[] = [
   {
     accessorKey: "cif",
     header: "CIF",
-    filterFn: startsWithFilter as FilterFn<Client>,
+    filterFn: startsWithFilter as FilterFn<ClientOutput>,
     meta: {
-      filterComponent: (table: Table<Client>) => (
+      filterComponent: (table: Table<ClientOutput>) => (
         <InputFilter
           placeholder="Filtrează CIF..."
           value={(table.getColumn("cif")?.getFilterValue() as string) ?? ""}
@@ -60,9 +60,9 @@ const columns: ColumnDef<Client>[] = [
   {
     accessorKey: "address",
     header: "Adresă",
-    filterFn: fuzzyFilter as FilterFn<Client>,
+    filterFn: fuzzyFilter as FilterFn<ClientOutput>,
     meta: {
-      filterComponent: (table: Table<Client>) => (
+      filterComponent: (table: Table<ClientOutput>) => (
         <InputFilter
           placeholder="Filtrează adresa..."
           value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
@@ -99,7 +99,7 @@ const columns: ColumnDef<Client>[] = [
               title="Modifica Datele Clientului"
               desctiption="Modifică datele clientului  aici."
               columns={columns}
-              schema={ClientSchema}
+              schema={Client.schema}
               apiUpdate={api.clients.update.useMutation}
               defaultValues={client}
               className={actionButtonClasses}
@@ -134,8 +134,8 @@ function Page() {
           title="Adaugă Client"
           desctiption="Adaugă datele clientului aici."
           columns={columns}
-          schema={ClientSchema}
           apiCreate={api.clients.create.useMutation}
+          {...Client}
         />
       }
     />

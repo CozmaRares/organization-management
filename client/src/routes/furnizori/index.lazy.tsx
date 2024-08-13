@@ -9,7 +9,7 @@ import GridLoader from "@/components/GridLoader";
 import AddX from "@/components/mutations/AddX";
 import UpdateX from "@/components/mutations/UpdateX";
 import DeleteX from "@/components/mutations/DeleteX";
-import { SupplierSchema } from "@/lib/zod/supplier";
+import { Supplier } from "@/lib/zod/supplier";
 import { supplierStatus } from "@/lib/dbEnums";
 import ActionMenu, { actionButtonClasses } from "@/components/ActionMenu";
 
@@ -17,14 +17,14 @@ export const Route = createLazyFileRoute("/furnizori/")({
   component: Page,
 });
 
-type Supplier = z.output<typeof SupplierSchema>;
+type SupplierOutput = z.output<typeof Supplier.schema>;
 
-const columns: ColumnDef<Supplier>[] = [
+const columns: ColumnDef<SupplierOutput>[] = [
   {
     accessorKey: "name",
     header: "Nume",
     meta: {
-      filterComponent: (table: Table<Supplier>) => (
+      filterComponent: (table: Table<SupplierOutput>) => (
         <InputFilter
           placeholder="Filtrează numele..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -41,7 +41,7 @@ const columns: ColumnDef<Supplier>[] = [
     accessorKey: "status",
     header: "Status",
     meta: {
-      filterComponent: (table: Table<Supplier>) => (
+      filterComponent: (table: Table<SupplierOutput>) => (
         <InputFilter
           placeholder="Filtrează status..."
           value={(table.getColumn("status")?.getFilterValue() as number) ?? ""}
@@ -68,7 +68,7 @@ const columns: ColumnDef<Supplier>[] = [
               title="Modifica Datele Furnizorului"
               desctiption="Modifică datele furnizorului aici."
               columns={columns}
-              schema={SupplierSchema}
+              schema={Supplier.schema}
               apiUpdate={api.suppliers.update.useMutation}
               defaultValues={supplier}
               className={actionButtonClasses}
@@ -105,8 +105,8 @@ function Page() {
           title="Adaugă Furnizor"
           desctiption="Adaugă datele furnizorului aici."
           columns={columns}
-          schema={SupplierSchema}
           apiCreate={api.suppliers.create.useMutation}
+          {...Supplier}
         />
       }
     />

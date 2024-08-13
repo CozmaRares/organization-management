@@ -7,7 +7,7 @@ import { z } from "zod";
 import Error from "@/components/Error";
 import { api } from "@/lib/api";
 import GridLoader from "@/components/GridLoader";
-import { ProductDefaults, ProductSchema } from "@/lib/zod/product";
+import { Product } from "@/lib/zod/product";
 import AddX from "@/components/mutations/AddX";
 import UpdateX from "@/components/mutations/UpdateX";
 import DeleteX from "@/components/mutations/DeleteX";
@@ -17,14 +17,14 @@ export const Route = createLazyFileRoute("/produse/")({
   component: Page,
 });
 
-type Product = z.output<typeof ProductSchema>;
+type ProductOutput = z.output<typeof Product.schema>;
 
-const columns: ColumnDef<Product>[] = [
+const columns: ColumnDef<ProductOutput>[] = [
   {
     accessorKey: "name",
     header: "Nume",
     meta: {
-      filterComponent: (table: Table<Product>) => (
+      filterComponent: (table: Table<ProductOutput>) => (
         <InputFilter
           placeholder="Filtrează numele..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -40,10 +40,10 @@ const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "vat",
     header: "TVA",
-    filterFn: equalsFilter as FilterFn<Product>,
+    filterFn: equalsFilter as FilterFn<ProductOutput>,
     cell: ({ cell }) => <div>{cell.getValue<number>()} %</div>,
     meta: {
-      filterComponent: (table: Table<Product>) => (
+      filterComponent: (table: Table<ProductOutput>) => (
         <InputFilter
           placeholder="Filtrează TVA..."
           value={(table.getColumn("vat")?.getFilterValue() as number) ?? ""}
@@ -65,9 +65,9 @@ const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "stock",
     header: "Stoc",
-    filterFn: equalsFilter as FilterFn<Product>,
+    filterFn: equalsFilter as FilterFn<ProductOutput>,
     meta: {
-      filterComponent: (table: Table<Product>) => (
+      filterComponent: (table: Table<ProductOutput>) => (
         <InputFilter
           placeholder="Filtrează stoc..."
           value={(table.getColumn("stock")?.getFilterValue() as number) ?? ""}
@@ -96,7 +96,7 @@ const columns: ColumnDef<Product>[] = [
               title="Modifica Datele Produsului"
               desctiption="Modifică datele produsului aici."
               columns={columns}
-              schema={ProductSchema}
+              schema={Product.schema}
               apiUpdate={api.products.update.useMutation}
               defaultValues={product}
               className={actionButtonClasses}
@@ -133,9 +133,8 @@ function Page() {
           title="Adaugă Produs"
           desctiption="Adaugă datele produsului aici."
           columns={columns}
-          schema={ProductSchema}
-          defaultValues={ProductDefaults}
           apiCreate={api.products.create.useMutation}
+          {...Product}
         />
       }
     />
