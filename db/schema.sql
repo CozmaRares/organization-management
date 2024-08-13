@@ -53,16 +53,14 @@ CREATE TABLE Licenta_Contract_Client (
   CHECK (buc > 0 AND pret > 0)
 );
 
-DROP TABLE IF EXISTS Factura_Intrare;
-CREATE TABLE Factura_Intrare(
+DROP TABLE IF EXISTS Factura_Furnizor;
+CREATE TABLE Factura_Furnizor(
   id INT AUTO_INCREMENT PRIMARY KEY,
 
   nume_furnizor VARCHAR(255) NOT NULL REFERENCES Furnizor(nume),
 
   data_emisa    DATE NOT NULL DEFAULT (CURRENT_DATE()),
   data_scadenta DATE NOT NULL DEFAULT (CURRENT_DATE()),
-
-  status ENUM('emis' , 'depasit', 'partial plătit', 'plătit', 'plătit exces') NOT NULL DEFAULT ('emis'),
 
   total  DECIMAL(10, 2) NOT NULL,
   platit DECIMAL(10, 2) NOT NULL,
@@ -72,7 +70,7 @@ CREATE TABLE Factura_Intrare(
 
 DROP TABLE IF EXISTS Marfa_Intrare;
 CREATE TABLE Marfa_Intrare (
-  id_factura  INT          REFERENCES Factura_Intrare(id),
+  id_factura  INT          REFERENCES Factura_Furnizor(id),
   nume_produs VARCHAR(255) REFERENCES Produs(nume),
 
   tva  INT            NOT NULL DEFAULT 19,
@@ -86,9 +84,9 @@ CREATE TABLE Marfa_Intrare (
   CHECK (tva >= 0 AND buc > 0 AND pret > 0)
 );
 
-DROP TABLE IF EXISTS Cheltuiala_Factura_Intrare;
-CREATE TABLE Cheltuiala_Factura_Intrare (
-  id_factura      INT REFERENCES Factura_Intrare(id),
+DROP TABLE IF EXISTS Cheltuiala_Factura_Furnizor;
+CREATE TABLE Cheltuiala_Factura_Furnizor (
+  id_factura      INT REFERENCES Factura_Furnizor(id),
   nume_cheltuiala VARCHAR(255),
 
   tva  INT            NOT NULL DEFAULT 19,
@@ -103,7 +101,7 @@ DROP TABLE IF EXISTS Plata;
 CREATE TABLE Plata (
   id INT AUTO_INCREMENT PRIMARY KEY,
 
-  id_factura INT           NOT NULL REFERENCES Factura_Intrare(id),
+  id_factura INT           NOT NULL REFERENCES Factura_Furnizor(id),
   tip        VARCHAR(255)  NOT NULL REFERENCES Tip_Tranzactie(tip),
 
   data_ef DATE NOT NULL DEFAULT (CURRENT_DATE()),
@@ -115,8 +113,8 @@ CREATE TABLE Plata (
   CHECK (valoare > 0)
 );
 
-DROP TABLE IF EXISTS Factura_Iesire;
-CREATE TABLE Factura_Iesire (
+DROP TABLE IF EXISTS Factura_Client;
+CREATE TABLE Factura_Client (
   id INT AUTO_INCREMENT PRIMARY KEY,
 
   nume_client VARCHAR(255) NOT NULL REFERENCES Client(nume),
@@ -126,8 +124,6 @@ CREATE TABLE Factura_Iesire (
   data_emisa    DATE NOT NULL DEFAULT (CURRENT_DATE()),
   data_scadenta DATE NOT NULL DEFAULT (CURRENT_DATE()),
 
-  status ENUM('emis' , 'depasit', 'partial plătit', 'plătit', 'plătit exces') NOT NULL DEFAULT ('emis'),
-
   total  DECIMAL(10, 2) NOT NULL,
   platit DECIMAL(10, 2) NOT NULL,
 
@@ -136,24 +132,24 @@ CREATE TABLE Factura_Iesire (
 
 DROP TABLE IF EXISTS Marfa_Iesire;
 CREATE TABLE Marfa_Iesire (
-  id_factura_iesire INT          REFERENCES Factura_Iesire(id),
+  id_factura_client INT          REFERENCES Factura_Client(id),
   nume_produs       VARCHAR(255) REFERENCES Produs(nume),
 
-  id_factura_intrare INT NOT NULL REFERENCES Factura_Intrare(id),
+  id_factura_furnizor INT NOT NULL REFERENCES Factura_Furnizor(id),
 
   tva      INT            NOT NULL DEFAULT 19,
   reducere INT            NOT NULL DEFAULT 0,
   buc      DECIMAL(10, 2) NOT NULL,
   pret     DECIMAL(10, 2) NOT NULL,
 
-  PRIMARY KEY (id_factura_iesire, nume_produs),
+  PRIMARY KEY (id_factura_client, nume_produs),
 
   CHECK (tva >= 0 AND reducere >= 0 AND buc > 0 AND pret > 0)
 );
 
-DROP TABLE IF EXISTS Serviciu_Factura_Iesire;
-CREATE TABLE Serviciu_Factura_Iesire (
-  id_factura    INT REFERENCES Factura_Iesire(id),
+DROP TABLE IF EXISTS Serviciu_Factura_Client;
+CREATE TABLE Serviciu_Factura_Client (
+  id_factura    INT REFERENCES Factura_Client(id),
   nume_serviciu VARCHAR(255),
 
   tva  INT            NOT NULL DEFAULT 19,
@@ -168,7 +164,7 @@ DROP TABLE IF EXISTS Incasare;
 CREATE TABLE Incasare (
   id INT AUTO_INCREMENT PRIMARY KEY,
 
-  id_factura INT          NOT NULL REFERENCES Factura_Intrare(id),
+  id_factura INT          NOT NULL REFERENCES Factura_Furnizor(id),
   tip        VARCHAR(255) NOT NULL REFERENCES Tip_Tranzactie(tip),
 
   data_ef DATE NOT NULL DEFAULT (CURRENT_DATE()),
