@@ -70,6 +70,7 @@ export default function DataForm<
           id: (col as { accessorKey: string }).accessorKey,
           label: col.meta!.columnName,
           inputType: col.meta!.inputType!,
+          wrapper: col.meta!.inputWrapperClassName,
         })),
     [columns],
   );
@@ -80,14 +81,14 @@ export default function DataForm<
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid grid-cols-2 gap-4 py-2"
       >
-        {inputs.map(({ id, label, inputType }) => {
+        {inputs.map(({ id, label, inputType, wrapper }) => {
           return (
             <FormField
               key={`dialog-input-${id}`}
               control={form.control}
               name={id as Path<Input>}
               render={({ field }) => (
-                <FormItem className="last-of-type:odd:col-span-full">
+                <FormItem className={wrapper}>
                   <FormLabel>{label}</FormLabel>
                   <Inp
                     placeholder={label}

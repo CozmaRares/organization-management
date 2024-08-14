@@ -51,7 +51,6 @@ class SupplierBill {
             "supplierName" => $this->supplierName,
             "issuedDate" => $this->issuedDate,
             "dueDate" => $this->dueDate,
-            "status" => $this->status,
             "total" => $this->total,
             "paid" => $this->paid,
         ];

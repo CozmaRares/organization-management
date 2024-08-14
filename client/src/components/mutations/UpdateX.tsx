@@ -26,6 +26,7 @@ type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
       pathParam: string;
     }
   >;
+  pathParam: string,
   className: string;
 };
 
@@ -38,6 +39,7 @@ export default function Update<
   title,
   desctiption,
   apiUpdate,
+  pathParam,
   className,
   ...props
 }: Props<Output, Def, Input>) {
@@ -56,7 +58,7 @@ export default function Update<
         <DataForm
           buttonText="Salvează"
           onSubmit={data => {
-            updateMutation.mutate({ ...data, pathParam: data.name });
+            updateMutation.mutate({ ...data, pathParam });
           }}
           {...props}
         />

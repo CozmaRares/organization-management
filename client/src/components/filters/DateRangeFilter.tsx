@@ -14,10 +14,16 @@ import { ro } from "date-fns/locale";
 type Props = {
   date: DateRange | undefined;
   setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+  placeholder: string;
   className?: string;
 };
 
-export default function DateRangePicker({ date, setDate, className }: Props) {
+export default function DateRangeFilter({
+  date,
+  setDate,
+  placeholder,
+  className,
+}: Props) {
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -32,6 +38,7 @@ export default function DateRangePicker({ date, setDate, className }: Props) {
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             <Dates
+              placeholder={placeholder}
               from={date?.from}
               to={date?.to}
             />
@@ -59,10 +66,11 @@ export default function DateRangePicker({ date, setDate, className }: Props) {
 type DatesProps = {
   from?: Date;
   to?: Date;
+  placeholder: string;
 };
 
-function Dates({ from, to }: DatesProps) {
-  if (!from) return <span>Alege o data</span>;
+function Dates({ from, to, placeholder }: DatesProps) {
+  if (!from) return <span>{placeholder}</span>;
 
   if (!to) return formatDateDisplay(from);
 

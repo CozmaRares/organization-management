@@ -168,7 +168,7 @@ function CollapsibleMenu({
             "flex w-full items-center justify-between p-3 transition-[border-bottom-left-radius] group-hover:bg-primary/40",
             "outline-none ring-offset-background transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2",
             className,
-            isOpen && "rounded-bl-none bg-primary/20",
+            isOpen && "rounded-bl-none bg-accent",
             isActive && "bg-primary/30",
           )}
         >

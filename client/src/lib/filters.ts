@@ -13,12 +13,19 @@ export const startsWithFilter: FilterFn<unknown> = (
 ) =>
   row.getValue<string>(columnID).toLowerCase().trim().startsWith(filterValue);
 
-export const equalsFilter: FilterFn<unknown> = (row, columnID, filterValue) => {
-  console.log({
-    value: row.getValue<number>(columnID),
-    filterValue,
-    result: row.getValue<number>(columnID) === filterValue,
-  });
+export const equalsFilter: FilterFn<unknown> = (row, columnID, filterValue) =>
+  row.getValue<number>(columnID) === filterValue;
 
-  return row.getValue<number>(columnID) === filterValue;
+export const dateRangeFilter: FilterFn<unknown> = (
+  row,
+  columnID,
+  filterValue,
+) => {
+  const value = new Date(row.getValue<string>(columnID));
+
+  const range = filterValue;
+
+  return range.from && range.to
+    ? value >= range.from && value <= range.to
+    : true;
 };

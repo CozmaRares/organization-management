@@ -13,14 +13,14 @@ import { UseMutationResult } from "@tanstack/react-query";
 
 type Props = {
   triggerText: string;
-  id: string;
+  pathParam: string;
   className: string;
   apiDelete: () => UseMutationResult<void, Error, string>;
 };
 
 export default function DeleteX({
   triggerText,
-  id,
+  pathParam,
   className,
   apiDelete,
 }: Props) {
@@ -42,7 +42,7 @@ export default function DeleteX({
         <AlertDialogFooter>
           <AlertDialogCancel>Anulează</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => deleteMutation.mutate(id)}
+            onClick={() => deleteMutation.mutate(pathParam)}
             variant="destructive"
           >
             Continuă

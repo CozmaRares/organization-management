@@ -69,13 +69,14 @@ const columns: ColumnDef<SupplierOutput>[] = [
               desctiption="Modifică datele furnizorului aici."
               columns={columns}
               schema={Supplier.schema}
+              pathParam={supplier.name}
               apiUpdate={api.suppliers.update.useMutation}
               defaultValues={supplier}
               className={actionButtonClasses}
             />,
             <DeleteX
               triggerText="Șterge furnizor"
-              id={supplier.name}
+              pathParam={supplier.name}
               className={actionButtonClasses}
               apiDelete={api.suppliers.delete.useMutation}
             />,

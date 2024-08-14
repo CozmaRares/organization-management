@@ -100,13 +100,14 @@ const columns: ColumnDef<ClientOutput>[] = [
               desctiption="Modifică datele clientului  aici."
               columns={columns}
               schema={Client.schema}
+              pathParam={client.name}
               apiUpdate={api.clients.update.useMutation}
               defaultValues={client}
               className={actionButtonClasses}
             />,
             <DeleteX
               triggerText="Șterge client"
-              id={client.name}
+              pathParam={client.name}
               className={actionButtonClasses}
               apiDelete={api.clients.delete.useMutation}
             />,

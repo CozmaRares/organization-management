@@ -97,13 +97,14 @@ const columns: ColumnDef<ProductOutput>[] = [
               desctiption="Modifică datele produsului aici."
               columns={columns}
               schema={Product.schema}
+              pathParam={product.name}
               apiUpdate={api.products.update.useMutation}
               defaultValues={product}
               className={actionButtonClasses}
             />,
             <DeleteX
               triggerText="Șterge produs"
-              id={product.name}
+              pathParam={product.name}
               className={actionButtonClasses}
               apiDelete={api.products.delete.useMutation}
             />,

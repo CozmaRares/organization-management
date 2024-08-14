@@ -2,11 +2,11 @@ import useQuery from "@/hooks/useQuery";
 import { z } from "zod";
 import { QueryClient } from "@tanstack/react-query";
 import useUpdate from "@/hooks/useUpdate";
-import { ClientContract, Client} from "./zod/client";
+import { ClientContract, Client } from "./zod/client";
 import useCreate from "@/hooks/useCreate";
 import useDelete from "@/hooks/useDelete";
-import { Product} from "./zod/product";
-import { Supplier} from "./zod/supplier";
+import { Product } from "./zod/product";
+import { Supplier, SupplierBill } from "./zod/supplier";
 
 export const queryClient = new QueryClient();
 
@@ -32,12 +32,17 @@ const apiData = Object.freeze({
     url: "/api/furnizori",
     key: ["suppliers"],
   },
+  supplierBills: {
+    url: "/api/facturi-furnizori",
+    key: ["supplier bills"],
+  },
 } as const satisfies Record<string, APIData>);
 
 type ClientInput = z.input<typeof Client.schema>;
 type ClientContractInput = z.input<typeof ClientContract.schema>;
 type ProductInput = z.input<typeof Product.schema>;
 type SupplierInput = z.input<typeof Supplier.schema>;
+type SupplierBillInput = z.input<typeof SupplierBill.schema>;
 
 type APIEntry =
   | {
@@ -183,6 +188,39 @@ export const api = Object.freeze({
           url: apiData.suppliers.url,
           onSuccessInvalidateKeys: apiData.suppliers.key,
         }),
+    },
+    bills: {
+      get: {
+        useQuery: () =>
+          useQuery({
+            url: apiData.supplierBills.url,
+            queryKey: apiData.supplierBills.key,
+            validator: z.array(SupplierBill.schema),
+          }),
+        invalidate: () =>
+          queryClient.invalidateQueries({ queryKey: apiData.supplierBills.key }),
+      },
+      create: {
+        useMutation: () =>
+          useCreate<SupplierBillInput>({
+            url: apiData.supplierBills.url,
+            onSuccessInvalidateKeys: apiData.supplierBills.key,
+          }),
+      },
+      update: {
+        useMutation: () =>
+          useUpdate<SupplierBillInput>({
+            url: apiData.supplierBills.url,
+            onSuccessInvalidateKeys: apiData.supplierBills.key,
+          }),
+      },
+      delete: {
+        useMutation: () =>
+          useDelete({
+            url: apiData.supplierBills.url,
+            onSuccessInvalidateKeys: apiData.supplierBills.key,
+          }),
+      },
     },
   },
 } as const satisfies API);

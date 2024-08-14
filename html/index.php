@@ -13,7 +13,6 @@ use Server\Database\Query\SelectQueryBuilder;
 use Bramus\Router\Router;
 use Server\DAO\SupplierBillDAO;
 use Server\Logger;
-use Server\Models\SupplierBill;
 
 use function Server\Utils\getJSONBody;
 use function Server\Utils\sendJSON;
