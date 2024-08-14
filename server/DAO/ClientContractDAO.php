@@ -25,9 +25,6 @@ class ClientContractDAO implements DAO {
     ];
     private const PK_COL = "id";
 
-    private function __construct() {
-    }
-
     private static function createContract(array $data) {
         return new ClientContract(
             (int) getNullish($data, ClientContractDAO::COLUMNS["id"]),

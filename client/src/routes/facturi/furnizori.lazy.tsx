@@ -14,7 +14,7 @@ import ActionMenu, { actionButtonClasses } from "@/components/ActionMenu";
 import { SupplierBill } from "@/lib/zod/supplier";
 import DateRangeFilter from "@/components/filters/DateRangeFilter";
 import { DateRange } from "react-day-picker";
-import { formatDateDisplay } from "@/lib/utils";
+import { formatCurrency, formatDateDisplay } from "@/lib/utils";
 import { DataFormInput } from "@/lib/types";
 
 export const Route = createLazyFileRoute("/facturi/furnizori")({
@@ -23,6 +23,33 @@ export const Route = createLazyFileRoute("/facturi/furnizori")({
 
 type FromAPI = z.output<typeof SupplierBill.schemas.api>;
 type FromUser = z.input<typeof SupplierBill.schemas.user>;
+
+const billStatuses = [
+  "emisă",
+  "depășită",
+  "plătită",
+  "plătită parțial",
+  "plătită în exces",
+] as const;
+type BillStatus = (typeof billStatuses)[number];
+
+function computeBillStatus({
+  issuedDate,
+  dueDate,
+  total,
+  paid,
+}: {
+  issuedDate: Date;
+  dueDate: Date;
+  total: number;
+  paid: number;
+}): BillStatus {
+  if (Math.abs(total - paid) < 0.02) return "plătită";
+  else if (total < paid) return "plătită în exces";
+  else if (dueDate < issuedDate) return "depășită";
+  else if (paid > 0) return "plătită parțial";
+  else return "emisă";
+}
 
 const columns: ColumnDef<FromAPI>[] = [
   {
@@ -89,6 +116,22 @@ const columns: ColumnDef<FromAPI>[] = [
       toggleVisibility: true,
       columnName: "Data Scadentă",
     },
+  },
+  {
+    accessorKey: "total",
+    header: () => <div className="text-right">Total</div>,
+    cell: ({ cell }) => (
+      <div className="text-right">
+        {formatCurrency(cell.getValue<number>())}
+      </div>
+    ),
+  },
+  {
+    id: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="first-letter:capitalize">{computeBillStatus(row.original)}</div>
+    ),
   },
   {
     id: "actions",

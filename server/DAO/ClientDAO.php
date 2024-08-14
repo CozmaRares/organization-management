@@ -23,9 +23,6 @@ class ClientDAO implements DAO {
     ];
     private const PK_COL = "name";
 
-    private function __construct() {
-    }
-
     private static function createClient(array $data) {
         return new Client(
             getNullish($data, ClientDAO::COLUMNS["name"]),

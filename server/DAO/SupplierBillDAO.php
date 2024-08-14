@@ -26,9 +26,6 @@ class SupplierBillDAO implements DAO {
     ];
     private const PK_COL = "id";
 
-    private function __construct() {
-    }
-
     private static function createSupplierBill(array $data) {
         return new SupplierBill(
             (int) getNullish($data, SupplierBillDAO::COLUMNS["id"]),

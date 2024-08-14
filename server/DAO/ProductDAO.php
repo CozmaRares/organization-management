@@ -23,9 +23,6 @@ class ProductDAO implements DAO {
     ];
     private const PK_COL = "name";
 
-    private function __construct() {
-    }
-
     private static function createProduct(array $data) {
         return new Product(
             getNullish($data, ProductDAO::COLUMNS["name"]),

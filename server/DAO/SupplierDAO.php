@@ -22,9 +22,6 @@ class SupplierDAO implements DAO {
     ];
     private const PK_COL = "name";
 
-    private function __construct() {
-    }
-
     private static function createSupplier(array $data) {
         return new Supplier(
             getNullish($data, SupplierDAO::COLUMNS["name"]),

@@ -3,6 +3,7 @@
         "files": [
             "server/Database/Query/Operators.php",
             "server/Database/Connection.php",
+            "server/API/helpers.php",
             "server/DAO/DAO.php",
             "server/utils.php"
         ],
