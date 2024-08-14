@@ -13,19 +13,21 @@ import AddX from "@/components/mutations/AddX";
 import UpdateX from "@/components/mutations/UpdateX";
 import DeleteX from "@/components/mutations/DeleteX";
 import ActionMenu, { actionButtonClasses } from "@/components/ActionMenu";
+import { DataFormInput } from "@/lib/types";
 
 export const Route = createLazyFileRoute("/clienti/")({
   component: Page,
 });
 
-type ClientOutput = z.output<typeof Client.schema>;
+type FromAPI = z.output<typeof Client.schemas.api>;
+type FromUser = z.input<typeof Client.schemas.user>;
 
-const columns: ColumnDef<ClientOutput>[] = [
+const columns: ColumnDef<FromAPI>[] = [
   {
     accessorKey: "name",
     header: "Nume",
     meta: {
-      filterComponent: (table: Table<ClientOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează numele..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -34,16 +36,15 @@ const columns: ColumnDef<ClientOutput>[] = [
           }
         />
       ),
-      inputType: { type: "input" },
       columnName: "Nume",
     },
   },
   {
     accessorKey: "cif",
     header: "CIF",
-    filterFn: startsWithFilter as FilterFn<ClientOutput>,
+    filterFn: startsWithFilter as FilterFn<FromAPI>,
     meta: {
-      filterComponent: (table: Table<ClientOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează CIF..."
           value={(table.getColumn("cif")?.getFilterValue() as string) ?? ""}
@@ -53,16 +54,15 @@ const columns: ColumnDef<ClientOutput>[] = [
         />
       ),
       toggleVisibility: true,
-      inputType: { type: "input" },
       columnName: "CIF",
     },
   },
   {
     accessorKey: "address",
     header: "Adresă",
-    filterFn: fuzzyFilter as FilterFn<ClientOutput>,
+    filterFn: fuzzyFilter as FilterFn<FromAPI>,
     meta: {
-      filterComponent: (table: Table<ClientOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează adresa..."
           value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
@@ -71,7 +71,6 @@ const columns: ColumnDef<ClientOutput>[] = [
           }
         />
       ),
-      inputType: { type: "textarea" },
       toggleVisibility: true,
       columnName: "Adresă",
     },
@@ -98,8 +97,8 @@ const columns: ColumnDef<ClientOutput>[] = [
               triggerText="Schimbă datele"
               title="Modifica Datele Clientului"
               desctiption="Modifică datele clientului  aici."
-              columns={columns}
-              schema={Client.schema}
+              schema={Client.schemas.user}
+              dataFormInputs={dataFormInputs}
               pathParam={client.name}
               apiUpdate={api.clients.update.useMutation}
               defaultValues={client}
@@ -119,6 +118,27 @@ const columns: ColumnDef<ClientOutput>[] = [
   },
 ];
 
+const dataFormInputs: Array<DataFormInput<keyof FromUser>> = [
+  {
+    id: "name",
+    label: "Nume",
+    inputType: { type: "input" },
+  },
+  {
+    id: "cif",
+    label: "CIF",
+    inputType: {
+      type: "input",
+    },
+  },
+  {
+    id: "address",
+    label: "Adresă",
+    inputType: { type: "textarea" },
+    inputWrapperClassName: "col-span-2",
+  },
+];
+
 function Page() {
   const { isPending, isFetching, error, data } = api.clients.get.useQuery();
 
@@ -134,9 +154,10 @@ function Page() {
         <AddX
           title="Adaugă Client"
           desctiption="Adaugă datele clientului aici."
-          columns={columns}
           apiCreate={api.clients.create.useMutation}
-          {...Client}
+          dataFormInputs={dataFormInputs}
+          schema={Client.schemas.user}
+          defaultValues={Client.defaultValues}
         />
       }
     />

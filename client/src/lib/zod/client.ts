@@ -1,27 +1,43 @@
 import { z } from "zod";
-import { zdate, zenum, zvarchar } from "./utils";
+import * as zu from "./utils";
 import { clientContractStatus } from "../dbEnums";
-import { ZodCustom } from "../types";
 
 const ClientSchema = z.object({
-  name: zvarchar(),
-  address: zvarchar(),
-  cif: zvarchar(),
+  name: zu.varchar(),
+  address: zu.varchar(),
+  cif: zu.varchar(),
 });
 
-export const Client: ZodCustom<typeof ClientSchema> = {
-  schema: ClientSchema,
+export const Client: zu.Schemas<typeof ClientSchema, typeof ClientSchema> = {
+  schemas: {
+    api: ClientSchema,
+    user: ClientSchema,
+  },
 };
 
-const ClientContractSchema = z.object({
-  clientName: zvarchar(),
-  date: zdate(),
-  details: zvarchar(),
-  status: zenum(clientContractStatus),
+const ClientContractSchemaAPI = z.object({
+  id: zu.int(),
+  clientName: zu.varchar(),
+  date: zu.date.api(),
+  details: zu.varchar(),
+  status: zu._enum(clientContractStatus),
 });
 
-export const ClientContract: ZodCustom<typeof ClientContractSchema> = {
-  schema: ClientContractSchema,
+const ClientContractSchemaUser = z.object({
+  clientName: zu.varchar(),
+  date: zu.date.user(),
+  details: zu.varchar(),
+  status: zu._enum(clientContractStatus),
+});
+
+export const ClientContract: zu.Schemas<
+  typeof ClientContractSchemaAPI,
+  typeof ClientContractSchemaUser
+> = {
+  schemas: {
+    api: ClientContractSchemaAPI,
+    user: ClientContractSchemaUser,
+  },
   defaultValues: {
     date: new Date(),
     status: "standby",

@@ -12,19 +12,21 @@ import AddX from "@/components/mutations/AddX";
 import UpdateX from "@/components/mutations/UpdateX";
 import DeleteX from "@/components/mutations/DeleteX";
 import ActionMenu, { actionButtonClasses } from "@/components/ActionMenu";
+import { DataFormInput } from "@/lib/types";
 
 export const Route = createLazyFileRoute("/produse/")({
   component: Page,
 });
 
-type ProductOutput = z.output<typeof Product.schema>;
+type FromAPI = z.output<typeof Product.schemas.api>;
+type FromUser = z.input<typeof Product.schemas.user>;
 
-const columns: ColumnDef<ProductOutput>[] = [
+const columns: ColumnDef<FromAPI>[] = [
   {
     accessorKey: "name",
     header: "Nume",
     meta: {
-      filterComponent: (table: Table<ProductOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează numele..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -33,17 +35,16 @@ const columns: ColumnDef<ProductOutput>[] = [
           }
         />
       ),
-      inputType: { type: "input" },
       columnName: "Nume",
     },
   },
   {
     accessorKey: "vat",
     header: "TVA",
-    filterFn: equalsFilter as FilterFn<ProductOutput>,
+    filterFn: equalsFilter as FilterFn<FromAPI>,
     cell: ({ cell }) => <div>{cell.getValue<number>()} %</div>,
     meta: {
-      filterComponent: (table: Table<ProductOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează TVA..."
           value={(table.getColumn("vat")?.getFilterValue() as number) ?? ""}
@@ -58,16 +59,15 @@ const columns: ColumnDef<ProductOutput>[] = [
         />
       ),
       toggleVisibility: true,
-      inputType: { type: "input" },
       columnName: "TVA",
     },
   },
   {
     accessorKey: "stock",
     header: "Stoc",
-    filterFn: equalsFilter as FilterFn<ProductOutput>,
+    filterFn: equalsFilter as FilterFn<FromAPI>,
     meta: {
-      filterComponent: (table: Table<ProductOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează stoc..."
           value={(table.getColumn("stock")?.getFilterValue() as number) ?? ""}
@@ -78,7 +78,6 @@ const columns: ColumnDef<ProductOutput>[] = [
           }}
         />
       ),
-      inputType: { type: "input" },
       toggleVisibility: true,
       columnName: "Stoc",
     },
@@ -95,8 +94,8 @@ const columns: ColumnDef<ProductOutput>[] = [
               triggerText="Schimbă datele"
               title="Modifica Datele Produsului"
               desctiption="Modifică datele produsului aici."
-              columns={columns}
-              schema={Product.schema}
+              schema={Product.schemas.user}
+              dataFormInputs={dataFormInputs}
               pathParam={product.name}
               apiUpdate={api.products.update.useMutation}
               defaultValues={product}
@@ -113,6 +112,21 @@ const columns: ColumnDef<ProductOutput>[] = [
       );
     },
     size: 70,
+  },
+];
+
+const dataFormInputs: Array<DataFormInput<keyof FromUser>> = [
+  {
+    id: "name",
+    label: "Nume",
+    inputType: { type: "input" },
+  },
+  {
+    id: "vat",
+    label: "TVA",
+    inputType: {
+      type: "input",
+    },
   },
 ];
 
@@ -133,9 +147,10 @@ function Page() {
         <AddX
           title="Adaugă Produs"
           desctiption="Adaugă datele produsului aici."
-          columns={columns}
           apiCreate={api.products.create.useMutation}
-          {...Product}
+          schema={Product.schemas.user}
+          defaultValues={Product.defaultValues}
+          dataFormInputs={dataFormInputs}
         />
       }
     />

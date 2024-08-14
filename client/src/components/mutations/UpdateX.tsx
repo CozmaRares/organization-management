@@ -16,7 +16,10 @@ type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
   triggerText: string;
   title: string;
   desctiption: string;
-  columns: ColumnDef<Output>[];
+  dataFormInputs: Array<
+    // @ts-expect-error ts complains for non string keys, but they will always be strings
+    DataFormInput<keyof Input>
+  >;
   schema: z.ZodSchema<Output, Def, Input>;
   defaultValues: DefaultValues<Input>;
   apiUpdate: () => UseMutationResult<

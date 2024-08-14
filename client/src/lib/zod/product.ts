@@ -1,17 +1,23 @@
 import { z } from "zod";
-import { zint, zvarchar } from "./utils";
-import { ZodCustom } from "../types";
+import * as zu from "./utils";
 
-const ProductSchema = z.object({
-  name: zvarchar(),
-  vat: zint(),
-  stock: zint(),
+const ProductSchemaAPI = z.object({
+  name: zu.varchar(),
+  vat: zu.int(),
+  stock: zu.int(),
 });
 
-export const Product: ZodCustom<typeof ProductSchema> = {
-  schema: ProductSchema,
+const ProductSchemaUser = z.object({
+  name: zu.varchar(),
+  vat: zu.int(),
+});
+
+export const Product: zu.Schemas<typeof ProductSchemaAPI, typeof ProductSchemaUser> = {
+  schemas: {
+    api: ProductSchemaAPI,
+    user: ProductSchemaUser,
+  },
   defaultValues: {
     vat: 19,
-    stock: 0,
   },
 };

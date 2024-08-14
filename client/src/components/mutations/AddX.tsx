@@ -8,15 +8,18 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import DataForm from "../DataForm";
-import { ColumnDef } from "@tanstack/react-table";
 import { z } from "zod";
 import { DefaultValues, FieldValues } from "react-hook-form";
 import { UseMutationResult } from "@tanstack/react-query";
+import { DataFormInput } from "@/lib/types";
 
 type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
   title: string;
   desctiption: string;
-  columns: ColumnDef<Output>[];
+  dataFormInputs: Array<
+    // @ts-expect-error ts complains for non string keys, but they will always be strings
+    DataFormInput<keyof Input>
+  >;
   schema: z.ZodSchema<Output, Def, Input>;
   defaultValues?: Partial<DefaultValues<Input>>;
   apiCreate: () => UseMutationResult<void, Error, Input>;

@@ -1,4 +1,4 @@
-export const clientContractType = Object.freeze([
+export const clientContractLicenseType = Object.freeze([
   "permanent",
   "sezonier",
 ] as const);

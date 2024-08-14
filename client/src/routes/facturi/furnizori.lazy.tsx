@@ -15,19 +15,21 @@ import { SupplierBill } from "@/lib/zod/supplier";
 import DateRangeFilter from "@/components/filters/DateRangeFilter";
 import { DateRange } from "react-day-picker";
 import { formatDateDisplay } from "@/lib/utils";
+import { DataFormInput } from "@/lib/types";
 
 export const Route = createLazyFileRoute("/facturi/furnizori")({
   component: Page,
 });
 
-type SupplierBillOutput = z.output<typeof SupplierBill.schema>;
+type FromAPI = z.output<typeof SupplierBill.schemas.api>;
+type FromUser = z.input<typeof SupplierBill.schemas.user>;
 
-const columns: ColumnDef<SupplierBillOutput>[] = [
+const columns: ColumnDef<FromAPI>[] = [
   {
     accessorKey: "supplierName",
     header: "Furnizor",
     meta: {
-      filterComponent: (table: Table<SupplierBillOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează furnizor..."
           value={
@@ -38,7 +40,6 @@ const columns: ColumnDef<SupplierBillOutput>[] = [
           }
         />
       ),
-      inputType: { type: "input" },
       inputWrapperClassName: "col-span-2",
       columnName: "Furnizor",
     },
@@ -46,12 +47,10 @@ const columns: ColumnDef<SupplierBillOutput>[] = [
   {
     accessorKey: "issuedDate",
     header: "Data Emisă",
-    filterFn: dateRangeFilter as FilterFn<SupplierBillOutput>,
-    cell: ({ cell }) => (
-      <div>{formatDateDisplay(new Date(cell.getValue<string>()))}</div>
-    ),
+    filterFn: dateRangeFilter as FilterFn<FromAPI>,
+    cell: ({ cell }) => <div>{formatDateDisplay(cell.getValue<Date>())}</div>,
     meta: {
-      filterComponent: (table: Table<SupplierBillOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <DateRangeFilter
           placeholder="Filtrează dată emisă..."
           date={
@@ -65,19 +64,18 @@ const columns: ColumnDef<SupplierBillOutput>[] = [
         />
       ),
       toggleVisibility: true,
-      inputType: { type: "date" },
       columnName: "Data Emisă",
     },
   },
   {
     accessorKey: "dueDate",
     header: "Data Scadentă",
-    filterFn: dateRangeFilter as FilterFn<SupplierBillOutput>,
+    filterFn: dateRangeFilter as FilterFn<FromAPI>,
     cell: ({ cell }) => (
       <div>{formatDateDisplay(new Date(cell.getValue<string>()))}</div>
     ),
     meta: {
-      filterComponent: (table: Table<SupplierBillOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <DateRangeFilter
           placeholder="Filtrează dată scadentă..."
           date={
@@ -88,7 +86,6 @@ const columns: ColumnDef<SupplierBillOutput>[] = [
           setDate={range => table.getColumn("dueDate")?.setFilterValue(range)}
         />
       ),
-      inputType: { type: "date" },
       toggleVisibility: true,
       columnName: "Data Scadentă",
     },
@@ -105,9 +102,9 @@ const columns: ColumnDef<SupplierBillOutput>[] = [
               triggerText="Schimbă datele"
               title="Modifica Datele Facturii"
               desctiption="Modifică datele facturii aici."
-              columns={columns}
-              schema={SupplierBill.schema}
+              schema={SupplierBill.schemas.user}
               apiUpdate={api.suppliers.bills.update.useMutation}
+              dataFormInputs={dataFormInputs}
               pathParam={`${bill.id}`}
               defaultValues={bill}
               className={actionButtonClasses}
@@ -123,6 +120,29 @@ const columns: ColumnDef<SupplierBillOutput>[] = [
       );
     },
     size: 70,
+  },
+];
+
+const dataFormInputs: Array<DataFormInput<keyof FromUser>> = [
+  {
+    id: "supplierName",
+    label: "Furnizor",
+    inputType: { type: "input" },
+  },
+  {
+    id: "total",
+    label: "Total",
+    inputType: { type: "input" },
+  },
+  {
+    id: "issuedDate",
+    label: "Data Emisă",
+    inputType: { type: "date" },
+  },
+  {
+    id: "dueDate",
+    label: "Data Scadentă",
+    inputType: { type: "date" },
   },
 ];
 
@@ -142,12 +162,12 @@ function Page() {
         <AddX
           title="Adaugă Factură"
           desctiption="Adaugă datele clientului aici."
-          columns={columns}
           apiCreate={api.suppliers.bills.create.useMutation}
-          {...SupplierBill}
+          schema={SupplierBill.schemas.user}
+          defaultValues={SupplierBill.defaultValues}
+          dataFormInputs={dataFormInputs}
         />
       }
     />
   );
 }
-

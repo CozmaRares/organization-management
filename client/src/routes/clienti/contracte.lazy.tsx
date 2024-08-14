@@ -10,20 +10,23 @@ import { api } from "@/lib/api";
 import { clientContractStatus } from "@/lib/dbEnums";
 import GridLoader from "@/components/GridLoader";
 import AddX from "@/components/mutations/AddX";
+import { DataFormInput } from "@/lib/types";
+import { formatDateDisplay } from "@/lib/utils";
 
 export const Route = createLazyFileRoute("/clienti/contracte")({
   component: Page,
 });
 
-type ClientContractOutput = z.output<typeof ClientContract.schema>;
+type FromAPI = z.output<typeof ClientContract.schemas.api>;
+type FromUser = z.input<typeof ClientContract.schemas.user>;
 
-const columns = [
+const columns: ColumnDef<FromAPI>[] = [
   {
     accessorKey: "clientName",
     header: "Client",
-    filterFn: startsWithFilter as FilterFn<ClientContractOutput>,
+    filterFn: startsWithFilter as FilterFn<FromAPI>,
     meta: {
-      filterComponent: (table: Table<ClientContractOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează client..."
           value={
@@ -35,7 +38,6 @@ const columns = [
         />
       ),
       toggleVisibility: true,
-      inputType: { type: "input" },
       columnName: "Client",
     },
   },
@@ -47,19 +49,15 @@ const columns = [
     ),
     meta: {
       toggleVisibility: true,
-      inputType: {
-        type: "select",
-        options: clientContractStatus,
-      },
       columnName: "Status",
     },
   },
   {
     accessorKey: "date",
     header: "Data Ef.",
+    cell: ({ cell }) => <div>{formatDateDisplay(cell.getValue<Date>())}</div>,
     meta: {
       toggleVisibility: true,
-      inputType: { type: "date" },
       columnName: "Data Ef.",
     },
   },
@@ -68,11 +66,38 @@ const columns = [
     header: "Detalii",
     meta: {
       toggleVisibility: true,
-      inputType: { type: "textarea" },
       columnName: "Detalii",
     },
   },
-] as const satisfies ColumnDef<ClientContractOutput>[];
+];
+
+const dataFormInputs: Array<DataFormInput<keyof FromUser>> = [
+  {
+    id: "clientName",
+    label: "Client",
+    inputType: { type: "input" },
+    inputWrapperClassName: "col-span-2",
+  },
+  {
+    id: "status",
+    label: "Status",
+    inputType: {
+      type: "select",
+      options: clientContractStatus,
+    },
+  },
+  {
+    id: "date",
+    label: "Data Ef.",
+    inputType: { type: "date" },
+  },
+  {
+    id: "details",
+    label: "Detalii",
+    inputType: { type: "textarea" },
+    inputWrapperClassName: "col-span-2",
+  },
+];
 
 function Page() {
   const { isPending, isFetching, error, data } =
@@ -90,9 +115,10 @@ function Page() {
         <AddX
           title="Adaugă Contract"
           desctiption="Adaugă datele contractului aici."
-          columns={columns}
+          dataFormInputs={dataFormInputs}
           apiCreate={api.clients.contracts.create.useMutation}
-          {...ClientContract}
+          schema={ClientContract.schemas.user}
+          defaultValues={ClientContract.defaultValues}
         />
       }
     />

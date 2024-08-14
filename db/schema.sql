@@ -35,6 +35,7 @@ CREATE TABLE Contract_Client (
   nume_client VARCHAR(255) NOT NULL REFERENCES Client(nume),
 
   data_ef DATE                                                NOT NULL DEFAULT (CURRENT_DATE()),
+
   status  ENUM('acceptat', 'standby', 'respins', 'suspendat') NOT NULL DEFAULT ('standby'),
 
   detalii VARCHAR(255) NOT NULL

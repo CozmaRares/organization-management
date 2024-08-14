@@ -12,19 +12,21 @@ import DeleteX from "@/components/mutations/DeleteX";
 import { Supplier } from "@/lib/zod/supplier";
 import { supplierStatus } from "@/lib/dbEnums";
 import ActionMenu, { actionButtonClasses } from "@/components/ActionMenu";
+import { DataFormInput } from "@/lib/types";
 
 export const Route = createLazyFileRoute("/furnizori/")({
   component: Page,
 });
 
-type SupplierOutput = z.output<typeof Supplier.schema>;
+type FromAPI = z.output<typeof Supplier.schemas.api>;
+type FromUser = z.input<typeof Supplier.schemas.user>;
 
-const columns: ColumnDef<SupplierOutput>[] = [
+const columns: ColumnDef<FromAPI>[] = [
   {
     accessorKey: "name",
     header: "Nume",
     meta: {
-      filterComponent: (table: Table<SupplierOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează numele..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -33,15 +35,17 @@ const columns: ColumnDef<SupplierOutput>[] = [
           }
         />
       ),
-      inputType: { type: "input" },
       columnName: "Nume",
     },
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ cell }) => (
+      <div className="capitalize">{cell.getValue<string>()}</div>
+    ),
     meta: {
-      filterComponent: (table: Table<SupplierOutput>) => (
+      filterComponent: (table: Table<FromAPI>) => (
         <InputFilter
           placeholder="Filtrează status..."
           value={(table.getColumn("status")?.getFilterValue() as number) ?? ""}
@@ -51,7 +55,6 @@ const columns: ColumnDef<SupplierOutput>[] = [
         />
       ),
       toggleVisibility: true,
-      inputType: { type: "select", options: supplierStatus },
       columnName: "Status",
     },
   },
@@ -67,8 +70,8 @@ const columns: ColumnDef<SupplierOutput>[] = [
               triggerText="Schimbă datele"
               title="Modifica Datele Furnizorului"
               desctiption="Modifică datele furnizorului aici."
-              columns={columns}
-              schema={Supplier.schema}
+              schema={Supplier.schemas.user}
+              dataFormInputs={dataFormInputs}
               pathParam={supplier.name}
               apiUpdate={api.suppliers.update.useMutation}
               defaultValues={supplier}
@@ -85,6 +88,22 @@ const columns: ColumnDef<SupplierOutput>[] = [
       );
     },
     size: 70,
+  },
+];
+
+const dataFormInputs: Array<DataFormInput<keyof FromUser>> = [
+  {
+    id: "name",
+    label: "Nume",
+    inputType: { type: "input" },
+  },
+  {
+    id: "status",
+    label: "Status",
+    inputType: {
+      type: "select",
+      options: supplierStatus,
+    },
   },
 ];
 
@@ -105,9 +124,10 @@ function Page() {
         <AddX
           title="Adaugă Furnizor"
           desctiption="Adaugă datele furnizorului aici."
-          columns={columns}
           apiCreate={api.suppliers.create.useMutation}
-          {...Supplier}
+          schema={Supplier.schemas.user}
+          dataFormInputs={dataFormInputs}
+          defaultValues={Supplier.defaultValues}
         />
       }
     />

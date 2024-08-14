@@ -3,41 +3,45 @@ import { formatDateStore } from "../utils";
 
 const requiredError = "Este obligatoriu";
 
-export const zvarchar = (max = 255) =>
+export const varchar = (max = 255) =>
   z
     .string({ required_error: requiredError })
     .min(1, "Câmpul trebuie să aibă cel puțin 1 caracter")
     .max(max, `Câmpul poate avea cel mult ${max} de caractere`);
 
-export const zdate = () =>
-  z
-    .date({ required_error: requiredError })
-    .or(z.string())
-    .transform(date => {
-      if (typeof date == "string") return date;
-      return formatDateStore(date);
-    });
+export const date = {
+  api: () =>
+    z
+      .string({ required_error: requiredError })
+      .transform(str => new Date(str))
+      .refine(date => !isNaN(date.getTime()), "Data primită nu este validă"),
+  user: () =>
+    z
+      .date({ required_error: requiredError })
+      .transform(date => formatDateStore(date)),
+};
 
-export const zint = () =>
-  z
-    .number({ required_error: requiredError })
-    .int("Numărul trebuie să fie întreg")
-    .nonnegative("Numărul trebuie să fie non-negativ")
-    .or(z.string())
-    .transform(num => {
-      if (typeof num == "number") return num;
-      return Number(num);
-    });
+export const float = () =>
+  z.coerce
+    .number({
+      required_error: requiredError,
+      invalid_type_error: "Numărul primit nu este valid",
+    })
+    .nonnegative("Numărul trebuie să fie non-negativ");
 
-export const zfloat = () =>
-  z
-    .number({ required_error: requiredError })
-    .nonnegative("Numărul trebuie să fie non-negativ")
-    .or(z.string())
-    .transform(num => {
-      if (typeof num == "number") return num;
-      return Number(num);
-    });
+export const int = () => float().int("Numărul trebuie să fie întreg");
 
-export const zenum = <T extends readonly [string, ...string[]]>(options: T) =>
+export const _enum = <T extends readonly [string, ...string[]]>(options: T) =>
   z.enum(options, { required_error: requiredError });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Schemas<
+  APISchema extends z.ZodSchema<any, any, any>,
+  UserSchema extends z.ZodSchema<any, any, any>,
+> = {
+  schemas: {
+    api: APISchema;
+    user: UserSchema;
+  };
+  defaultValues?: Partial<z.input<UserSchema>>;
+};

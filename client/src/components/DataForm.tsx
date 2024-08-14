@@ -1,7 +1,7 @@
 import { forwardRef, useMemo } from "react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { InputType } from "@/lib/types";
+import { DataFormInput, InputType } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ControllerRenderProps,
@@ -31,10 +31,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { ColumnDef } from "@tanstack/react-table";
 
 type Props<Output, Def extends z.ZodTypeDef, Input extends FieldValues> = {
-  columns: ColumnDef<Output>[];
+  dataFormInputs: Array<
+    // @ts-expect-error ts complains for non string keys, but they will always be strings
+    DataFormInput<keyof Input>
+  >;
   schema: z.ZodSchema<Output, Def, Input>;
   defaultValues?: Partial<DefaultValues<Input>>;
   buttonText: string;
@@ -46,7 +48,7 @@ export default function DataForm<
   Def extends z.ZodTypeDef,
   Input extends FieldValues,
 >({
-  columns,
+  dataFormInputs,
   schema,
   defaultValues,
   buttonText,
@@ -57,50 +59,35 @@ export default function DataForm<
     defaultValues: defaultValues as DefaultValues<Input>,
   });
 
-  const inputs = useMemo(
-    () =>
-      columns
-        .filter(
-          col =>
-            "accessorKey" in col &&
-            "meta" in col &&
-            col.meta!.inputType !== undefined,
-        )
-        .map(col => ({
-          id: (col as { accessorKey: string }).accessorKey,
-          label: col.meta!.columnName,
-          inputType: col.meta!.inputType!,
-          wrapper: col.meta!.inputWrapperClassName,
-        })),
-    [columns],
-  );
-
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid grid-cols-2 gap-4 py-2"
       >
-        {inputs.map(({ id, label, inputType, wrapper }) => {
-          return (
-            <FormField
-              key={`dialog-input-${id}`}
-              control={form.control}
-              name={id as Path<Input>}
-              render={({ field }) => (
-                <FormItem className={wrapper}>
-                  <FormLabel>{label}</FormLabel>
-                  <Inp
-                    placeholder={label}
-                    inputType={inputType}
-                    {...field}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          );
-        })}
+        {dataFormInputs.map(
+          ({ id, label, inputType, inputWrapperClassName }) => {
+            return (
+              <FormField
+                // @ts-expect-error id will always be a string
+                key={`dialog-input-${id}`}
+                control={form.control}
+                name={id as Path<Input>}
+                render={({ field }) => (
+                  <FormItem className={inputWrapperClassName}>
+                    <FormLabel>{label}</FormLabel>
+                    <Inp
+                      placeholder={label}
+                      inputType={inputType}
+                      {...field}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            );
+          },
+        )}
         <Button
           className="col-span-full"
           type="submit"

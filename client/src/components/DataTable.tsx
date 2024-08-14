@@ -156,7 +156,7 @@ export default function DataTable<TData, TValue>({
             }}
             className="w-16 pr-1"
           />
-          din {table.getPageCount().toLocaleString()}
+          din {isNaN(table.getPageCount()) ? 1 : table.getPageCount()}
         </span>
         <Select
           value={pagination.pageSize.toString()}
