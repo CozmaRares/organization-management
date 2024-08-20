@@ -53,6 +53,24 @@ function computeBillStatus({
 
 const columns: ColumnDef<FromAPI>[] = [
   {
+    accessorKey: "id",
+    header: "ID",
+    meta: {
+      filterComponent: (table: Table<FromAPI>) => (
+        <InputFilter
+          placeholder="Filtrează furnizor..."
+          value={
+            (table.getColumn("supplierName")?.getFilterValue() as string) ?? ""
+          }
+          onChange={event =>
+            table.getColumn("supplierName")?.setFilterValue(event.target.value)
+          }
+        />
+      ),
+      columnName: "Furnizor",
+    },
+  },
+  {
     accessorKey: "supplierName",
     header: "Furnizor",
     meta: {
@@ -67,7 +85,6 @@ const columns: ColumnDef<FromAPI>[] = [
           }
         />
       ),
-      inputWrapperClassName: "col-span-2",
       columnName: "Furnizor",
     },
   },
@@ -130,7 +147,9 @@ const columns: ColumnDef<FromAPI>[] = [
     id: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="first-letter:capitalize">{computeBillStatus(row.original)}</div>
+      <div className="first-letter:capitalize">
+        {computeBillStatus(row.original)}
+      </div>
     ),
   },
   {
